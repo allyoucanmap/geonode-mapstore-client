@@ -82,10 +82,10 @@ function create(params) {
         },
         'scripts': {
             ...packageJSON.scripts,
-            'compile': '@mapstore/geonode-mapstore-client compile',
-            'start': '@mapstore/geonode-mapstore-client start',
-            'test': '@mapstore/geonode-mapstore-client test',
-            'update-project': '@mapstore/geonode-mapstore-client update'
+            'compile': 'geonode-mapstore-client compile',
+            'start': 'geonode-mapstore-client start',
+            'test': 'geonode-mapstore-client test',
+            'update-project': 'geonode-mapstore-client update'
         },
         'devDependencies': {
             ...packageJSON.devDependencies,

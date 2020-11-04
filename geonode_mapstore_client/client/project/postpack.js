@@ -1,5 +1,3 @@
-
-
 /**
  * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
@@ -20,10 +18,14 @@ const packageJSON = require(packageJSONPath);
 
 const name = packageJSON.name.replace('@', '').replace('/', '-');
 const packageName = `${name}-${packageJSON.version}.tgz`;
-fs.copyFileSync(path.join(__dirname, '..', packageName), path.join(modulePath, packageName));
-rimraf.sync(path.join(__dirname, '..', packageName));
 
-fs.copyFileSync(path.join(modulePath, 'package.json'), packageJSONPath);
-rimraf.sync(path.join(modulePath, 'package.json'));
+if (fs.existsSync(path.join(__dirname, '..', packageName))) {
+    fs.copyFileSync(path.join(__dirname, '..', packageName), path.join(modulePath, packageName));
+    rimraf.sync(path.join(__dirname, '..', packageName));
+}
 
+if (fs.existsSync(path.join(modulePath, 'package.json'))) {
+    fs.copyFileSync(path.join(modulePath, 'package.json'), packageJSONPath);
+    rimraf.sync(path.join(modulePath, 'package.json'));
+}
 message.title('created package');
