@@ -62,6 +62,8 @@ function create(params) {
 
     const libVersion = geoNodeMapStoreClientPackageJSON.version;
 
+    const { mapstore, ...geoNodeMapStoreClientPackageJSONDependencies } = geoNodeMapStoreClientPackageJSON.dependencies;
+
     const newPackageJSON = {
         ...packageJSON,
         'name': params.name || packageJSON.name || 'geonode-mapstore-client-project',
@@ -93,7 +95,7 @@ function create(params) {
         },
         'dependencies': {
             ...packageJSON.dependencies,
-            ...geoNodeMapStoreClientPackageJSON.dependencies,
+            ...geoNodeMapStoreClientPackageJSONDependencies,
             '@mapstore/geonode-mapstore-client': libVersion + ''
         },
         'geonode': {
