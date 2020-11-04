@@ -60,6 +60,8 @@ function create(params) {
     const packageJSONPath = path.resolve(clientFolder, 'package.json');
     const packageJSON = fs.existsSync(packageJSONPath) ? require(packageJSONPath) : {};
 
+    const libVersion = geoNodeMapStoreClientPackageJSON.version;
+
     const newPackageJSON = {
         ...packageJSON,
         'name': params.name || packageJSON.name || 'geonode-mapstore-client-project',
@@ -80,10 +82,10 @@ function create(params) {
         },
         'scripts': {
             ...packageJSON.scripts,
-            'compile': 'geonode-mapstore-client compile',
-            'start': 'geonode-mapstore-client start',
-            'test': 'geonode-mapstore-client test',
-            'update-project': 'geonode-mapstore-client update'
+            'compile': '@mapstore/geonode-mapstore-client compile',
+            'start': '@mapstore/geonode-mapstore-client start',
+            'test': '@mapstore/geonode-mapstore-client test',
+            'update-project': '@mapstore/geonode-mapstore-client update'
         },
         'devDependencies': {
             ...packageJSON.devDependencies,
@@ -92,7 +94,7 @@ function create(params) {
         'dependencies': {
             ...packageJSON.dependencies,
             ...geoNodeMapStoreClientPackageJSON.dependencies,
-            'geonode-mapstore-client': params.lib
+            '@mapstore/geonode-mapstore-client': libVersion + ''
         },
         'geonode': {
             ...packageJSON.geonode,
@@ -132,12 +134,6 @@ if (isProject) {
             'name': 'location',
             'default': './client',
             'validate': () => true
-        },
-        {
-            'label': '  - Absolute path of geonode-mapstore-client-{version}.tgz: ',
-            'name': 'lib',
-            'default': '',
-            'validate': (value) => !!value
         }
     ];
 

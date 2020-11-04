@@ -34,10 +34,9 @@ childProcess
     );
 
 if (!isProject) {
-    const packPath = path.join(__dirname, 'pack.js');
     childProcess
         .execSync(
-            `node ${packPath}`,
+            'npm pack',
             { stdio: 'inherit' }
         );
 }

@@ -1,6 +1,6 @@
 {
-  "name": "geonode-mapstore-client",
-  "version": "2.0.4",
+  "name": "@mapstore/geonode-mapstore-client",
+  "version": "0.0.1",
   "description": "MapStore 2 Api bundle specific to geonode framework",
   "main": "api.js",
   "eslintConfig": {
@@ -22,10 +22,11 @@
     "compile-minor": "node project/compile --v=minor",
     "compile-major": "node project/compile --v=major",
     "start": "node project/start",
-    "pack": "node project/pack",
     "lint": "eslint js --ext .jsx,.js",
     "test": "node project/test",
-    "test:watch": "node project/test --watch=true"
+    "test:watch": "node project/test --watch=true",
+    "prepack": "node project/prepack",
+    "postpack": "node project/postpack"
   },
   "bin": {
     "geonode-mapstore-client": "bin/geonode-mapstore-client.js"
