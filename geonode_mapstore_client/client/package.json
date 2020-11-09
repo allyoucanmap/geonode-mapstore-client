@@ -17,7 +17,7 @@
     }
   },
   "scripts": {
-    "compile": "mapstore-project compile geonode",
+    "compile": "mapstore-project compile geonode && node postCompile",
     "start": "mapstore-project start geonode",
     "test": "mapstore-project test geonode",
     "test:watch": "mapstore-project test:watch geonode",
