@@ -40,8 +40,8 @@ const pluginsDefinition = {
         NotificationsPlugin: require('@mapstore/framework/plugins/Notifications'),
         FeatureEditorPlugin: require('@mapstore/framework/plugins/FeatureEditor').default,
         QueryPanelPlugin: require('@mapstore/framework/plugins/QueryPanel'),
-        SavePlugin: require('@mapstore/framework/plugins/Save').default,
-        SaveAsPlugin: require('@mapstore/framework/plugins/SaveAs').default,
+        SavePlugin: require('@js/plugins/Save').default,
+        SaveAsPlugin: require('@js/plugins/SaveAs').default,
         MetadataExplorerPlugin: require('@mapstore/framework/plugins/MetadataExplorer'),
         GridContainerPlugin: require('@mapstore/framework/plugins/GridContainer'),
         StyleEditorPlugin: require('@mapstore/framework/plugins/StyleEditor'),
@@ -50,6 +50,8 @@ const pluginsDefinition = {
         MousePositionPlugin: require('@mapstore/framework/plugins/MousePosition'),
         SearchPlugin: require('@mapstore/framework/plugins/Search'),
         SearchServicesConfigPlugin: require('@mapstore/framework/plugins/SearchServicesConfig'),
+        SwipePlugin: require('@mapstore/framework/plugins/Swipe').default,
+        LocatePlugin: require('@mapstore/framework/plugins/Locate').default,
         AddReducersAndEpics: {
             reducers: {
                 security: require('@mapstore/framework/reducers/security').default,
