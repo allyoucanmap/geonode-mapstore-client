@@ -28,6 +28,29 @@ export const getResourceByPk = (pk) => {
         .then(({ data }) => ({ pk: data.id, ...data }));
 };
 
+export const autocomplete = (params) => {
+    const { endpointAutocomplete = '/base/autocomplete_response' } = getConfigProp('geoNodeApi') || {};
+    return axios.get(endpointAutocomplete, { params })
+        .then(({ data }) => {
+            return {
+                suggestions: (data?.results || [])
+                    .map(({ id, text }) => {
+                        return {
+                            id,
+                            label: text,
+                            value: text
+                        };
+                    })
+            };
+        });
+};
+
+export const getUserInfo = () => {
+    const { endpointV1 = '/api' } = getConfigProp('geoNodeApi') || {};
+    return axios.get(`${endpointV1}/o/v4/userinfo`)
+        .then(({ data }) => data);
+};
+
 export default {
     getResourceByPk
 };

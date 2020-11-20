@@ -1,0 +1,152 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import main from '@mapstore/framework/components/app/main';
+import Router, { withRoutes } from '@js/components/app/Router';
+import MainLoader from '@js/components/app/MainLoader';
+import { connect } from 'react-redux';
+import {
+    setConfigProp,
+    setLocalConfigurationFile
+} from '@mapstore/framework/utils/ConfigUtils';
+import {
+    getSupportedLocales,
+    setSupportedLocales
+} from '@mapstore/framework/utils/LocaleUtils';
+import maptype from '@mapstore/framework/reducers/maptype';
+import security from '@mapstore/framework/reducers/security';
+import { setRegGeoserverRule } from '@mapstore/framework/utils/LayersUtils';
+
+import Home from '@js/routes/Home';
+
+import gnsearch from '@js/reducers/gnsearch';
+import gnresource from '@js/reducers/gnresource';
+import gnsearchEpics from '@js/epics/gnsearch';
+
+import {
+    getConfiguration,
+    getEndpoints,
+    getAccountInfo
+} from '@js/api/geonode/v2';
+
+import axios from '@mapstore/framework/libs/ajax';
+
+// Set X-CSRFToken in axios;
+axios.defaults.xsrfHeaderName = "X-CSRFToken";
+axios.defaults.xsrfCookieName = "csrftoken";
+
+// TODO: we should compile .scss as .less file in MapStore
+// and add a link tag with the compiled css in the template
+// this will ensure more control on override or custom css
+import '../../themes/geonode/scss/geonode.scss';
+
+const SearchRoute = connect(() => ({ hideHero: true }))(Home);
+const DEFAULT_LOCALE = {};
+const ConnectedRouter = connect((state) => ({
+    locale: state?.locale || DEFAULT_LOCALE
+}))(Router);
+
+const routes = [
+    {
+        name: 'homepage',
+        path: '/',
+        component: Home
+    },
+    {
+        name: 'resources',
+        path: [
+            '/search/',
+            '/search/:pk',
+            '/search/:ctype/:pk'
+        ],
+        component: SearchRoute
+    }
+];
+
+setLocalConfigurationFile('');
+setRegGeoserverRule(/\/[\w- ]*geoserver[\w- ]*\/|\/[\w- ]*gs[\w- ]*\//);
+
+const getVersion = () => {
+    if (!__DEVTOOLS__) {
+        return __GEONODE_PROJECT_CONFIG__.version;
+    }
+    return 'dev';
+};
+
+const pathsNeedVersion = [
+    'static/mapstore/',
+    'print.json'
+];
+axios.interceptors.request.use(
+    config => {
+        if (config.url && pathsNeedVersion.filter(url => config.url.match(url))[0]) {
+            return {
+                ...config,
+                params: {
+                    ...config.params,
+                    v: getVersion()
+                }
+            };
+        }
+        return config;
+    }
+);
+
+const setLocale = (localeKey) => {
+    const supportedLocales = getSupportedLocales();
+    const locale = supportedLocales[localeKey]
+        ? { [localeKey]: supportedLocales[localeKey] }
+        : { en: supportedLocales.en };
+    setSupportedLocales(locale);
+};
+
+Promise.all([
+    getConfiguration('/static/mapstore/config/localConfig.json'),
+    getAccountInfo(),
+    getEndpoints()
+])
+    .then(([localConfig, user]) => {
+        const { geoNodeConfiguration, ...config } = localConfig;
+        Object.keys(config).forEach((key) => {
+            setConfigProp(key, config[key]);
+        });
+        setConfigProp('translationsPath', __GEONODE_PROJECT_CONFIG__.translationsPath || config.translationsPath);
+        const securityInitialState = user?.info?.access_token
+            && {
+                security: {
+                    user: user,
+                    token: user.info.access_token
+                }
+            };
+        setLocale();
+        // home app entry point
+        main({
+            appComponent: withRoutes(routes)(ConnectedRouter),
+            loaderComponent: MainLoader,
+            initialState: {
+                defaultState: {
+                    maptype: {
+                        mapType: 'openlayers'
+                    },
+                    ...securityInitialState
+                }
+            },
+            pluginsConfig: localConfig.plugins || [],
+            themeCfg: null,
+            appReducers: {
+                gnsearch,
+                gnresource,
+                maptype,
+                security
+            },
+            appEpics: {
+                ...gnsearchEpics
+            },
+            geoNodeConfiguration
+        });
+    });

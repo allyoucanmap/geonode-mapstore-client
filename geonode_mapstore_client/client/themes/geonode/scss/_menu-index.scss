@@ -1,0 +1,39 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.gn-menu-index {
+    position: sticky;
+    min-height: 3rem;
+    width: 100%;
+    padding: 0.5rem;
+    color: $gn-primary-color;
+    background-color: $gn-primary-bg;
+    z-index: 15;
+    .gn-menu-index-content {
+        max-width: $gn-page-max-width;
+        margin: auto;
+    }
+    .btn-default,
+    .gn-tag {
+        font-size: $font-size-base;
+        color: $gn-primary-color;
+        background-color: $gn-primary-bg;
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        &.active {
+            color: $gn-primary-bg;
+            background-color: $gn-primary-color;
+        }
+        @include hover() {
+            color: $gn-primary-bg;
+            background-color: $gn-primary-color;
+            opacity: 1;
+        }
+    }
+}

@@ -26,9 +26,12 @@
   "author": "GeoSolutions",
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "@mapstore/project": "git+https://github.com/geosolutions-it/mapstore-project.git#604fa074f10e8a8a1317b9de19030771293722c2"
+    "@mapstore/project": "git+https://github.com/geosolutions-it/mapstore-project.git#41c43d56eab9a8d1f40aa68fbdf1f7eaa330fda0"
   },
   "dependencies": {
-    "mapstore": "file:MapStore2"
+    "@fortawesome/fontawesome-free": "5.15.1",
+    "bootstrap-v4": "npm:bootstrap@4.5.0",
+    "mapstore": "file:MapStore2",
+    "react-bootstrap-v1": "npm:react-bootstrap@1.3.0"
   }
 }

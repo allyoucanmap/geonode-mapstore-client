@@ -14,24 +14,27 @@ import {
 } from '@js/utils/APIUtils';
 import isArray from 'lodash/isArray';
 import castArray from 'lodash/castArray';
+import { getUserInfo } from '@js/api/geonode/v1';
 
 let endpoints = {
     // default values
     'base_resources': '/api/v2/base_resources',
+    'documents': '/api/v2/documents',
+    'layers': '/api/v2/layers',
     'maps': '/api/v2/maps',
     'geoapps': '/api/v2/geoapps',
     'geostories': '/api/v2/geostories',
-    'documents': '/api/v2/documents'
+    'users': '/api/v2/users'
 };
 
 const RESOURCES = 'base_resources';
-const GEOAPPS = 'geoapps';
-const GEOSTORIES = 'geostories';
-// const GROUPS = 'groups';
+const DOCUMENTS = 'documents';
 // const LAYERS = 'layers';
 const MAPS = 'maps';
-const DOCUMENTS = 'documents';
-// const USERS = 'users';
+const GEOAPPS = 'geoapps';
+const GEOSTORIES = 'geostories';
+const USERS = 'users';
+// const GROUPS = 'groups';
 
 const requestOptions = (name, requestFunc) => {
     const options = getRequestOptions(name);
@@ -216,6 +219,28 @@ export const updateGeoStory = (pk, body) => {
         .then(({ data }) => data.geostory);
 };
 
+export const getUserByPk = (pk) => {
+    return axios.get(parseDevHostname(`${endpoints[USERS]}/${pk}`))
+        .then(({ data }) => data.user);
+};
+
+export const getAccountInfo = () => {
+    return getUserInfo()
+        .then((info) => {
+            return getUserByPk(info.sub)
+                .then((user) => ({ ...user, info }))
+                .catch(() => ({ info }));
+        })
+        .catch(() => null);
+};
+
+export const getConfiguration = (configUrl) => {
+    return axios.get(configUrl)
+        .then(({ data }) => {
+            return data;
+        });
+};
+
 export default {
     getEndpoints,
     getResources,
@@ -224,5 +249,8 @@ export default {
     createGeoStory,
     updateGeoStory,
     getMaps,
-    getDocumentsByDocType
+    getDocumentsByDocType,
+    getUserByPk,
+    getAccountInfo,
+    getConfiguration
 };
