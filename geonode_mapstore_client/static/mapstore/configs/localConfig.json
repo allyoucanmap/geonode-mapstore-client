@@ -1,0 +1,256 @@
+{
+    "proxyUrl": {
+        "url": "proxy/?url=",
+        "useCORS": []
+    },
+    "useAuthenticationRules": true,
+    "authenticationRules": [
+        {
+            "urlPattern": ".*geoserver.*",
+            "authkeyParamName": "access_token",
+            "method": "authkey"
+        },
+        {
+            "urlPattern": ".*gs.*",
+            "authkeyParamName": "access_token",
+            "method": "authkey"
+        },
+        {
+            "urlPattern": ".*api/v2.*",
+            "method": "bearer"
+        }
+    ],
+    "geoNodeApi": {
+        "endpointAdapter": "/mapstore/rest",
+        "endpointAutocomplete": "/base/autocomplete_response",
+        "endpointV1": "/api",
+        "endpointV2": "/api/v2"
+    },
+    "geoNodeConfiguration": {
+        "theme": {
+            "variant": "light",
+            "navbar": {
+                "style": {}
+            },
+            "hero": {
+                "style": {}
+            }
+        },
+        "filters": {
+            "fields": {
+                "options": [
+                    {
+                        "id": "polymorphic_ctype_id",
+                        "labelId": "gnhome.resourceTypes",
+                        "placeholderId": "gnhome.resourceTypesPlaceholder",
+                        "type": "select",
+                        "options": ["58", "52", "57"]
+                    },
+                    {
+                        "id": "category.identifier",
+                        "labelId": "gnhome.categories",
+                        "placeholderId": "gnhome.categoriesPlaceholder",
+                        "type": "select",
+                        "options": ["boundaries", "society"]
+                    },
+                    {
+                        "id": "keywords.name",
+                        "labelId": "gnhome.keywords",
+                        "placeholderId": "gnhome.keywordsPlaceholder",
+                        "type": "select",
+                        "options": ["features", "test", "map"]
+                    },
+                    {
+                        "id": "regions.name",
+                        "labelId": "gnhome.regions",
+                        "placeholderId": "gnhome.regionsPlaceholder",
+                        "type": "select",
+                        "options": ["Global", "Africa", "Central Africa", "West AfricaPacific", "Kiribati"]
+                    },
+                    {
+                        "id": "owner.username",
+                        "labelId": "gnhome.owners",
+                        "placeholderId": "gnhome.ownersPlaceholder",
+                        "type": "select",
+                        "options": ["admin"]
+                    }
+                ]
+            },
+            "order": {
+                "defaultLabelId": "gnhome.orderBy",
+                "options": [
+                    {
+                        "label": "Most recent",
+                        "labelId": "gnhome.mostRecent",
+                        "value": "-date"
+                    },
+                    {
+                        "label": "Less recent",
+                        "labelId": "gnhome.lessRecent",
+                        "value": "date"
+                    },
+                    {
+                        "label": "A Z",
+                        "labelId": "gnhome.aZ",
+                        "value": "title"
+                    },
+                    {
+                        "label": "Z A",
+                        "labelId": "gnhome.zA",
+                        "value": "-title"
+                    },
+                    {
+                        "label": "Most popular",
+                        "labelId": "gnhome.mostPopular",
+                        "value": "popular_count"
+                    }
+                ]
+            },
+            "extent": {
+                "layers": [
+                    {
+                        "type": "osm",
+                        "title": "Open Street Map",
+                        "name": "mapnik",
+                        "source": "osm",
+                        "group": "background",
+                        "visibility": true
+                    }
+                ],
+                "style": {
+                    "color": "#397AAB",
+                    "opacity": 0.8,
+                    "fillColor": "#397AAB",
+                    "fillOpacity": 0.4,
+                    "weight": 4
+                }
+            }
+        },
+        "navbar": {
+            "logo": [
+                {
+                    "src": "/static/mapstore/img/geonode-logo.svg",
+                    "href": "#/"
+                }
+            ],
+            "items": [
+                {
+                    "labelId": "gnhome.register",
+                    "type": "link",
+                    "href": "/account/signup/?next=/",
+                    "authenticated": false
+                },
+                {
+                    "labelId": "gnhome.signIn",
+                    "type": "link",
+                    "href": "/account/login/?next=/",
+                    "authenticated": false
+                },
+                {
+                    "image": "${user.avatar}",
+                    "type": "dropdown",
+                    "authenticated": true,
+                    "items": [
+                        {
+                            "type": "link",
+                            "href": "/admin/",
+                            "labelId": "gnhome.admin",
+                            "allowedGroups": ["admin"]
+                        },
+                        {
+                            "type": "link",
+                            "href": "/account/logout/?next=/",
+                            "labelId": "gnhome.logOut"
+                        }
+                    ]
+                }
+            ]
+        },
+        "menu": {
+            "items": [
+                {
+                    "labelId": "gnhome.data",
+                    "type": "dropdown",
+                    "items": [
+                        {
+                            "type": "link",
+                            "href": "/layers/?limit=5",
+                            "labelId": "gnhome.layers"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/documents/?limit=5",
+                            "labelId": "gnhome.documents"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/services/?limit=5",
+                            "labelId": "gnhome.remoteServices"
+                        }
+                    ]
+                },
+                {
+                    "labelId": "gnhome.maps",
+                    "type": "link",
+                    "href": "/maps/?limit=5"
+                },
+                {
+                    "labelId": "gnhome.about",
+                    "type": "dropdown",
+                    "items": [
+                        {
+                            "type": "link",
+                            "href": "/people/",
+                            "labelId": "gnhome.people"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/groups/",
+                            "labelId": "gnhome.groups"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/groups/categories/",
+                            "labelId": "gnhome.groupsCategories"
+                        }
+                    ]
+                },
+                {
+                    "id": "landuse",
+                    "labelId": "gnhome.landuse",
+                    "query": {
+                        "filter{keywords.name.in}": ["landuse", "land"],
+                        "filter{regions.name}": ["Africa"]
+                    }
+                },
+                {
+                    "id": "water",
+                    "labelId": "gnhome.water",
+                    "query": {
+                        "filter{category.identifier.in}": ["water", "river", "lake"],
+                        "filter{regions.name}": ["Global"]
+                    }
+                }
+            ]
+        },
+        "footer": {
+            "items": [
+                {
+                    "label": "geonode.org",
+                    "type": "link",
+                    "href": "#"
+                },
+                {
+                    "labelId": "gnhome.terms",
+                    "type": "link",
+                    "href": "#"
+                },
+                {
+                    "labelId": "gnhome.privacy",
+                    "type": "link",
+                    "href": "#"
+                }
+            ]
+        }
+    }
+}
