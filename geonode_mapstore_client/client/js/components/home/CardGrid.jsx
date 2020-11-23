@@ -24,7 +24,9 @@ const Cards = withResizeDetector(({
     const margin = 24;
     const size = 320;
     const count = Math.floor(containerWidth / (size + margin));
-    const width = Math.floor((containerWidth - margin * count) / count);
+    const width = containerWidth >= size + margin * 2
+        ? Math.floor((containerWidth - margin * count) / count)
+        : '100%';
     const ulPadding = margin / 2;
 
     return (

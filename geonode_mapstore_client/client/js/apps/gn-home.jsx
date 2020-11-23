@@ -18,7 +18,6 @@ import {
     getSupportedLocales,
     setSupportedLocales
 } from '@mapstore/framework/utils/LocaleUtils';
-import maptype from '@mapstore/framework/reducers/maptype';
 import security from '@mapstore/framework/reducers/security';
 import { setRegGeoserverRule } from '@mapstore/framework/utils/LayersUtils';
 
@@ -106,7 +105,7 @@ const setLocale = (localeKey) => {
 };
 
 Promise.all([
-    getConfiguration('/static/mapstore/config/localConfig.json'),
+    getConfiguration('/static/mapstore/configs/localConfig.json'),
     getAccountInfo(),
     getEndpoints()
 ])
@@ -115,7 +114,10 @@ Promise.all([
         Object.keys(config).forEach((key) => {
             setConfigProp(key, config[key]);
         });
-        setConfigProp('translationsPath', __GEONODE_PROJECT_CONFIG__.translationsPath || config.translationsPath);
+        setConfigProp('translationsPath', config.translationsPath
+            ? config.translationsPath
+            : __GEONODE_PROJECT_CONFIG__.translationsPath
+        );
         const securityInitialState = user?.info?.access_token
             && {
                 security: {
@@ -130,9 +132,6 @@ Promise.all([
             loaderComponent: MainLoader,
             initialState: {
                 defaultState: {
-                    maptype: {
-                        mapType: 'openlayers'
-                    },
                     ...securityInitialState
                 }
             },
@@ -141,7 +140,6 @@ Promise.all([
             appReducers: {
                 gnsearch,
                 gnresource,
-                maptype,
                 security
             },
             appEpics: {

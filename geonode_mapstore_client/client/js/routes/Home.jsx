@@ -226,6 +226,7 @@ function Home({
                     marginTop: dimensions.brandNavbarHeight,
                     ...theme?.hero?.style
                 }}
+                jumbotronStyle={theme?.jumbotron?.style}
             >
                 <div ref={inViewRef}>
                     {isHeroVisible && search}
@@ -247,7 +248,7 @@ function Home({
                 containerStyle={!isHeroVisible
                     ? {
                         marginTop: dimensions.brandNavbarHeight,
-                        minHeight: `calc(100vh - ${dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight + dimensions.filtersMenuNodeHeight + dimensions.footerNodeHeight}px )`
+                        minHeight: `calc(100vh - ${dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight + dimensions.footerNodeHeight}px )`
                     }
                     : undefined}
                 column={
@@ -260,7 +261,8 @@ function Home({
                                 position: 'fixed',
                                 top: dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight,
                                 bottom: dimensions.footerNodeHeight,
-                                overflow: 'auto'
+                                overflow: 'auto',
+                                height: 'auto'
                             })
                         }}
                     />

@@ -14,7 +14,7 @@ function inAllowedGroups(user, allowedGroups) {
 }
 
 export function readProperty(state, value) {
-    if (value.indexOf('${') === 0) {
+    if (value?.indexOf('${') === 0) {
         return get(state, value.replace(/^\$\{(.*)\}$/, '$1'));
     }
     return value;

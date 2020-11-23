@@ -53,48 +53,6 @@ const requestOptions = (name, requestFunc) => {
     return requestFunc(options);
 };
 
-export const setEndpoints = (data) => {
-    endpoints = data;
-};
-
-export const getEndpoints = () => {
-    return axios.get('/api/v2/')
-        .then(({ data }) => {
-            setEndpoints(data);
-            return data;
-        });
-};
-
-export const getResources = ({
-    q,
-    pageSize = 20,
-    page = 1,
-    sort,
-    ...params
-}) => {
-    return requestOptions(RESOURCES, () => axios.get(parseDevHostname(endpoints[RESOURCES]), {
-        params: {
-            ...params,
-            ...(sort && { sort: isArray(sort) ? sort : [ sort ]}),
-            ...(q && {
-                search: q,
-                search_fields: ['title', 'abstract']
-            }),
-            page,
-            page_size: pageSize
-        }
-    })
-        .then(({ data }) => {
-            return {
-                isNextPageAvailable: !!data.links.next,
-                resources: (data.resources || [])
-                    .map((resource) => {
-                        return resource;
-                    })
-            };
-        }));
-};
-
 // some fields such as search_fields does not support the array notation `key[]=value1&key[]=value2`
 // this function will parse all values included array in the `key=value1&key=value2` format
 function addQueryString(requestUrl, params) {
@@ -114,6 +72,49 @@ function addQueryString(requestUrl, params) {
         }, '');
     return `${requestUrl}${queryString}`;
 }
+
+export const setEndpoints = (data) => {
+    endpoints = data;
+};
+
+export const getEndpoints = () => {
+    return axios.get('/api/v2/')
+        .then(({ data }) => {
+            setEndpoints(data);
+            return data;
+        });
+};
+
+export const getResources = ({
+    q,
+    pageSize = 20,
+    page = 1,
+    sort,
+    ...params
+}) => {
+    return requestOptions(RESOURCES, () => axios.get(parseDevHostname(
+        addQueryString(endpoints[RESOURCES], q && {
+            search: q,
+            search_fields: ['title', 'abstract']
+        })
+    ), {
+        params: {
+            ...params,
+            ...(sort && { sort: isArray(sort) ? sort : [ sort ]}),
+            page,
+            page_size: pageSize
+        }
+    })
+        .then(({ data }) => {
+            return {
+                isNextPageAvailable: !!data.links.next,
+                resources: (data.resources || [])
+                    .map((resource) => {
+                        return resource;
+                    })
+            };
+        }));
+};
 
 export const getMaps = ({
     q,

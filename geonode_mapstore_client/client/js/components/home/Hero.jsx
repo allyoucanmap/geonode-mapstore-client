@@ -13,6 +13,7 @@ import HTML from '@mapstore/framework/components/I18N/HTML';
 
 const Hero = forwardRef(({
     style,
+    jumbotronStyle,
     children
 }, ref) => {
 
@@ -22,7 +23,7 @@ const Hero = forwardRef(({
             className="gn-hero"
             style={style}
         >
-            <Jumbotron>
+            <Jumbotron style={jumbotronStyle}>
                 <div className="gn-hero-description">
                     <HTML msgId="gnhome.description"/>
                 </div>

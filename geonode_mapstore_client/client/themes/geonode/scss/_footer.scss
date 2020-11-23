@@ -7,12 +7,13 @@
  */
 
 .gn-footer {
-    position: sticky;
+    position: fixed;
     bottom: 0;
     color: $gn-body-shade-color;
     background-color: $gn-body-shade-bg;
     z-index: 18;
     padding: 0.5rem;
+    width: 100%;
     ul {
         list-style-type: none;
         padding: 0;

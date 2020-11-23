@@ -9,6 +9,7 @@
 import React, { forwardRef, useRef } from 'react';
 import { Dropdown, Nav } from 'react-bootstrap-v1';
 import Message from '@mapstore/framework/components/I18N/Message';
+import FaIcon from '@js/components/home/FaIcon';
 import {
     readProperty,
     filterMenuItems
@@ -39,11 +40,15 @@ function NavItem({
                     {items
                         .filter((itm) => filterMenuItems(state, itm, item))
                         .map((itm, idx) => {
+                            if (itm.type === 'divider') {
+                                return <Dropdown.Divider key={idx} />;
+                            }
                             return (
                                 <Dropdown.Item
                                     key={idx}
                                     href={readProperty(state, itm.href)}
                                 >
+                                    {itm.faIcon && <><FaIcon name={itm.faIcon}/></>}
                                     {itm.labelId && <Message msgId={itm.labelId}/> || itm.label}
                                 </Dropdown.Item>
                             );
@@ -84,11 +89,11 @@ const BrandNavbar = forwardRef(({
                 <ul
                     className="gn-brand-navbar-left-side"
                 >
-                    {logo.map(({ src, label, href }, idx) => {
+                    {logo.map(({ src, label, href, style: logoStyle }, idx) => {
                         return (
                             <li key={idx}>
                                 <a href={href}>
-                                    <img src={src} />
+                                    <img src={src} style={logoStyle}/>
                                     {label}
                                 </a>
                             </li>
