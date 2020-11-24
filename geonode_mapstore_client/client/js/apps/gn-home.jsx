@@ -111,6 +111,7 @@ Promise.all([
 ])
     .then(([localConfig, user]) => {
         const { geoNodeConfiguration, ...config } = localConfig;
+        const geoNodePageConfig = window.__GEONODE_PAGE_CONFIG__ || {};
         Object.keys(config).forEach((key) => {
             setConfigProp(key, config[key]);
         });
@@ -125,7 +126,7 @@ Promise.all([
                     token: user.info.access_token
                 }
             };
-        setLocale();
+        setLocale(geoNodePageConfig.languageCode);
         // home app entry point
         main({
             appComponent: withRoutes(routes)(ConnectedRouter),

@@ -44,35 +44,54 @@
                         "labelId": "gnhome.resourceTypes",
                         "placeholderId": "gnhome.resourceTypesPlaceholder",
                         "type": "select",
-                        "options": ["58", "52", "57"]
+                        "options": [
+                            "58",
+                            "52",
+                            "57"
+                        ]
                     },
                     {
                         "id": "category.identifier",
                         "labelId": "gnhome.categories",
                         "placeholderId": "gnhome.categoriesPlaceholder",
                         "type": "select",
-                        "options": ["boundaries", "society"]
+                        "options": [
+                            "boundaries",
+                            "society"
+                        ]
                     },
                     {
                         "id": "keywords.name",
                         "labelId": "gnhome.keywords",
                         "placeholderId": "gnhome.keywordsPlaceholder",
                         "type": "select",
-                        "options": ["features", "test", "map"]
+                        "options": [
+                            "features",
+                            "test",
+                            "map"
+                        ]
                     },
                     {
                         "id": "regions.name",
                         "labelId": "gnhome.regions",
                         "placeholderId": "gnhome.regionsPlaceholder",
                         "type": "select",
-                        "options": ["Global", "Africa", "Central Africa", "West AfricaPacific", "Kiribati"]
+                        "options": [
+                            "Global",
+                            "Africa",
+                            "Central Africa",
+                            "West AfricaPacific",
+                            "Kiribati"
+                        ]
                     },
                     {
                         "id": "owner.username",
                         "labelId": "gnhome.owners",
                         "placeholderId": "gnhome.ownersPlaceholder",
                         "type": "select",
-                        "options": ["admin"]
+                        "options": [
+                            "admin"
+                        ]
                     }
                 ]
             },
@@ -155,7 +174,9 @@
                             "type": "link",
                             "href": "/admin/",
                             "labelId": "gnhome.admin",
-                            "allowedGroups": ["admin"]
+                            "allowedGroups": [
+                                "admin"
+                            ]
                         },
                         {
                             "type": "link",
@@ -219,16 +240,27 @@
                     "id": "landuse",
                     "labelId": "gnhome.landuse",
                     "query": {
-                        "filter{keywords.name.in}": ["landuse", "land"],
-                        "filter{regions.name}": ["Africa"]
+                        "filter{keywords.name.in}": [
+                            "landuse",
+                            "land"
+                        ],
+                        "filter{regions.name}": [
+                            "Africa"
+                        ]
                     }
                 },
                 {
                     "id": "water",
                     "labelId": "gnhome.water",
                     "query": {
-                        "filter{category.identifier.in}": ["water", "river", "lake"],
-                        "filter{regions.name}": ["Global"]
+                        "filter{category.identifier.in}": [
+                            "water",
+                            "river",
+                            "lake"
+                        ],
+                        "filter{regions.name}": [
+                            "Global"
+                        ]
                     }
                 }
             ]
