@@ -84,7 +84,8 @@ function FilterForm({
     const state = useRef({});
     state.current = {
         query,
-        fields
+        fields,
+        values
     };
 
     useEffect(() => {
@@ -174,12 +175,12 @@ function FilterForm({
                                 >
                                     <Form.Label><strong>{labelId ? <Message msgId={labelId}/> : label}</strong></Form.Label>
                                     <Select
-                                        value={currentValues}
+                                        value={currentValues.map((value) => ({ value, label: value }))}
                                         multi
                                         placeholder={placeholderId}
                                         onChange={(selected) => {
                                             setValues({
-                                                ...values,
+                                                ...state.current.values,
                                                 [filterKey]: selected.map(({ value }) => value)
                                             });
                                         }}
