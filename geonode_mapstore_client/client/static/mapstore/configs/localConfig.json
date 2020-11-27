@@ -47,7 +47,8 @@
                         "options": [
                             "58",
                             "52",
-                            "57"
+                            "57",
+                            "62"
                         ]
                     },
                     {
@@ -153,12 +154,44 @@
                     "items": [
                         {
                             "type": "link",
+                            "href": "${user.hrefProfile}",
+                            "labelId": "gnhome.profile"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/social/recent-activity",
+                            "labelId": "gnhome.recentActivity"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/favorite/list/",
+                            "labelId": "gnhome.favorites"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/messages/inbox/",
+                            "labelId": "gnhome.inbox"
+                        },
+                        { "type": "divider" },
+                        {
+                            "type": "link",
                             "href": "/admin/",
                             "labelId": "gnhome.admin",
-                            "allowedGroups": [
-                                "admin"
-                            ]
+                            "allowedGroups": ["admin"]
                         },
+                        {
+                            "type": "link",
+                            "href": "/geoserver/",
+                            "labelId": "gnhome.geoServer",
+                            "allowedGroups": ["admin"]
+                        },
+                        { "type": "divider" },
+                        {
+                            "type": "link",
+                            "href": "/help/",
+                            "labelId": "gnhome.help"
+                        },
+                        { "type": "divider" },
                         {
                             "type": "link",
                             "href": "/account/logout/?next=/",
@@ -188,13 +221,58 @@
                             "type": "link",
                             "href": "/services/?limit=5",
                             "labelId": "gnhome.remoteServices"
+                        },
+                        {
+                            "type": "divider",
+                            "authenticated": true
+                        },
+                        {
+                            "type": "link",
+                            "href": "/layers/upload",
+                            "labelId": "gnhome.uploadLayer",
+                            "authenticated": true
+                        },
+                        {
+                            "type": "link",
+                            "href": "/documents/upload",
+                            "labelId": "gnhome.uploadDocument",
+                            "authenticated": true
+                        },
+                        {
+                            "type": "link",
+                            "href": "/services/register/",
+                            "labelId": "gnhome.addRemoteService",
+                            "authenticated": true
                         }
                     ]
                 },
                 {
                     "labelId": "gnhome.maps",
                     "type": "link",
-                    "href": "/maps/?limit=5"
+                    "href": "/maps/?limit=5",
+                    "authenticated": false
+                },
+                {
+                    "labelId": "gnhome.maps",
+                    "type": "dropdown",
+                    "authenticated": true,
+                    "items": [
+                        {
+                            "type": "link",
+                            "href": "/maps/?limit=5",
+                            "labelId": "gnhome.exploreMaps"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/maps/new",
+                            "labelId": "gnhome.createMap"
+                        }
+                    ]
+                },
+                {
+                    "type": "link",
+                    "href": "/apps/?limit=5",
+                    "labelId": "gnhome.apps"
                 },
                 {
                     "labelId": "gnhome.about",
@@ -214,35 +292,41 @@
                             "type": "link",
                             "href": "/groups/categories/",
                             "labelId": "gnhome.groupsCategories"
+                        },
+                        {
+                            "type": "link",
+                            "href": "/announcements/",
+                            "labelId": "gnhome.announcements",
+                            "authenticated": true
+                        },
+                        {
+                            "type": "divider",
+                            "authenticated": true,
+                            "allowedGroups": ["admin"]
+                        },
+                        
+                        {
+                            "type": "link",
+                            "href": "/invitations/geonode-send-invite/",
+                            "labelId": "gnhome.inviteUsers",
+                            "authenticated": true,
+                            "allowedGroups": ["admin"]
+                        },
+                        {
+                            "type": "link",
+                            "href": "/admin/people/profile/add/",
+                            "labelId": "gnhome.addUser",
+                            "authenticated": true,
+                            "allowedGroups": ["admin"]
+                        },
+                        {
+                            "type": "link",
+                            "href": "/groups/create/",
+                            "labelId": "gnhome.createGroup",
+                            "authenticated": true,
+                            "allowedGroups": ["admin"]
                         }
                     ]
-                },
-                {
-                    "id": "landuse",
-                    "labelId": "gnhome.landuse",
-                    "query": {
-                        "filter{keywords.name.in}": [
-                            "landuse",
-                            "land"
-                        ],
-                        "filter{regions.name}": [
-                            "Africa"
-                        ]
-                    }
-                },
-                {
-                    "id": "water",
-                    "labelId": "gnhome.water",
-                    "query": {
-                        "filter{category.identifier.in}": [
-                            "water",
-                            "river",
-                            "lake"
-                        ],
-                        "filter{regions.name}": [
-                            "Global"
-                        ]
-                    }
                 }
             ]
         },
@@ -251,17 +335,17 @@
                 {
                     "label": "geonode.org",
                     "type": "link",
-                    "href": "#"
+                    "href": "https://geonode.org/"
                 },
                 {
-                    "labelId": "gnhome.terms",
+                    "labelId": "gnhome.developers",
                     "type": "link",
-                    "href": "#"
+                    "href": "/developer/"
                 },
                 {
-                    "labelId": "gnhome.privacy",
+                    "labelId": "gnhome.about",
                     "type": "link",
-                    "href": "#"
+                    "href": "/about/"
                 }
             ]
         }

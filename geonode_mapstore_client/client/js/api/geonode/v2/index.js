@@ -229,7 +229,12 @@ export const getAccountInfo = () => {
     return getUserInfo()
         .then((info) => {
             return getUserByPk(info.sub)
-                .then((user) => ({ ...user, info }))
+                .then((user) => ({
+                    ...user,
+                    info,
+                    // TODO: remove when the href is provided by the server
+                    hrefProfile: `/people/profile/${user.username}/`
+                }))
                 .catch(() => ({ info }));
         })
         .catch(() => null);

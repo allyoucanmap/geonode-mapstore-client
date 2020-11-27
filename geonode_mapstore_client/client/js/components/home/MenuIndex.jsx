@@ -43,6 +43,9 @@ function MenuItem({
                     {items
                         .filter((itm) => filterMenuItems(state, itm, item))
                         .map((itm, idx) => {
+                            if (itm.type === 'divider') {
+                                return <Dropdown.Divider key={idx} />;
+                            }
                             return (
                                 <Dropdown.Item
                                     key={idx}
