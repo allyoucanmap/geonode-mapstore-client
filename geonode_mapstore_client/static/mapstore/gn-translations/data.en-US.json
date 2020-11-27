@@ -72,7 +72,26 @@
             "regions": "Regions",
             "regionsPlaceholder": "Select regions",
             "owners": "Owners",
-            "ownersPlaceholder": "Select owners"
+            "ownersPlaceholder": "Select owners",
+
+            "profile": "Profile",
+            "recentActivity": "Recent Activity",
+            "favorites": "Favorites",
+            "inbox": "Inbox",
+            "geoServer": "GeoServer",
+            "help": "Help",
+            "uploadLayer": "Upload Layer",
+            "uploadDocument": "Upload Document",
+            "addRemoteService": "Add Remote Service",
+            "exploreMaps": "Explore Maps",
+            "createMap": "Create Map",
+            "apps": "Apps",
+            "announcements": "Announcements",
+            "inviteUsers": "Invite Users",
+            "addUser": "Add User",
+            "createGroup": "Create Group",
+            "developers": "Developers",
+            "customFilterExample": "Custom Filter (Global)"
         }
     }
 }

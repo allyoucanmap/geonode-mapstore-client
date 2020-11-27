@@ -9,7 +9,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.1",
     "bootstrap-v4": "npm:bootstrap@4.5.0",
-    "mapstore": "git+https://github.com/geosolutions-it/MapStore2.git#cef170011b2572430b56dbd38b15e37758e5b7e9",
+    "mapstore": "git+https://github.com/geosolutions-it/MapStore2.git#bbba2e281b63f352a530897b86fc906a60700ed9",
     "react-bootstrap-v1": "npm:react-bootstrap@1.3.0"
   }
 }
