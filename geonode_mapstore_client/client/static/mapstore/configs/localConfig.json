@@ -327,6 +327,16 @@
                             "allowedGroups": ["admin"]
                         }
                     ]
+                },
+                {
+                    "type": "filter",
+                    "id": "landuse",
+                    "labelId": "gnhome.customFilterExample",
+                    "query": {
+                        "filter{regions.name.in}": [
+                            "Global"
+                        ]
+                    }
                 }
             ]
         },

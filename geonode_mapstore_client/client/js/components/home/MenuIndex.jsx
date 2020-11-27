@@ -70,20 +70,24 @@ function MenuItem({
             </Tag>
         );
     }
-    const active = castArray(query.f || []).find(value => value === item.id);
-    return (
-        <Tag
-            tabIndex={tabIndex}
-            draggable={draggable}
-            active={active}
-            href={formatHref({
-                query: { f: item.id },
-                replaceQuery: active ? false : true
-            })}
-        >
-            {labelId && <Message msgId={labelId}/> || label}
-        </Tag>
-    );
+    if (type === 'filter') {
+        const active = castArray(query.f || []).find(value => value === item.id);
+        return (
+            <Tag
+                tabIndex={tabIndex}
+                draggable={draggable}
+                active={active}
+                href={formatHref({
+                    query: { f: item.id },
+                    replaceQuery: active ? false : true
+                })}
+            >
+                {labelId && <Message msgId={labelId}/> || label}
+            </Tag>
+        );
+    }
+
+    return null;
 }
 
 const MenuIndex = forwardRef(({

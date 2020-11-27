@@ -90,7 +90,8 @@
             "inviteUsers": "Invite Users",
             "addUser": "Add User",
             "createGroup": "Create Group",
-            "developers": "Developers"
+            "developers": "Developers",
+            "customFilterExample": "Custom Filter (Global)"
         }
     }
 }

@@ -12,9 +12,12 @@ import {
     setRequestOptions,
     getRequestOptions
 } from '@js/utils/APIUtils';
+import mergeWith from 'lodash/mergeWith';
 import isArray from 'lodash/isArray';
+import isString from 'lodash/isString';
 import castArray from 'lodash/castArray';
 import { getUserInfo } from '@js/api/geonode/v1';
+import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
 
 let endpoints = {
     // default values
@@ -85,13 +88,42 @@ export const getEndpoints = () => {
         });
 };
 
+function mergeCustomQuery(params, customQuery) {
+    if (customQuery) {
+        return mergeWith(
+            { ...params },
+            { ...customQuery },
+            (objValue, srcValue) => {
+                if (isArray(objValue) && isArray(srcValue)) {
+                    return [...objValue, ...srcValue];
+                }
+                if (isString(objValue) && isArray(srcValue)) {
+                    return [objValue, ...srcValue];
+                }
+                if (isArray(objValue) && isString(srcValue)) {
+                    return [...objValue, srcValue];
+                }
+                if (isString(objValue) && isString(srcValue)) {
+                    return [ objValue, srcValue ];
+                }
+                return undefined; // eslint-disable-line consistent-return
+            }
+        );
+    }
+    return params;
+}
+
 export const getResources = ({
     q,
     pageSize = 20,
     page = 1,
     sort,
+    f,
     ...params
 }) => {
+    const { query: customQuery } = (getConfigProp('menuFilters') || [])
+        .find(({ id }) => f === id) || {};
+
     return requestOptions(RESOURCES, () => axios.get(parseDevHostname(
         addQueryString(endpoints[RESOURCES], q && {
             search: q,
@@ -99,7 +131,7 @@ export const getResources = ({
         })
     ), {
         params: {
-            ...params,
+            ...mergeCustomQuery(params, customQuery),
             ...(sort && { sort: isArray(sort) ? sort : [ sort ]}),
             page,
             page_size: pageSize

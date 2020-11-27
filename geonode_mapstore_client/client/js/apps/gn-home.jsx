@@ -119,6 +119,8 @@ Promise.all([
             ? config.translationsPath
             : __GEONODE_PROJECT_CONFIG__.translationsPath
         );
+        const menuFilters = geoNodeConfiguration?.menu?.items?.filter(({ type }) => type === 'filter');
+        setConfigProp('menuFilters', menuFilters);
         const securityInitialState = user?.info?.access_token
             && {
                 security: {
