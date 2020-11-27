@@ -248,7 +248,8 @@ function Home({
                 containerStyle={!isHeroVisible
                     ? {
                         marginTop: dimensions.brandNavbarHeight,
-                        minHeight: `calc(100vh - ${dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight + dimensions.footerNodeHeight}px )`
+                        minHeight: `calc(100vh - ${dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight + dimensions.footerNodeHeight}px )`,
+                        paddingBottom: dimensions.footerNodeHeight
                     }
                     : undefined}
                 column={

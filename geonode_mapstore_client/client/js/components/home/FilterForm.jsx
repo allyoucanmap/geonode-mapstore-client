@@ -14,8 +14,60 @@ import Message from '@mapstore/framework/components/I18N/Message';
 import localizedProps from '@mapstore/framework/components/misc/enhancers/localizedProps';
 import FaIcon from '@js/components/home/FaIcon';
 import FilterByExtent from '@js/components/home/FilterByExtent';
+import {
+    getKeywords,
+    getCategories,
+    getRegions,
+    getOwners
+} from '@js/api/geonode/v1';
 
-const Select = localizedProps('placeholder')(ReactSelect);
+const SelectSync = localizedProps('placeholder')(ReactSelect);
+const SelectAsync = localizedProps('placeholder')(ReactSelect.Async);
+
+const suggestionsRequestTypes = {
+    categories: {
+        filterKey: 'filter{category.identifier.in}',
+        loadOptions: (q) => getCategories({ q })
+            .then(results => ({
+                options: results
+                    .map(({
+                        identifier
+                    }) => ({
+                        label: identifier,
+                        value: identifier
+                    }))
+            }))
+            .catch(() => null)
+    },
+    keywords: {
+        filterKey: 'filter{keywords.slug.in}',
+        loadOptions: (q) => getKeywords({ q })
+            .then(results => ({
+                options: results
+                    .map(({ slug }) => ({ label: slug, value: slug }))
+            }))
+            .catch(() => null)
+    },
+    regions: {
+        filterKey: 'filter{regions.name.in}',
+        loadOptions: (q) => getRegions({ q })
+            .then(results => ({
+                options: results
+                    .map(({ name }) => ({ label: name, value: name }))
+            }))
+            .catch(() => null)
+    },
+    owners: {
+        filterKey: 'filter{owner.username.in}',
+        loadOptions: (q) => getOwners({ q })
+            .then(results => ({
+                options: results
+                    .map(({ username }) => ({ label: username, value: username }))
+            }))
+            .catch(() => null)
+    }
+};
+
 function FilterForm({
     id,
     show,
@@ -36,8 +88,10 @@ function FilterForm({
     };
 
     useEffect(() => {
-        const newValues = state.current.fields.reduce((acc, { id: formId }) => {
-            const filterKey = `filter{${formId}.in}`;
+        const newValues = state.current.fields.reduce((acc, { id: formId, suggestionsRequestKey }) => {
+            const filterKey = suggestionsRequestKey
+                ? suggestionsRequestTypes[suggestionsRequestKey].filterKey
+                : `filter{${formId}.in}`;
             if (!state.current.query[filterKey]) {
                 return acc;
             }
@@ -99,11 +153,20 @@ function FilterForm({
                             label,
                             placeholderId,
                             description,
-                            options
+                            options,
+                            suggestionsRequestKey
                         }) => {
-                            const key = `${id}-${formId}`;
-                            const filterKey = `filter{${formId}.in}`;
-                            const currentValues = values[filterKey] || [];
+                            const key = `${id}-${formId || suggestionsRequestKey}`;
+                            const filterKey = suggestionsRequestKey
+                                ? suggestionsRequestTypes[suggestionsRequestKey].filterKey
+                                : `filter{${formId}.in}`;
+                            const currentValues = suggestionsRequestKey
+                                ? values[suggestionsRequestTypes[suggestionsRequestKey].filterKey] || []
+                                : values[filterKey] || [];
+                            const optionsProp = suggestionsRequestKey
+                                ? { loadOptions: suggestionsRequestTypes[suggestionsRequestKey].loadOptions }
+                                : { options: options.map(option => ({ value: option, label: option })) };
+                            const Select = suggestionsRequestKey ? SelectAsync : SelectSync;
                             return (
                                 <Form.Group
                                     key={key}
@@ -112,10 +175,6 @@ function FilterForm({
                                     <Form.Label><strong>{labelId ? <Message msgId={labelId}/> : label}</strong></Form.Label>
                                     <Select
                                         value={currentValues}
-                                        options={options.map(option => ({
-                                            value: option,
-                                            label: option
-                                        }))}
                                         multi
                                         placeholder={placeholderId}
                                         onChange={(selected) => {
@@ -124,6 +183,7 @@ function FilterForm({
                                                 [filterKey]: selected.map(({ value }) => value)
                                             });
                                         }}
+                                        { ...optionsProp }
                                     />
                                     {description &&
                                         <Form.Text className="text-muted">
