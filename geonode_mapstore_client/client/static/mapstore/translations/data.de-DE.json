@@ -89,7 +89,9 @@
             "addUser": "Benutzer hinzufügen",
             "createGroup": "Gruppe erstellen",
             "developers": "Entwickler",
-            "customFilterExample": "Benutzerdefinierter Filter (Global)"
+            "customFilterExample": "Benutzerdefinierter Filter (Global)",
+            "copiedResourceUrl": "Ressourcen-URL kopiert!",
+            "copyResourceUrl": "Ressourcen-URL kopieren"
         }
     }
 }

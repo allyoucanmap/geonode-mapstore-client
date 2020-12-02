@@ -89,7 +89,9 @@
             "addUser": "Add user",
             "createGroup": "Create group",
             "developers": "Developers",
-            "customFilterExample": "Custom filter (Global)"
+            "customFilterExample": "Custom filter (Global)",
+            "copiedResourceUrl": "Resource url copied!",
+            "copyResourceUrl": "Copy resource url"
         }
     }
 }
