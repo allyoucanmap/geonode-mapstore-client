@@ -26,6 +26,7 @@ import Home from '@js/routes/Home';
 import gnsearch from '@js/reducers/gnsearch';
 import gnresource from '@js/reducers/gnresource';
 import gnsearchEpics from '@js/epics/gnsearch';
+import gnlocaleEpics from '@js/epics/gnlocale';
 
 import {
     getConfiguration,
@@ -96,21 +97,17 @@ axios.interceptors.request.use(
     }
 );
 
-const setLocale = (localeKey) => {
-    const supportedLocales = getSupportedLocales();
-    const locale = supportedLocales[localeKey]
-        ? { [localeKey]: supportedLocales[localeKey] }
-        : { en: supportedLocales.en };
-    setSupportedLocales(locale);
-};
-
 Promise.all([
     getConfiguration('/static/mapstore/configs/localConfig.json'),
     getAccountInfo(),
     getEndpoints()
 ])
     .then(([localConfig, user]) => {
-        const { geoNodeConfiguration, ...config } = localConfig;
+        const {
+            geoNodeConfiguration,
+            supportedLocales: defaultSupportedLocales,
+            ...config
+        } = localConfig;
         const geoNodePageConfig = window.__GEONODE_PAGE_CONFIG__ || {};
         Object.keys(config).forEach((key) => {
             setConfigProp(key, config[key]);
@@ -119,6 +116,10 @@ Promise.all([
             ? config.translationsPath
             : __GEONODE_PROJECT_CONFIG__.translationsPath
         );
+        const supportedLocales = defaultSupportedLocales || getSupportedLocales();
+        setSupportedLocales(supportedLocales);
+        const locale = supportedLocales[geoNodePageConfig.languageCode]?.code;
+        setConfigProp('locale', locale);
         const menuFilters = geoNodeConfiguration?.menu?.items?.filter(({ type }) => type === 'filter');
         setConfigProp('menuFilters', menuFilters);
         const securityInitialState = user?.info?.access_token
@@ -128,7 +129,6 @@ Promise.all([
                     token: user.info.access_token
                 }
             };
-        setLocale(geoNodePageConfig.languageCode);
         // home app entry point
         main({
             appComponent: withRoutes(routes)(ConnectedRouter),
@@ -146,7 +146,8 @@ Promise.all([
                 security
             },
             appEpics: {
-                ...gnsearchEpics
+                ...gnsearchEpics,
+                ...gnlocaleEpics
             },
             geoNodeConfiguration
         });

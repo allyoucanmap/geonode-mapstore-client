@@ -13,6 +13,9 @@ import url from 'url';
 import { createSelector } from 'reselect';
 import { Button } from 'react-bootstrap-v1';
 import castArray from 'lodash/castArray';
+import { loadLocale } from '@mapstore/framework/actions/locale';
+import { currentLocaleSelector } from '@mapstore/framework/selectors/locale';
+
 import FaIcon from '@js/components/home/FaIcon';
 
 import SearchBar from '@js/components/home/SearchBar';
@@ -23,6 +26,7 @@ import CardGrid from '@js/components/home/CardGrid';
 import DetailsPanel from '@js/components/home/DetailsPanel';
 import FiltersMenu from '@js/components/home/FiltersMenu';
 import FilterForm from '@js/components/home/FilterForm';
+import LanguageSelector from '@js/components/home/LanguageSelector';
 import {
     fetchSuggestions,
     searchResources,
@@ -34,8 +38,20 @@ import { withResizeDetector } from 'react-resize-detector';
 import Footer from '@js/components/home/Footer';
 import { useInView } from 'react-intersection-observer';
 
+
 const DEFAULT_SUGGESTIONS = [];
 const DEFAULT_RESOURCES = [];
+
+const ConnectedLanguageSelector = connect(
+    createSelector([
+        currentLocaleSelector
+    ], (value) => ({
+        value
+    })),
+    {
+        onSelect: loadLocale.bind(null, null)
+    }
+)(LanguageSelector);
 
 const ConnectedSearchBar = connect(
     createSelector([
@@ -241,6 +257,10 @@ function Home({
                 query={query}
                 menuItems={menu?.items}
                 formatHref={handleFormatHref}
+                tools={<ConnectedLanguageSelector
+                    inline={theme?.languageSelector?.inline}
+                    style={theme?.languageSelector?.style}
+                />}
             />
             <ConnectedCardGrid
                 user={user}

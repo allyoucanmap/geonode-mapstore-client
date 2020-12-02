@@ -8,6 +8,7 @@
 
 import axios from '@mapstore/framework/libs/ajax';
 import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
+import cookies from 'js-cookie';
 
 /**
 * Api for GeoNode v1
@@ -107,10 +108,20 @@ export const getOwners = ({ q, ...params }) => {
         });
 };
 
+export const setLanguage = (languageCode) => {
+    const csrfMiddlewareToken = cookies.get('csrftoken');
+    return axios.post('/i18n/setlang/', `csrfmiddlewaretoken=${csrfMiddlewareToken}&language=${languageCode}`, {
+        params: {
+            next: '/static/mapstore/configs/placeholder.json'
+        }
+    });
+};
+
 export default {
     getResourceByPk,
     getCategories,
     getKeywords,
     getRegions,
-    getOwners
+    getOwners,
+    setLanguage
 };

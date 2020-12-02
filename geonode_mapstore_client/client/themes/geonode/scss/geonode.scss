@@ -66,8 +66,8 @@
         }
 
         .gn-card-grid,
-        .gn-filter-menu,
-        .gn-filter-menu-content .gn-swipe-menu .btn {
+        .gn-filters-menu,
+        .gn-filters-menu-content .gn-swipe-menu .btn {
             @include color-var(map.get($theme-vars, 'body-shade-color'), --gn-body-shade-color);
             @include background-color-var(map.get($theme-vars, 'body-shade-bg'), --gn-body-shade-bg);
         }
@@ -199,19 +199,15 @@
                 text-decoration: none;
             }
 
-            /*
             &.active,
             &:active {
-                color: $dropdown-link-active-color;
-                text-decoration: none;
-                @include gradient-bg($dropdown-link-active-bg);
+                @include color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
+                @include background-color-var(map.get($theme-vars, 'primary-bg'), --gn-primary-bg);
+                @include hover-focus() {
+                    @include color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
+                    @include background-color-var(map.get($theme-vars, 'primary-bg'), --gn-primary-bg);
+                }
             }
-            */
-            /*
-            &.disabled,
-            &:disabled {
-            }
-            */
         }
 
         .list-group-item-action {
@@ -231,12 +227,7 @@
             @include color-var(map.get($theme-vars, 'body-color'), --gn-body-color);
             @include background-color-var(map.get($theme-vars, 'body-bg'), --gn-body-bg);
             @include border-color-var(map.get($theme-vars, 'body-border-color'), --gn-body-border-color);
-            /*
-            &.disabled,
-            &:disabled {
 
-            }
-            */
             &.active {
                 @include color-var(map.get($theme-vars, 'body-shade-color'), --gn-body-shade-color);
                 @include background-color-var(map.get($theme-vars, 'body-shade-bg'), --gn-body-shade-bg);
