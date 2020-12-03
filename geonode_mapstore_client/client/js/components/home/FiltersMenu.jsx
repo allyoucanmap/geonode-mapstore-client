@@ -12,6 +12,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import SwipeMenu from '@js/components/home/SwipeMenu';
 import Message from '@mapstore/framework/components/I18N/Message';
 import Tag from '@js/components/home/Tag';
+import { getFilterLabelById } from '@js/utils/GNSearchUtils';
 
 function MenuItem({
     tabIndex,
@@ -30,7 +31,7 @@ function MenuItem({
                 query: { [item.key]: item.value }
             })}
         >
-            {item.value}
+            {getFilterLabelById(item.key, item.value) || item.value}
         </Tag>
     );
 }
