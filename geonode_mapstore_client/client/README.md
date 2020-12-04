@@ -9,13 +9,13 @@ This project contains following applications:
 - [Homepage](#homepage)
 
 ## MapStore js API
-Api used inside django template to display map and layer viewer
+Api used inside django templates to show map and layer viewers
 
 ## GeoStory
-This application displays stories with map and geospatial data
+This application allow to show and edit stories with map and geospatial data
 ## Homepage
 
-This application displays an homepage that interact with the GeoNode API v2 and shows available resources. You can enable this app by replacing the content of the index.html of a GeoNode project with the [home.html](home.html) template.
+This single application is an alternative homepage that interact with the GeoNode API v2 and shows available resources. You can enable this app by replacing the content of the index.html of a GeoNode project with the [home.html](home.html) template.
 
 The homepage configuration file is located in [localConfig.json](static/mapstore/configs/localConfig.json) and it exposes specific properties to customize the homepage theme and structure:
 
