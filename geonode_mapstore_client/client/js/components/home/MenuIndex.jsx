@@ -30,6 +30,21 @@ function MenuItem({
     const { formatHref, query, state } = menuItemsProps;
     const { type, label, labelId = '', items = [], href } = item;
     if (type === 'dropdown') {
+        const dropdownItems = items
+            .filter((itm) => filterMenuItems(state, itm, item))
+            .map((itm, idx) => {
+                if (itm.type === 'divider') {
+                    return <Dropdown.Divider key={idx} />;
+                }
+                return (
+                    <Dropdown.Item
+                        key={idx}
+                        href={readProperty(state, itm.href)}
+                    >
+                        {itm.labelId && <Message msgId={itm.labelId}/> || itm.label}
+                    </Dropdown.Item>
+                );
+            });
         return (
             <Dropdown>
                 <Dropdown.Toggle
@@ -39,23 +54,13 @@ function MenuItem({
                 >
                     {labelId && <Message msgId={labelId}/> || label}
                 </Dropdown.Toggle>
-                {containerNode && createPortal(<Dropdown.Menu>
-                    {items
-                        .filter((itm) => filterMenuItems(state, itm, item))
-                        .map((itm, idx) => {
-                            if (itm.type === 'divider') {
-                                return <Dropdown.Divider key={idx} />;
-                            }
-                            return (
-                                <Dropdown.Item
-                                    key={idx}
-                                    href={readProperty(state, itm.href)}
-                                >
-                                    {itm.labelId && <Message msgId={itm.labelId}/> || itm.label}
-                                </Dropdown.Item>
-                            );
-                        })}
-                </Dropdown.Menu>, containerNode.parentNode)}
+                {containerNode
+                    ? createPortal(<Dropdown.Menu>
+                        {dropdownItems}
+                    </Dropdown.Menu>, containerNode.parentNode)
+                    : <Dropdown.Menu>
+                        {dropdownItems}
+                    </Dropdown.Menu>}
             </Dropdown>
         );
     }
@@ -69,6 +74,9 @@ function MenuItem({
                 {labelId && <Message msgId={labelId}/> || label}
             </Tag>
         );
+    }
+    if (type === 'divider') {
+        return <div className="gn-menu-index-divider"></div>;
     }
     if (type === 'filter') {
         const active = castArray(query.f || []).find(value => value === item.id);
@@ -92,7 +100,8 @@ function MenuItem({
 
 const MenuIndex = forwardRef(({
     style,
-    menuItems,
+    leftItems,
+    rightItems,
     query,
     formatHref,
     user,
@@ -115,7 +124,7 @@ const MenuIndex = forwardRef(({
                             style={{ height }}
                         >
                             <SwipeMenu
-                                items={menuItems
+                                items={leftItems
                                     .filter((item) => filterMenuItems(state, item))}
                                 menuItemComponent={MenuItem}
                                 menuItemsProps={{
@@ -128,6 +137,24 @@ const MenuIndex = forwardRef(({
                     )}
                 </ReactResizeDetector>
                 {tools && <div className="gn-menu-index-tools">
+                    <ul className="gn-menu-index-right-items">
+                        {rightItems
+                            .filter((item) => filterMenuItems(state, item))
+                            .map((item, idx) => {
+                                return (
+                                    <li key={idx}>
+                                        <MenuItem
+                                            item={{ ...item, id: item.id || idx }}
+                                            menuItemsProps={{
+                                                query,
+                                                formatHref,
+                                                state
+                                            }}
+                                        />
+                                    </li>
+                                );
+                            })}
+                    </ul>
                     {tools}
                 </div>}
             </div>
@@ -137,14 +164,16 @@ const MenuIndex = forwardRef(({
 
 MenuIndex.propTypes = {
     style: PropTypes.object,
-    menuItems: PropTypes.array,
+    leftItems: PropTypes.array,
+    rightItems: PropTypes.array,
     query: PropTypes.object,
     formatHref: PropTypes.func,
     tools: PropTypes.node
 };
 
 MenuIndex.defaultProps = {
-    menuItems: [],
+    leftItems: [],
+    rightItems: [],
     query: {},
     formatHref: () => '#'
 };
