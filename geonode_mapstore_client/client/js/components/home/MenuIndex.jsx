@@ -10,6 +10,7 @@ import React, { forwardRef } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
+import isNil from 'lodash/isNil';
 import ReactResizeDetector from 'react-resize-detector';
 import SwipeMenu from '@js/components/home/SwipeMenu';
 import Tag from '@js/components/home/Tag';
@@ -20,6 +21,8 @@ import {
     filterMenuItems
 } from '@js/utils/MenuUtils';
 import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
+
+const isValidBadgeValue = value => !!(value !== '' && !isNil(value));
 
 function MenuItem({
     tabIndex,
@@ -46,7 +49,7 @@ function MenuItem({
                         style={itm.style}
                     >
                         {itm.labelId && <Message msgId={itm.labelId}/> || itm.label}
-                        {itmBadgeValue && <Badge>{itmBadgeValue}</Badge>}
+                        {isValidBadgeValue(itmBadgeValue) && <Badge>{itmBadgeValue}</Badge>}
                     </Dropdown.Item>
                 );
             });
@@ -59,7 +62,7 @@ function MenuItem({
                     style={style}
                 >
                     {labelId && <Message msgId={labelId}/> || label}
-                    {badgeValue && <Badge>{badgeValue}</Badge>}
+                    {isValidBadgeValue(badgeValue) && <Badge>{badgeValue}</Badge>}
                 </Dropdown.Toggle>
                 {containerNode
                     ? createPortal(<Dropdown.Menu>
@@ -80,7 +83,7 @@ function MenuItem({
                 style={style}
             >
                 {labelId && <Message msgId={labelId}/> || label}
-                {badgeValue && <Badge>{badgeValue}</Badge>}
+                {isValidBadgeValue(badgeValue) && <Badge>{badgeValue}</Badge>}
             </Tag>
         );
     }
@@ -101,7 +104,7 @@ function MenuItem({
                 })}
             >
                 {labelId && <Message msgId={labelId}/> || label}
-                {badgeValue && <Badge>{badgeValue}</Badge>}
+                {isValidBadgeValue(badgeValue) && <Badge>{badgeValue}</Badge>}
             </Tag>
         );
     }
