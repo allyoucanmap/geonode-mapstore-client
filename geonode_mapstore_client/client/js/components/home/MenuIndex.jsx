@@ -13,12 +13,13 @@ import castArray from 'lodash/castArray';
 import ReactResizeDetector from 'react-resize-detector';
 import SwipeMenu from '@js/components/home/SwipeMenu';
 import Tag from '@js/components/home/Tag';
-import { Dropdown } from 'react-bootstrap-v1';
+import { Dropdown, Badge } from 'react-bootstrap-v1';
 import Message from '@mapstore/framework/components/I18N/Message';
 import {
     readProperty,
     filterMenuItems
 } from '@js/utils/MenuUtils';
+import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
 
 function MenuItem({
     tabIndex,
@@ -28,7 +29,8 @@ function MenuItem({
     containerNode
 }) {
     const { formatHref, query, state } = menuItemsProps;
-    const { type, label, labelId = '', items = [], href } = item;
+    const { type, label, labelId = '', items = [], href, style, badge = '' } = item;
+    const badgeValue = readProperty(state, badge);
     if (type === 'dropdown') {
         const dropdownItems = items
             .filter((itm) => filterMenuItems(state, itm, item))
@@ -36,12 +38,15 @@ function MenuItem({
                 if (itm.type === 'divider') {
                     return <Dropdown.Divider key={idx} />;
                 }
+                const itmBadgeValue = readProperty(state, itm.badge || '');
                 return (
                     <Dropdown.Item
                         key={idx}
                         href={readProperty(state, itm.href)}
+                        style={itm.style}
                     >
                         {itm.labelId && <Message msgId={itm.labelId}/> || itm.label}
+                        {itmBadgeValue && <Badge>{itmBadgeValue}</Badge>}
                     </Dropdown.Item>
                 );
             });
@@ -51,8 +56,10 @@ function MenuItem({
                     id={'gn-menu-index-' + item.id}
                     variant="default"
                     tabIndex={tabIndex}
+                    style={style}
                 >
                     {labelId && <Message msgId={labelId}/> || label}
+                    {badgeValue && <Badge>{badgeValue}</Badge>}
                 </Dropdown.Toggle>
                 {containerNode
                     ? createPortal(<Dropdown.Menu>
@@ -70,13 +77,15 @@ function MenuItem({
                 tabIndex={tabIndex}
                 draggable={draggable}
                 href={readProperty(state, href)}
+                style={style}
             >
                 {labelId && <Message msgId={labelId}/> || label}
+                {badgeValue && <Badge>{badgeValue}</Badge>}
             </Tag>
         );
     }
     if (type === 'divider') {
-        return <div className="gn-menu-index-divider"></div>;
+        return <div className="gn-menu-index-divider" style={style}></div>;
     }
     if (type === 'filter') {
         const active = castArray(query.f || []).find(value => value === item.id);
@@ -85,12 +94,14 @@ function MenuItem({
                 tabIndex={tabIndex}
                 draggable={draggable}
                 active={active}
+                style={style}
                 href={formatHref({
                     query: { f: item.id },
                     replaceQuery: active ? false : true
                 })}
             >
                 {labelId && <Message msgId={labelId}/> || label}
+                {badgeValue && <Badge>{badgeValue}</Badge>}
             </Tag>
         );
     }
@@ -108,7 +119,10 @@ const MenuIndex = forwardRef(({
     tools
 }, ref) => {
 
-    const state = { user };
+    const state = {
+        user,
+        ...(getConfigProp('geoNodeResourcesInfo') || {})
+    };
 
     return (
         <nav

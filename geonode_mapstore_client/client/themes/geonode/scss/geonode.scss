@@ -76,6 +76,14 @@
         .gn-menu-index {
             @include color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
             @include background-color-var(map.get($theme-vars, 'primary-bg'), --gn-primary-bg);
+            .badge {
+                @include color-var(map.get($theme-vars, 'primary-bg'), --gn-primary-bg);
+                @include background-color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
+            }
+            .dropdown-menu .badge {
+                @include color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
+                @include background-color-var(map.get($theme-vars, 'primary-bg'), --gn-primary-bg);
+            }
         }
         .gn-menu-index-divider {
             @include background-color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
@@ -129,6 +137,10 @@
                 @include color-var(map.get($theme-vars, 'primary-bg'), --gn-primary-bg);
                 @include background-color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
                 opacity: 1;
+                .badge {
+                    @include color-var(map.get($theme-vars, 'primary-color'), --gn-primary-color);
+                    @include background-color-var(map.get($theme-vars, 'primary-bg'), --gn-primary-bg);
+                }
             }
         }
 
