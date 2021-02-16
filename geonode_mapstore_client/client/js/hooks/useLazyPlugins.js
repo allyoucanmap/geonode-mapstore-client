@@ -64,13 +64,21 @@ function useLazyPlugins({
                 });
                 augmentStore({ reducers, epics });
                 return pluginsKeys.map((pluginName, idx) => {
-                    const impl = impls[idx];
+                    const { loadPlugin, enabler, ...impl } = impls[idx];
                     const pluginDef = {
                         [pluginName]: {
                             [pluginName]: {
-                                loadPlugin: (resolve) => {
-                                    resolve(impl);
-                                }
+                                ...impl.containers,
+                                ...(enabler && { enabler: (state) => {
+                                    return enabler(state);
+                                }}),
+                                loadPlugin: loadPlugin
+                                    ? (resolve) => loadPlugin((component) => {
+                                        resolve({ ...impl, component });
+                                    })
+                                    : (resolve) => {
+                                        resolve(impl);
+                                    }
                             }
                         }
                     };

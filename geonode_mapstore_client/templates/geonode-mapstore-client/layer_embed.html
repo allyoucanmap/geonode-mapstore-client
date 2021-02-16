@@ -6,6 +6,12 @@
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% if TWITTER_CARD %}
+            {% include "base/_resourcebase_twittercard.html" %}
+        {% endif %}
+        {% if OPENGRAPH_ENABLED %}
+            {% include "base/_resourcebase_opengraph.html" %}
+        {% endif %}
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
         <title>{{ SITE_NAME }}</title>
@@ -87,7 +93,7 @@
                 languageCode: '{{ LANGUAGE_CODE }}',
                 resourceConfig: {{ ms2_config|default:"false"|safe }},
                 permissionsList: {{ perms_list|default:'[]' }},
-                pluginsConfigKey: 'map_embed',
+                pluginsConfigKey: 'layer_embed',
                 localConfig: {
                     proxyUrl: {
                         url: '{{ PROXY_URL|default:"/proxy/?url=" }}',

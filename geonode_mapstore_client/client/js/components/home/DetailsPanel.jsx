@@ -64,11 +64,11 @@ function DetailsPanel({
 
     const types = getTypesInfo();
     const {
-        embed,
+        formatEmbedUrl = embedUrl => embedUrl,
         icon,
         name
     } = resource && (types[resource.doc_type] || types[resource.resource_type]) || {};
-    const embedUrl = embed && embed.replace('{pk}', resource.pk);
+    const embedUrl = resource?.embed_url && formatEmbedUrl(resource.embed_url);
     return (
         <div
             ref={detailsContainerNode}
