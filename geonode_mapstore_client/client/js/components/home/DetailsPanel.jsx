@@ -87,8 +87,20 @@ function DetailsPanel({
                     </Button>
                 </div>
                 <div className="gn-details-panel-preview">
+                    <div
+                        style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                        <FaIcon name={icon}/>
+                    </div>
                     {embedUrl
                         ? <iframe
+                            key={embedUrl}
                             src={embedUrl}
                             style={{
                                 position: 'absolute',
