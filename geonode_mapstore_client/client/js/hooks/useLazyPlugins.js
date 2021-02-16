@@ -69,9 +69,7 @@ function useLazyPlugins({
                         [pluginName]: {
                             [pluginName]: {
                                 ...impl.containers,
-                                ...(enabler && { enabler: (state) => {
-                                    return enabler(state);
-                                }}),
+                                ...(enabler && { enabler }),
                                 loadPlugin: loadPlugin
                                     ? (resolve) => loadPlugin((component) => {
                                         resolve({ ...impl, component });

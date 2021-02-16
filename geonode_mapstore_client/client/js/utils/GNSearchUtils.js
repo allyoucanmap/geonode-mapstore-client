@@ -99,7 +99,6 @@ export const getResourceTypesInfo = () => ({
     },
     'geostory': {
         icon: 'book-open',
-        embed: '/apps/{pk}/embed',
         name: 'GeoStory'
     },
     'image': {
