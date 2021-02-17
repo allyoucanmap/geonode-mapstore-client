@@ -88,6 +88,7 @@ function DetailsPanel({
                 </div>
                 <div className="gn-details-panel-preview">
                     <div
+                        className="gn-loader-placeholder"
                         style={{
                             position: 'absolute',
                             width: '100%',
