@@ -53,7 +53,7 @@ function parseMapConfig({ data, attributes, user, id }, resource) {
         canDelete: true,
         canEdit: true,
         name: metadata.title,
-        description: metadata.abstract,
+        description: metadata.raw_abstract,
         thumbnail: metadata.thumbnail || resource?.data?.thumbnail,
         type: 'map'
     };
@@ -96,7 +96,7 @@ const loadMediaList = {
                     thumbnail: resource.thumbnail_url,
                     src: resource.href,
                     title: resource.title,
-                    description: resource.abstract,
+                    description: resource.raw_abstract,
                     alt: resource.alternate,
                     credits: resource.attribution,
                     sourceId
@@ -146,7 +146,7 @@ const loadMediaList = {
                     thumbnail: resource.thumbnail_url,
                     src: resource.href,
                     title: resource.title,
-                    description: resource.abstract,
+                    description: resource.raw_abstract,
                     credits: resource.attribution,
                     sourceId
                 }
@@ -176,7 +176,7 @@ const loadMediaList = {
                 data: {
                     thumbnail: resource.thumbnail_url,
                     title: resource.title,
-                    description: resource.abstract,
+                    description: resource.raw_abstract,
                     id: resource.pk,
                     sourceId
                 }
