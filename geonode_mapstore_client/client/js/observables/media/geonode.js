@@ -53,7 +53,7 @@ function parseMapConfig({ data, attributes, user, id }, resource) {
         canDelete: true,
         canEdit: true,
         name: metadata.title,
-        description: metadata.raw_abstract,
+        description: metadata.abstract,
         thumbnail: metadata.thumbnail || resource?.data?.thumbnail,
         type: 'map'
     };
