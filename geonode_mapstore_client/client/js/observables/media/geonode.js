@@ -52,9 +52,9 @@ function parseMapConfig({ data, attributes, user, id }, resource) {
         canCopy: true,
         canDelete: true,
         canEdit: true,
-        name: metadata.title,
-        description: metadata.abstract,
-        thumbnail: metadata.thumbnail || resource?.data?.thumbnail,
+        name: resource?.data?.title || metadata.title,
+        description: resource?.data?.description || metadata.abstract,
+        thumbnail: resource?.data?.thumbnail || metadata.thumbnail,
         type: 'map'
     };
 }
