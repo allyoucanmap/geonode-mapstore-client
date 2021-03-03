@@ -1,7 +1,1 @@
-[
-    {
-        "op": "add",
-        "jsonpath": "/geoNodeConfiguration/theme/color",
-        "value": "#2233aa"
-    }
-]
+[]
