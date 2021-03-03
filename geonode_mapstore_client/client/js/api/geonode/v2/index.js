@@ -19,6 +19,7 @@ import castArray from 'lodash/castArray';
 import { getUserInfo } from '@js/api/geonode/v1';
 import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
 import { setFilterById } from '@js/utils/GNSearchUtils';
+import { mergeConfigsPatch } from '@js/utils/PatchUtils';
 
 let endpoints = {
     // default values
@@ -275,10 +276,23 @@ export const getAccountInfo = () => {
         .catch(() => null);
 };
 
-export const getConfiguration = (configUrl) => {
-    return axios.get(configUrl)
-        .then(({ data }) => {
-            return data;
+export const getConfiguration = (
+    configUrl = '/static/mapstore/configs/localConfig.json',
+    patchesUrls = [ '/static/mapstore/configs/localConfig.override.json' ]
+) => {
+    return axios.all([
+        axios.get(configUrl)
+            .then(({ data }) => data),
+        ...(patchesUrls || [])
+            .map((patchUrl) =>
+                axios.get(patchUrl)
+                    .then(({ data }) => data)
+                    .catch(() => null)
+            )
+    ])
+        .then((response) => {
+            const [config, ...patches] = response;
+            return mergeConfigsPatch(config, patches.filter(patch => patch));
         });
 };
 
