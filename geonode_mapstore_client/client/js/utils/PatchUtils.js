@@ -29,13 +29,17 @@ export const transformPath = (paths) => {
  */
 export const convertToJsonPatch = (sourceJSON = {}, rawRules = []) => {
     const patchRules = castArray(rawRules).reduce(
-        (p, { op, jsonpath, value }) => {
+        (p, { op, jsonpath, path: jsonpatch, value }) => {
             let transformedPaths;
-            try {
-                transformedPaths = transformPath(jp.paths(sourceJSON, jsonpath));
-            } catch (e) {
-                // in this case the jsonpath lib failed because the path was not a valid jsonpath one
-                transformedPaths = [jsonpath];
+            if (jsonpatch) {
+                transformedPaths = [jsonpatch];
+            } else {
+                try {
+                    transformedPaths = transformPath(jp.paths(sourceJSON, jsonpath));
+                } catch (e) {
+                    // in this case the jsonpath lib failed because the path was not a valid jsonpath one
+                    transformedPaths = [jsonpath];
+                }
             }
             let transformedRules = transformedPaths.map((path) => {
                 let transformedRule = { op, path };
