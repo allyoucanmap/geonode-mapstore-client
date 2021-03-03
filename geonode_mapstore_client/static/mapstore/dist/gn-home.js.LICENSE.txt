@@ -77,6 +77,8 @@ object-assign
  * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  */
 
+/** @license MIT License (c) copyright 2010-2014 original author or authors */
+
 /** @license React v0.16.2
  * scheduler.production.min.js
  *

@@ -101,6 +101,8 @@
  *
  */
 
+/** @license MIT License (c) copyright 2010-2014 original author or authors */
+
 /** @license React v16.10.1
  * react-dom-server.browser.production.min.js
  *
