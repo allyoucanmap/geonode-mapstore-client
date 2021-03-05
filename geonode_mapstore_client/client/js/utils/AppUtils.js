@@ -71,12 +71,7 @@ export function setupConfiguration({
     Object.keys(config).forEach((key) => {
         setConfigProp(key, config[key]);
     });
-    // overrides from django template
-    if (geoNodePageConfig.localConfig) {
-        Object.keys(geoNodePageConfig.localConfig).forEach((key) => {
-            setConfigProp(key, geoNodePageConfig.localConfig[key]);
-        });
-    }
+
     setConfigProp('translationsPath', config.translationsPath
         ? config.translationsPath
         : __GEONODE_PROJECT_CONFIG__.translationsPath

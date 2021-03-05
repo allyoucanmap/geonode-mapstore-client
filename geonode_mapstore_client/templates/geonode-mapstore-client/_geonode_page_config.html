@@ -1,0 +1,32 @@
+{% load client_lib_tags %}
+<script>
+    {% autoescape off %}
+    window.__GEONODE_PAGE_CONFIG__ = {
+        languageCode: '{{ LANGUAGE_CODE }}',
+        resourceConfig: {{ ms2_config|default:"false"|safe }},
+        permissionsList: {{ perms_list|default:'[]' }},
+        pluginsConfigKey: '{{ plugins_config_key|default:"" }}',
+        localConfig: {
+            proxyUrl: {
+                url: '{{ PROXY_URL|default:"/proxy/?url=" }}',
+                useCORS: []
+            },
+            geonode_url: '{{ SITEURL }}',
+            genode_rest_api: '{{ SITEURL }}mapstore/rest/',
+            printUrl: '{{ GEOSERVER_PUBLIC_LOCATION }}pdf/info.json',
+            bingApiKey: '{% bing_api_key %}'
+        }
+    }
+    {% endautoescape %}
+</script>
+{% block override_local_config %}
+{% comment %}
+<script>
+    window.__GEONODE_PAGE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
+        return _.merge(localConfig, {
+            // ...my config
+        });
+    };
+</script>
+{% endcomment %}
+{% endblock %}
