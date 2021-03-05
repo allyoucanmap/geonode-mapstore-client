@@ -279,7 +279,7 @@ export const getAccountInfo = () => {
 export const getConfiguration = (configUrl = '/static/mapstore/configs/localConfig.json') => {
     return axios.get(configUrl)
         .then(({ data }) => {
-            const geoNodePageConfig = window.__GEONODE_PAGE_CONFIG__ || {};
+            const geoNodePageConfig = window.__GEONODE_CONFIG__ || {};
             const localConfig = _.mergeWith(
                 data,
                 geoNodePageConfig.localConfig || {},

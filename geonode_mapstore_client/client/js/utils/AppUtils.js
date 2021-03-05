@@ -66,7 +66,7 @@ export function setupConfiguration({
         supportedLocales: defaultSupportedLocales,
         ...config
     } = localConfig;
-    const geoNodePageConfig = window.__GEONODE_PAGE_CONFIG__ || {};
+    const geoNodePageConfig = window.__GEONODE_CONFIG__ || {};
 
     Object.keys(config).forEach((key) => {
         setConfigProp(key, config[key]);
