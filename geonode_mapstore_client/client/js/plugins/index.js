@@ -253,7 +253,7 @@ export const plugins = {
     ),
     ViewerLayoutPlugin: toLazyPlugin(
         'ViewerLayout',
-        import(/* webpackChunkName: 'plugins/editor-layout-plugin' */ '@js/plugins/ViewerLayout')
+        import(/* webpackChunkName: 'plugins/viewer-layout-plugin' */ '@js/plugins/ViewerLayout')
     ),
     ActionNavbarPlugin: toLazyPlugin(
         'ActionNavbar',
