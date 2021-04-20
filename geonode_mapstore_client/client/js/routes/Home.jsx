@@ -44,6 +44,10 @@ import {
     getOwners
 } from '@js/api/geonode/v1';
 import { getResourceTypes } from '@js/api/geonode/v2';
+import useLocalStorage from '@js/hooks/useLocalStorage';
+import  { toggleFiltersPanel }  from '@js/actions/gnfiltersPanel';
+
+
 const DEFAULT_SUGGESTIONS = [];
 const DEFAULT_RESOURCES = [];
 const REDIRECT_NOT_ALLOWED = ['/', '/search/'];
@@ -71,6 +75,18 @@ const ConnectedSearchBar = connect(
         onClearSuggestions: updateSuggestions.bind(null, [])
     }
 )(SearchBar);
+
+
+const ConnectedFilterForm = connect(
+    createSelector([
+        state => state?.gnfiltersPanel?.isToggle || false
+    ], (isToggle) => ({
+        isToggle
+    })),
+    {
+        onToggleFilters: toggleFiltersPanel
+    }
+)(FilterForm);
 
 
 const CardGridWithMessageId = ({ query, user, isFirstRequest, ...props }) => {
@@ -171,6 +187,8 @@ function Home({
     theme,
     params,
     onSearch,
+    onToggleFilters,
+    isToggle,
     menu,
     navbar,
     footer,
@@ -234,14 +252,24 @@ function Home({
         heroNodeHeight
     };
 
-    const [showFilterForm, setShowFilterForm] = useState(isFilterForm || false);
+    const [cardLayoutStyle, setCardLayoutStyle] = useLocalStorage('layoutCardsStyle');
+    const [showFilterForm, setShowFilterForm] = useState( (isFilterForm && isToggle) || false);
 
     const handleShowFilterForm = () => {
-        setShowFilterForm(!showFilterForm);
         if (!REDIRECT_NOT_ALLOWED.includes(location.pathname)) {
             window.location = `#/search/${location.search}`;
+            return;
         }
+        setShowFilterForm(!showFilterForm);
+        onToggleFilters();
+
     };
+
+    const handleStoredLayoutStyle = () => {
+        let styleCard = cardLayoutStyle === 'grid' ? 'list' : 'grid';
+        setCardLayoutStyle(styleCard);
+    };
+
 
     function handleUpdate(newParams, pathname) {
         const { query } = url.parse(location.search, true);
@@ -391,8 +419,8 @@ function Home({
 
                 <div className="gn-container">
                     <div className="gn-row">
-                    {showFilterForm && <div ref={filterFormNode} id="gn-filter-form-container" className={`gn-filter-form-container`}>
-                             <FilterForm
+                        {showFilterForm && <div ref={filterFormNode} id="gn-filter-form-container" className={`gn-filter-form-container`}>
+                            <ConnectedFilterForm
                                 key="gn-filter-form"
                                 id="gn-filter-form"
                                 styleContanierForm={ hideHero ? { marginTop: dimensions.brandNavbarHeight, top: (filterFormOffset + dimensions.brandNavbarHeight), maxHeight: stickyFiltersMaxHeight } :
@@ -464,9 +492,11 @@ function Home({
                                     filters={queryFilters}
                                     onClear={handleClear}
                                     onClick={handleShowFilterForm}
+                                    layoutSwitcher={handleStoredLayoutStyle}
                                     orderOptions={filters?.order?.options}
                                     defaultLabelId={filters?.order?.defaultLabelId}
                                 />
+
                             </ConnectedCardGrid>
                         </div>
                     </div>
@@ -507,16 +537,19 @@ const ConnectedHome = connect(
     createSelector([
         state => state?.gnsearch?.params || DEFAULT_PARAMS,
         state => state?.security?.user || null,
-        state => state?.gnresource?.data || null
-    ], (params, user, resource) => ({
+        state => state?.gnresource?.data || null,
+        state => state?.gnfiltersPanel?.isToggle || false
+    ], (params, user, resource, isToggle) => ({
         params,
         user,
-        resource
+        resource,
+        isToggle
 
     })),
     {
         onSearch: searchResources,
-        onSelect: requestResource
+        onSelect: requestResource,
+        onToggleFilters: toggleFiltersPanel
     }
 )(withResizeDetector(Home));
 
