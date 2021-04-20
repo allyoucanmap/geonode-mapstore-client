@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import join from 'lodash/join';
 import { getConfiguredPlugin } from '@mapstore/framework/utils/PluginsUtils';
 
@@ -23,7 +23,7 @@ const usePluginItems = ({
                 Component: getConfiguredPlugin(plg, props.loadedPlugins, props.loaderComponent || <div />)
             })) || [];
     }
-    const props = useState({});
+    const props = useRef({});
     props.current = {
         items,
         loadedPlugins,

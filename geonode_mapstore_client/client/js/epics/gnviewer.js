@@ -89,6 +89,9 @@ export const gnViewerRequestLayerConfig = (action$) =>
                     zoomToExtent(extent, 'EPSG:4326'),
                     setResource(gnLayer)
                 );
+            }).catch(() => {
+                // TODO: implement various error cases
+                return Observable.empty();
             });
         });
 
@@ -103,6 +106,9 @@ export const gnViewerRequestMapConfig = (action$) =>
                     configureMap(adapterMap.data)// ,
                     // setResource(gnLayer)
                 );
+            }).catch(() => {
+                // TODO: implement various error cases
+                return Observable.empty();
             });
         });
 
@@ -118,6 +124,9 @@ export const gnViewerRequestGeoStoryConfig = (action$) =>
                     setCurrentStory(data),
                     setResource(resource)
                 );
+            }).catch(() => {
+                // TODO: implement various error cases
+                return Observable.empty();
             });
         });
 
@@ -131,6 +140,9 @@ export const gnViewerRequestDocumentConfig = (action$) =>
                 return Observable.of(
                     setResource(gnDocument)
                 );
+            }).catch(() => {
+                // TODO: implement various error cases
+                return Observable.empty();
             });
         });
 
