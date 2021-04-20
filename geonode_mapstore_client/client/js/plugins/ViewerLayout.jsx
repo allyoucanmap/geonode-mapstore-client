@@ -14,7 +14,7 @@ import isEqual from 'lodash/isEqual';
 import { createPlugin } from '@mapstore/framework/utils/PluginsUtils';
 import usePluginItems from '@js/hooks/usePluginItems';
 
-function EditorLayout({
+function ViewerLayout({
     items
 }, context) {
     const { loadedPlugins } = context;
@@ -54,7 +54,7 @@ function EditorLayout({
     );
 }
 
-EditorLayout.contextTypes = {
+ViewerLayout.contextTypes = {
     loadedPlugins: PropTypes.object
 };
 
@@ -62,15 +62,15 @@ function arePropsEqual(prevProps, nextProps) {
     return isEqual(prevProps, nextProps);
 }
 
-const MemoizeEditorLayout = memo(EditorLayout, arePropsEqual);
+const MemoizeViewerLayout = memo(ViewerLayout, arePropsEqual);
 
-const EditorLayoutPlugin = connect(
+const ViewerLayoutPlugin = connect(
     createSelector([], () => ({})),
     {}
-)(MemoizeEditorLayout);
+)(MemoizeViewerLayout);
 
-export default createPlugin('EditorLayout', {
-    component: EditorLayoutPlugin,
+export default createPlugin('ViewerLayout', {
+    component: ViewerLayoutPlugin,
     containers: {},
     epics: {},
     reducers: {}

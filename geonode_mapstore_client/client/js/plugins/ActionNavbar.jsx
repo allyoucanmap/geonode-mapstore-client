@@ -34,7 +34,7 @@ const ActionNavbarPlugin = connect(
 export default createPlugin('ActionNavbar', {
     component: ActionNavbarPlugin,
     containers: {
-        EditorLayout: {
+        ViewerLayout: {
             priority: 1,
             target: 'header'
         }

@@ -34,7 +34,7 @@ const BrandNavbarPlugin = connect(
 export default createPlugin('BrandNavbar', {
     component: BrandNavbarPlugin,
     containers: {
-        EditorLayout: {
+        ViewerLayout: {
             priority: 1,
             target: 'header'
         }

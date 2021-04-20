@@ -251,9 +251,9 @@ export const plugins = {
         'DrawerMenu',
         import(/* webpackChunkName: 'plugins/drawer-menu-plugin' */ '@mapstore/framework/plugins/DrawerMenu')
     ),
-    EditorLayoutPlugin: toLazyPlugin(
-        'EditorLayout',
-        import(/* webpackChunkName: 'plugins/editor-layout-plugin' */ '@js/plugins/EditorLayout')
+    ViewerLayoutPlugin: toLazyPlugin(
+        'ViewerLayout',
+        import(/* webpackChunkName: 'plugins/editor-layout-plugin' */ '@js/plugins/ViewerLayout')
     ),
     ActionNavbarPlugin: toLazyPlugin(
         'ActionNavbar',
