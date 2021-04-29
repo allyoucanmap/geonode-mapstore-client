@@ -204,7 +204,8 @@ function Home({
     filters,
     user,
     width,
-    resource
+    resource,
+    totalResources
 }) {
     const pageSize = getPageSize(width);
     const isMounted = useRef();
@@ -473,25 +474,25 @@ function Home({
                                     }
                                     : undefined}
                                 column={ hideHero &&
-                    <ConnectedDetailsPanel
-                        resource={resource}
-                        filters={queryFilters}
-                        formatHref={handleFormatHref}
-                        sectionStyle={{
-                            width: pageSize === 'lg'
-                                ? 700
-                                : pageSize === 'md'
-                                    ? 600
-                                    : '100%',
-                            ...(!isHeroVisible && {
-                                position: 'fixed',
-                                top: dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight,
-                                bottom: dimensions.footerNodeHeight,
-                                overflowY: 'scroll',
-                                height: 'auto'
-                            })
-                        }}
-                    />
+                                    <ConnectedDetailsPanel
+                                        resource={resource}
+                                        filters={queryFilters}
+                                        formatHref={handleFormatHref}
+                                        sectionStyle={{
+                                            width: pageSize === 'lg'
+                                                ? 700
+                                                : pageSize === 'md'
+                                                    ? 600
+                                                    : '100%',
+                                            ...(!isHeroVisible && {
+                                                position: 'fixed',
+                                                top: dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight,
+                                                bottom: dimensions.footerNodeHeight,
+                                                overflowY: 'scroll',
+                                                height: 'auto'
+                                            })
+                                        }}
+                                    />
                                 }
                                 isCardActive={res => res.pk === pk}
                                 page={params.page ? parseFloat(params.page) : 1}
@@ -512,11 +513,13 @@ function Home({
                                     cardsMenu={filterMenuItemsAllowed || []}
                                     order={query?.sort}
                                     filters={queryFilters}
+                                    filterFormEnabled={showFilterForm}
                                     onClear={handleClear}
                                     onClick={handleShowFilterForm}
                                     layoutSwitcher={handleStoredLayoutStyle}
                                     orderOptions={filters?.order?.options}
                                     defaultLabelId={filters?.order?.defaultLabelId}
+                                    totalResources={totalResources}
                                 />
 
                             </ConnectedCardGrid>
@@ -563,13 +566,15 @@ const ConnectedHome = connect(
         state => state?.security?.user || null,
         state => state?.gnresource?.data || null,
         state => state?.gnfiltersPanel?.isToggle || false,
-        state => getMonitoredState(state, getConfigProp('monitorState'))
-    ], (params, user, resource, isToggle, monitoredUserState) => ({
+        state => getMonitoredState(state, getConfigProp('monitorState')),
+        state => state?.gnsearch?.total || 0
+    ], (params, user, resource, isToggle, monitoredUserState, totalResources) => ({
         params,
         user,
         resource,
         isToggle,
-        monitoredUserState
+        monitoredUserState,
+        totalResources
     })),
     {
         onSearch: searchResources,

@@ -7,8 +7,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import { Dropdown, Button } from 'react-bootstrap-v1';
-import ReactResizeDetector from 'react-resize-detector';
+import { Dropdown, Button, Badge } from 'react-bootstrap-v1';
 import Message from '@mapstore/framework/components/I18N/Message';
 import FaIcon from '@js/components/home/FaIcon';
 import useLocalStorage from '@js/hooks/useLocalStorage';
@@ -23,7 +22,10 @@ const FiltersMenu = forwardRef(({
     style,
     onClick,
     layoutSwitcher,
-    defaultLabelId
+    defaultLabelId,
+    filterFormEnabled,
+    onClear,
+    totalResources
 }, ref) => {
 
     const selectedSort = orderOptions.find(({ value }) => order === value);
@@ -36,30 +38,39 @@ const FiltersMenu = forwardRef(({
             ref={ref}
         >
             <div className="gn-filters-menu-container">
-                <a className="gn-toogle-filter" onClick={onClick} > <Message msgId="gnhome.filters" /> {`(${filters.length})`}</a>
-                <ReactResizeDetector handleHeight>
-                    {({ height }) => (
-                        <div
-                            className="gn-filters-menu-content"
-                            style={{ height }}
-                        >
-                        </div>
-                    )}
-                </ReactResizeDetector>
+                <div className="gn-filters-menu-main">
+                    <Button
+                        variant="default"
+                        size="sm"
+                        active={filterFormEnabled}
+                        onClick={onClick}
+                    >
+                        <Message msgId="gnhome.filters" />
+                    </Button>
+                    {filters.length > 0 && <Button
+                        variant="default"
+                        size="sm"
+                        onClick={onClear}
+                    >
+                        <Message msgId="gnhome.clearFilters"/>
+                    </Button>}
+                    {' '}
+                    <Badge><Message msgId="gnhome.results" msgParams={{ count: totalResources }}/></Badge>
+                </div>
                 <Menu
                     items={cardsMenu}
                     containerClass={`gn-cards-menu`}
-
+                    size="sm"
+                    alignRight
                 />
-
-                <Button variant="default" onClick={layoutSwitcher} >
+                <Button
+                    variant="default"
+                    onClick={layoutSwitcher}
+                    size="sm"
+                >
                     <FaIcon name={cardLayoutStyle === 'grid' ? 'th' : cardLayoutStyle} />
                 </Button>
-
-                <div
-                    className="gn-filters-menu-tools"
-
-                >
+                <div className="gn-filters-menu-tools">
 
                     {orderOptions.length > 0 && <Dropdown alignRight>
                         <Dropdown.Toggle
