@@ -25,7 +25,7 @@ import FilterForm from '@js/components/home/FilterForm';
 import LanguageSelector from '@js/components/home/LanguageSelector';
 import { getMonitoredState, handleExpression } from '@mapstore/framework/utils/PluginsUtils';
 import { getConfigProp } from "@mapstore/framework/utils/ConfigUtils";
-import { filterMenuItems, mapObjectFunc, reduceArrayRecursive } from '@js/utils/MenuUtils';
+import { filterMenuItems, mapObjectFunc, reduceArrayRecursive, buildHrefByTemplate } from '@js/utils/MenuUtils';
 
 import get from 'lodash/get';
 import {
@@ -102,7 +102,7 @@ const CardGridWithMessageId = ({ query, user, isFirstRequest, ...props }) => {
             || isLoggedIn && 'noContentYet'
             || 'noPublicContent'
         : undefined;
-    return <CardGrid { ...props } messageId={messageId}/>;
+    return <CardGrid { ...props } messageId={messageId}  />;
 };
 
 const ConnectedCardGrid = connect(
@@ -361,6 +361,7 @@ function Home({
     const navebarItemsAllowed = reduceArrayRecursive(confWithHandleExpression?.navbar?.items, (item) => filterMenuItems(userState, item));
     const filterMenuItemsAllowed = reduceArrayRecursive(confWithHandleExpression?.cardsMenu?.items, (item) => filterMenuItems(userState, item));
     const footerMenuItemsAllowed = reduceArrayRecursive(confWithHandleExpression?.footer?.items, (item) => filterMenuItems(userState, item));
+    const cardOptionsItemsAllowed = reduceArrayRecursive(confWithHandleExpression?.cardOptions?.items, (item) => filterMenuItems(userState, item));
 
     const search = (
         <ConnectedSearchBar
@@ -456,11 +457,12 @@ function Home({
                                 user={user}
                                 query={query}
                                 pageSize={pageSize}
+                                cardOptions={cardOptionsItemsAllowed}
                                 isColumnActive={!!resource}
+                                buildHrefByTemplate={buildHrefByTemplate}
                                 containerStyle={!isHeroVisible
                                     ? {
                                         marginTop: hideHero && dimensions.brandNavbarHeight,
-                                        minHeight: `calc(100vh - ${dimensions.brandNavbarHeight + dimensions.menuIndexNodeHeight + dimensions.footerNodeHeight}px )`,
                                         paddingBottom: dimensions.footerNodeHeight
                                     }
                                     : undefined}
