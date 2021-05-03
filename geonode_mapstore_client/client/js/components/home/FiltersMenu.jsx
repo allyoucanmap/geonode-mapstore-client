@@ -21,16 +21,16 @@ const FiltersMenu = forwardRef(({
     filters,
     style,
     onClick,
-    layoutSwitcher,
     defaultLabelId,
-    filterFormEnabled,
     onClear,
     totalResources
 }, ref) => {
 
     const selectedSort = orderOptions.find(({ value }) => order === value);
-    const [cardLayoutStyle] = useLocalStorage('layoutCardsStyle');
-
+    const [cardLayoutStyle, setCardLayoutStyle] = useLocalStorage('layoutCardsStyle');
+    function handleToggleCardLayoutStyle() {
+        setCardLayoutStyle(cardLayoutStyle === 'grid' ? 'list' : 'grid');
+    }
     return (
         <div
             className="gn-filters-menu"
@@ -42,7 +42,7 @@ const FiltersMenu = forwardRef(({
                     <Button
                         variant="default"
                         size="sm"
-                        active={filterFormEnabled}
+                        active={filters.length}
                         onClick={onClick}
                     >
                         <Message msgId="gnhome.filters" />
@@ -55,7 +55,7 @@ const FiltersMenu = forwardRef(({
                         <Message msgId="gnhome.clearFilters"/>
                     </Button>}
                     {' '}
-                    <Badge><Message msgId="gnhome.results" msgParams={{ count: totalResources }}/></Badge>
+                    <Badge><Message msgId="gnhome.resourcesFound" msgParams={{ count: totalResources }}/></Badge>
                 </div>
                 <Menu
                     items={cardsMenu}
@@ -65,10 +65,10 @@ const FiltersMenu = forwardRef(({
                 />
                 <Button
                     variant="default"
-                    onClick={layoutSwitcher}
+                    onClick={handleToggleCardLayoutStyle}
                     size="sm"
                 >
-                    <FaIcon name={cardLayoutStyle === 'grid' ? 'th' : cardLayoutStyle} />
+                    <FaIcon name={cardLayoutStyle === 'grid' ? 'list' : 'th'} />
                 </Button>
                 <div className="gn-filters-menu-tools">
 
