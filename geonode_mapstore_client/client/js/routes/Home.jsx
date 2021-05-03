@@ -179,7 +179,6 @@ function Home({
     isFiltersPanelEnabled,
     monitoredUserState,
     geoNodeConfiguration,
-    navbar,
     hideHero,
     isFilterForm,
     onSelect,
@@ -367,7 +366,7 @@ function Home({
         <div className={`gn-home gn-theme-${theme?.variant || 'light'}`}>
             <BrandNavbar
                 ref={brandNavbarNode}
-                logo={castArray(navbar?.logo || [])
+                logo={castArray(confWithHandleExpression?.navbar?.logo || [])
                     .map((logo) => ({
                         ...logo,
                         ...logo[pageSize]
