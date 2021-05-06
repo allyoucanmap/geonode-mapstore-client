@@ -21,11 +21,9 @@ import FilterItems from './FilterItems';
  * @name FilterForm
  * @memberof components
  * @prop {string} id the thumbnail is scaled based on the following configuration
- * @prop {boolean} show show/hide filter form
  */
 function FilterForm({
     id,
-    show,
     style,
     styleContainerForm,
     query,
@@ -62,7 +60,7 @@ function FilterForm({
             ...(query?.extent && { extent: query.extent }),
             ...(query?.f && { f: query.f })
         });
-    }, [show, query]);
+    }, [query]);
 
     function handleApply() {
         onChange(values);
@@ -83,10 +81,6 @@ function FilterForm({
         }, {});
         setValues(emptyValues);
         onChange(emptyValues);
-    }
-
-    if (!show) {
-        return null;
     }
 
     return (
@@ -153,7 +147,6 @@ function FilterForm({
 
 FilterForm.defaultProps = {
     id: PropTypes.string,
-    show: PropTypes.bool,
     style: PropTypes.object,
     styleContainerForm: PropTypes.object,
     query: PropTypes.object,

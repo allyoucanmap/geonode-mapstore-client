@@ -22,13 +22,8 @@ describe('FiltersForm component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('should not render with default', () => {
+    it('should render with default', () => {
         ReactDOM.render( <FiltersForm />, document.getElementById("container"));
-        const filterFormNode = document.querySelector('.gn-filter-form');
-        expect(filterFormNode).toBeFalsy();
-    });
-    it('should render with show set to true', () => {
-        ReactDOM.render( <FiltersForm show/>, document.getElementById("container"));
         const filterFormNode = document.querySelector('.gn-filter-form');
         expect(filterFormNode).toBeTruthy();
     });

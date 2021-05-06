@@ -583,15 +583,13 @@
                     "type": "link",
                     "href": "${detail_url}",
                     "labelId": "gnhome.open",
-                    "icon": "edit",
-                    "action": "edit"
+                    "icon": "edit"
                 },
                 {
                     "type": "link",
                     "href":"${detail_url}/metadata_advanced",
                     "labelId": "gnhome.update",
                     "icon": "paste",
-                    "action": "update",
                     "authenticated": true,
                     "allowedGroups": [
                         "admin"
@@ -602,7 +600,6 @@
                     "href":"${detail_url}/remove",
                     "labelId": "gnhome.delete",
                     "icon": "trash",
-                    "action": "delete",
                     "authenticated": true,
                     "allowedGroups": [
                         "admin"

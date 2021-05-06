@@ -421,7 +421,6 @@ function Home({
                                 id="gn-filter-form"
                                 styleContainerForm={ hideHero ? { marginTop: dimensions.brandNavbarHeight, top: filterFormTop, maxHeight: stickyFiltersMaxHeight } :
                                     { top: filterFormTop, maxHeight: stickyFiltersMaxHeight }}
-                                show
                                 fields={filtersFormItemsAllowed}
                                 extentProps={filters?.extent}
                                 suggestionsRequestTypes={suggestionsRequestTypes}
