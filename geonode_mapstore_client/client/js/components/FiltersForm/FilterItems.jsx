@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
 import { Form } from 'react-bootstrap-v1';
 import ReactSelect from 'react-select';
@@ -121,5 +122,20 @@ function FilterItems({
         </>
     );
 }
+
+FilterItems.defaultProps = {
+    id: PropTypes.string,
+    items: PropTypes.array,
+    suggestionsRequestTypes: PropTypes.object,
+    values: PropTypes.object,
+    setValues: PropTypes.func
+};
+
+FilterItems.defaultProps = {
+    items: [],
+    suggestionsRequestTypes: {},
+    values: {},
+    setValues: () => {}
+};
 
 export default FilterItems;

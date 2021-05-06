@@ -208,7 +208,7 @@
                             "authenticated": true
                         },
                         {
-                            "id": "approved-resources",
+                            "id": "pending-approval",
                             "labelId": "gnhome.pendingApproval",
                             "type": "filter",
                             "query": {
@@ -219,7 +219,8 @@
                     ]
                 },
                 {
-                    "type": "divider"
+                    "type": "divider",
+                    "authenticated": true
                 },
                 {
                     "labelId": "gnhome.resourceTypes",

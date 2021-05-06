@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect, useRef, memo } from 'react';
+import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
 import { Form, Button } from 'react-bootstrap-v1';
 import Message from '@mapstore/framework/components/I18N/Message';
@@ -15,6 +16,13 @@ import isEqual from 'lodash/isEqual';
 import FilterByExtent from './FilterByExtent';
 import FilterItems from './FilterItems';
 
+/**
+ * FilterForm component allows to configure a list of field that can be used to apply filter on the page
+ * @name FilterForm
+ * @memberof components
+ * @prop {string} id the thumbnail is scaled based on the following configuration
+ * @prop {boolean} show show/hide filter form
+ */
 function FilterForm({
     id,
     show,
@@ -144,13 +152,28 @@ function FilterForm({
 }
 
 FilterForm.defaultProps = {
+    id: PropTypes.string,
+    show: PropTypes.bool,
+    style: PropTypes.object,
+    styleContainerForm: PropTypes.object,
+    query: PropTypes.object,
+    fields: PropTypes.array,
+    onChange: PropTypes.func,
+    onClose: PropTypes.func,
+    extentProps: PropTypes.object,
+    suggestionsRequestTypes: PropTypes.object
+};
+
+FilterForm.defaultProps = {
+    query: {},
     fields: [],
     onChange: () => {},
+    onClose: () => {},
     suggestionsRequestTypes: {}
 };
 
 const arePropsEqual = (prevProps, nextProps) => {
-    return isEqual( prevProps.styleContanierForm, nextProps.styleContanierForm);
+    return isEqual( prevProps.styleContainerForm, nextProps.styleContainerForm );
 };
 
 
