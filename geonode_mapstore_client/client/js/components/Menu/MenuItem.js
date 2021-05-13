@@ -42,7 +42,7 @@ import {
 const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, draggable, classItem, size, alignRight }) => {
 
     const { formatHref, query } = menuItemsProps;
-    const { id, type, label, labelId = '', items = [], href, style, badge = '', image, subType } = item;
+    const { id, type, label, labelId = '', items = [], href, style, badge = '', image, subType, Component } = item;
 
     const badgeValue = badge;
     if (type === 'dropdown') {
@@ -104,6 +104,10 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, draggable, cl
                 {isValidBadgeValue(badgeValue) && <Badge>{badgeValue}</Badge>}
             </Tag>
         );
+    }
+
+    if (type === 'custom' && Component) {
+        return <Component />;
     }
     return null;
 

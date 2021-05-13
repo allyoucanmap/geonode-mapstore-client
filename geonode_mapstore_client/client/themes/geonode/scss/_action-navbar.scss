@@ -28,15 +28,14 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        max-width: $gn-page-max-width;
         margin: auto;
         width: 100%;
         //padding: 0 0.5rem;
         .gn-action-navbar-content {
             display: flex;
             flex-direction: row;
-            margin: 0 0 0 0.4rem;
             flex: 1;
+            padding: 0 0.8rem;
             ul {
                 display: inline-block;
                 flex-direction: row;

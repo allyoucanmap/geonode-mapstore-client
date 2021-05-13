@@ -77,6 +77,11 @@ const requires = {
     SwipeHeader
 };
 
+// TODO: we should compile .scss as .less file in MapStore
+// and add a link tag with the compiled css in the template
+// this will ensure more control on override or custom css
+import '../../themes/geonode/scss/geonode.scss';
+
 const DEFAULT_LOCALE = {};
 const ConnectedRouter = connect((state) => ({
     locale: state?.locale || DEFAULT_LOCALE
