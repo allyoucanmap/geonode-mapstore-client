@@ -50,8 +50,8 @@ export const gnCheckSelectedLayerPermissions = (action$, { getState } = {}) =>
                 setEditPermissionStyleEditor(canEditStyles),
                 setSelectedLayerPermissions(permissions)
             )
-                .startWith(setPermission({canEdit: false}),  setSelectedLayerPermissions([]), setEditPermissionStyleEditor(false))
-                .catch(() => {Rx.Observable.empty();}) : Rx.Observable.of(setPermission({canEdit: false}), setEditPermissionStyleEditor(false), setSelectedLayerPermissions([]));
+                .catch(() => {Rx.Observable.empty();}) : Rx.Observable.of(setPermission({canEdit: false}), setEditPermissionStyleEditor(false), setSelectedLayerPermissions([]))
+                .startWith(setPermission({canEdit: false}),  setSelectedLayerPermissions([]), setEditPermissionStyleEditor(false));
         });
 
 
@@ -59,7 +59,7 @@ export const gnCheckSelectedLayerPermissions = (action$, { getState } = {}) =>
  * Checks the permissions for layers when a map is loaded and when a new layer is added
  * to a map
  */
-export const setLayersPermissions = (actions$, { getState = () => {}} = {}) =>
+export const gnSetLayersPermissions = (actions$, { getState = () => {}} = {}) =>
     actions$.ofType(MAP_CONFIG_LOADED, ADD_LAYER)
         .switchMap((action) => {
             if (action.type === MAP_CONFIG_LOADED) {
@@ -153,5 +153,5 @@ export const updateMapLayoutEpic = (action$, store) =>
 export default {
     gnCheckSelectedLayerPermissions,
     updateMapLayoutEpic,
-    setLayersPermissions
+    gnSetLayersPermissions
 };
