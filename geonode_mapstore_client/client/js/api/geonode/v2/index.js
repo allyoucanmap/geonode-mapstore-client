@@ -423,6 +423,16 @@ export const getResourcesTotalCount = () => {
         });
 };
 
+export const getFeaturedResources = (page = 1, page_size =  4) => {
+    return axios.get(parseDevHostname(endpoints[RESOURCES]), {
+        params: {
+            page_size,
+            page,
+            'filter{featured}': true
+        }
+    }).then(({data}) => data);
+};
+
 export default {
     getEndpoints,
     getResources,

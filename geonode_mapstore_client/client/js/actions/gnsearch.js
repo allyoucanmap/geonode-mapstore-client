@@ -15,6 +15,8 @@ export const LOADING_RESOURCES = 'GEONODE_SEARCH:LOADING_RESOURCES';
 export const SELECT_RESOURCE = 'GEONODE_SEARCH:SELECT_RESOURCE';
 export const REQUEST_RESOURCE = 'GEONODE_SEARCH:REQUEST_RESOURCE';
 export const UPDATE_RESOURCES_METADATA = 'GEONODE_SEARCH:UPDATE_RESOURCES_METADATA';
+export const SET_FEATURED_RESOURCES = 'GEONODE:SET_FEATURED_RESOURCES';
+export const UPDATE_FEATURED_RESOURCES = 'GEONODE_SEARCH:UPDATE_FEATURED_RESOURCES';
 
 export function fetchSuggestions(text) {
     return {
@@ -75,6 +77,32 @@ export function requestResource(pk, ctype) {
     };
 }
 
+
+/**
+* Actions for GeoNode resource search
+* set new Featured Resources includes data, page, links
+* @name actions.gnsearch
+*/
+export function setFeaturedResources(data) {
+    return {
+        type: SET_FEATURED_RESOURCES,
+        data
+    };
+}
+
+/**
+* Actions for GeoNode resource search
+* loads new featured resources basing on the action, previous or next
+* @param action {string} can be either next or previous
+* @name actions.gnsearch
+*/
+export function loadFeaturedResources(action) {
+    return {
+        type: UPDATE_FEATURED_RESOURCES,
+        action
+    };
+}
+
 export default {
     FETCH_SUGGESTIONS,
     fetchSuggestions,
@@ -89,5 +117,6 @@ export default {
     LOADING_RESOURCES,
     loadingResources,
     REQUEST_RESOURCE,
-    requestResource
+    requestResource,
+    setFeaturedResources
 };
