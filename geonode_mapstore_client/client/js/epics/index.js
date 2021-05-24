@@ -45,13 +45,17 @@ export const gnCheckSelectedLayerPermissions = (action$, { getState } = {}) =>
             const permissions = layer?.perms || [];
             const canEditStyles = permissions.includes("change_layer_style");
             const canEdit = permissions.includes("change_layer_data");
-            return layer ? Rx.Observable.of(
-                setPermission({canEdit}),
-                setEditPermissionStyleEditor(canEditStyles),
-                setSelectedLayerPermissions(permissions)
-            )
-                .catch(() => {Rx.Observable.empty();}) : Rx.Observable.of(setPermission({canEdit: false}), setEditPermissionStyleEditor(false), setSelectedLayerPermissions([]))
-                .startWith(setPermission({canEdit: false}),  setSelectedLayerPermissions([]), setEditPermissionStyleEditor(false));
+            return layer
+                ? Rx.Observable.of(
+                    setPermission({canEdit}),
+                    setEditPermissionStyleEditor(canEditStyles),
+                    setSelectedLayerPermissions(permissions)
+                )
+                : Rx.Observable.of(
+                    setPermission({canEdit: false}),
+                    setEditPermissionStyleEditor(false),
+                    setSelectedLayerPermissions([])
+                );
         });
 
 

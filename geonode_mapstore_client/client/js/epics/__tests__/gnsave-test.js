@@ -186,7 +186,7 @@ describe('gnsave epics', () => {
         testEpic(gnCheckSelectedLayerPermissions,
             NUM_ACTIONS, selectNode(1, "layer"), (actions) => {
                 try {
-                    expect(actions.map(({type}) => type)).toEqual([SET_PERMISSION, SET_SELECTED_LAYER_PERMISSIONS, SET_EDIT_PERMISSION]);
+                    expect(actions.map(({type}) => type)).toEqual([SET_PERMISSION, SET_EDIT_PERMISSION, SET_SELECTED_LAYER_PERMISSIONS]);
                     done();
                 } catch (error) {
                     done(error);
