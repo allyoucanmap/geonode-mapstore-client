@@ -68,7 +68,7 @@ const Cards = withResizeDetector(({
                     >
                         <ResourceCard
                             active={isCardActive(resource)}
-                            data={resource || {owner: {}}}
+                            data={resource}
                             formatHref={formatHref}
                             options={options}
                             buildHrefByTemplate={buildHrefByTemplate}

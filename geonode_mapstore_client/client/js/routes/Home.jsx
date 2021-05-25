@@ -430,6 +430,9 @@ function Home({
                     <div className="gn-row">
                         <div className="gn-grid-container">
                             <ConnectedFeatureList
+                                query={query}
+                                formatHref={handleFormatHref}
+                                buildHrefByTemplate={buildHrefByTemplate}
                                 containerStyle={{
                                     minHeight: 'auto'
                                 }}/>
