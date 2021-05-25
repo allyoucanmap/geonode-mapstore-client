@@ -93,7 +93,8 @@ const FeaturedList = withResizeDetector(({
     pageSize,
     buildHrefByTemplate,
     isPreviousPageAvailable,
-    loadFeaturedResources
+    loadFeaturedResources,
+    location
 }) => {
 
     const hasResources = resources?.length > 0;
@@ -109,7 +110,7 @@ const FeaturedList = withResizeDetector(({
         ...(!isPreviousPageAvailable || loading ? {color: 'grey', cursor: 'not-allowed'} : {cursor: 'pointer'})};
     return (
         <>
-            {hasResources && <div className="gn-card-grid">
+            {hasResources && location.pathname === '/' && <div className="gn-card-grid">
                 {header}
                 <div style={{
                     display: 'flex',
@@ -155,7 +156,8 @@ FeaturedList.defaultProps = {
     formatHref: () => '#',
     isCardActive: () => false,
     isPreviousPageAvailable: false,
-    loadFeaturedResources: () => {}
+    loadFeaturedResources: () => {},
+    location: {}
 };
 
 export default FeaturedList;
