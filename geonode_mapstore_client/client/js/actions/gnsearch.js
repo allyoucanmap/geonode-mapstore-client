@@ -79,7 +79,7 @@ export function requestResource(pk, ctype) {
 
 
 /**
-* Actions for GeoNode resource search
+* Actions for GeoNode resource featured items
 * set new Featured Resources includes data, page, links
 * @name actions.gnsearch
 */
@@ -91,7 +91,7 @@ export function setFeaturedResources(data) {
 }
 
 /**
-* Actions for GeoNode resource search
+* Actions for GeoNode resource featured items
 * loads new featured resources basing on the action, previous or next
 * @param action {string} can be either next or previous
 * @name actions.gnsearch
