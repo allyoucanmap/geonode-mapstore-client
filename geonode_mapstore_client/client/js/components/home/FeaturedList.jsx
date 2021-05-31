@@ -101,13 +101,11 @@ const FeaturedList = withResizeDetector(({
 
     const nextIconStyles = {
         fontSize: '2rem',
-        marginLeft: '1rem',
         ...(!isNextPageAvailable || loading ? {color: 'grey', cursor: 'not-allowed'} : {cursor: 'pointer'})
     };
 
     const previousIconStyles = {
         fontSize: '2rem',
-        marginRight: '1rem',
         ...(!isPreviousPageAvailable || loading ? {color: 'grey', cursor: 'not-allowed'} : {cursor: 'pointer'})};
     return (
         <>
