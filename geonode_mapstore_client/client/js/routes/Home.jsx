@@ -436,7 +436,7 @@ function Home({
             <div className="gn-main-home">
 
                 <div className="gn-container">
-                    <div className="gn-row">
+                    <div className="gn-row gn-home-section">
                         <div className="gn-grid-container">
                             {!disableFeatured &&  <ConnectedFeatureList
                                 query={query}
