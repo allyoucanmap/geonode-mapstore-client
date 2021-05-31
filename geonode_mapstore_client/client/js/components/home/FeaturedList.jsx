@@ -7,9 +7,10 @@
  */
 
 import React from 'react';
-import { Spinner } from 'react-bootstrap-v1';
+import { Spinner, Button } from 'react-bootstrap-v1';
 import HTML from '@mapstore/framework/components/I18N/HTML';
 import ResourceCard from '@js/components/home/ResourceCard';
+import FaIcon from '@js/components/home/FaIcon';
 import { withResizeDetector } from 'react-resize-detector';
 
 const Cards = withResizeDetector(({
@@ -101,6 +102,7 @@ const FeaturedList = withResizeDetector(({
 
     const nextIconStyles = {
         fontSize: '2rem',
+        marginLeft: '1rem',
         ...(!isNextPageAvailable || loading ? {color: 'grey', cursor: 'not-allowed'} : {cursor: 'pointer'})
     };
 
@@ -128,16 +130,23 @@ const FeaturedList = withResizeDetector(({
                                 options={cardOptions}
                                 buildHrefByTemplate={buildHrefByTemplate}
                             />
-                            <div className="gn-card-grid-pagination">
+                            <div className="gn-card-grid-pagination featured-list">
+
+                                <Button size="sm" onClick={() => loadFeaturedResources("previous")} disabled={!isPreviousPageAvailable || loading}
+                                    aria-hidden="true">
+                                    <FaIcon  style={previousIconStyles} name="caret-left"/>
+                                </Button>
+
                                 <div>
-                                    { loading && <Spinner animation="border" role="status">
+                                    { loading && <Spinner size="sm"  animation="border" role="status">
                                         <span className="sr-only">Loading...</span>
                                     </Spinner>}
                                 </div>
-                                <i onClick={() => loadFeaturedResources("previous")} disabled={!isPreviousPageAvailable || loading} className="fa fa-caret-left"
-                                    style={previousIconStyles} aria-hidden="true"></i>
-                                <i onClick={() => loadFeaturedResources("next")} disabled={!isNextPageAvailable || loading} className="fa fa-caret-right"
-                                    style={nextIconStyles} aria-hidden="true"></i>
+                                <Button size="sm" onClick={() => loadFeaturedResources("next")} disabled={!isNextPageAvailable || loading}
+                                    aria-hidden="true">
+                                    <FaIcon style={nextIconStyles} name="caret-right"/>
+
+                                </Button>
 
                             </div>
                         </div>

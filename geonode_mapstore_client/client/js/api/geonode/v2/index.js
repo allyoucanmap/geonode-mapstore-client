@@ -441,7 +441,7 @@ export const getFeaturedResources = (page = 1, page_size =  4) => {
         params: {
             page_size,
             page,
-            'filter{featured}': true
+            'filter{featured}': false
         }
     }).then(({data}) => data);
 };

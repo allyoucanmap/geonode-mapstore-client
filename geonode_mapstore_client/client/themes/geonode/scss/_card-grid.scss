@@ -56,6 +56,19 @@
         padding: 1rem;
         text-align: center;
     }
+    .gn-card-grid-pagination.featured-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button, button:focus {
+            color: black;
+            background: none;
+            border: none;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+    }
     .card-resource-list {
         display: flex;
         flex: 1 1 auto;
