@@ -193,7 +193,7 @@ function Home({
     width,
     resource,
     totalResources,
-    disableFeatured
+    disableFeatured = false
 }) {
 
     const {
@@ -438,7 +438,7 @@ function Home({
                 <div className="gn-container">
                     <div className="gn-row">
                         <div className="gn-grid-container">
-                            {disableFeatured &&  <ConnectedFeatureList
+                            {!disableFeatured &&  <ConnectedFeatureList
                                 query={query}
                                 formatHref={handleFormatHref}
                                 buildHrefByTemplate={buildHrefByTemplate}
