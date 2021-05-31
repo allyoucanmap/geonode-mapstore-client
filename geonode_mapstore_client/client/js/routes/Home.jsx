@@ -192,7 +192,8 @@ function Home({
     user,
     width,
     resource,
-    totalResources
+    totalResources,
+    disableFeatured
 }) {
 
     const {
@@ -437,14 +438,13 @@ function Home({
                 <div className="gn-container">
                     <div className="gn-row">
                         <div className="gn-grid-container">
-                            <ConnectedFeatureList
+                            {disableFeatured &&  <ConnectedFeatureList
                                 query={query}
-                                location={location}
                                 formatHref={handleFormatHref}
                                 buildHrefByTemplate={buildHrefByTemplate}
                                 containerStyle={{
                                     minHeight: 'auto'
-                                }}/>
+                                }}/> }
 
                         </div>
                     </div>
