@@ -103,7 +103,6 @@ export function setupConfiguration({
     Object.keys(config).forEach((key) => {
         setConfigProp(key, config[key]);
     });
-    console.log(__MAPSTORE_PROJECT_CONFIG__);
     setConfigProp('translationsPath', config.translationsPath
         ? config.translationsPath
         : __MAPSTORE_PROJECT_CONFIG__.translationsPath
