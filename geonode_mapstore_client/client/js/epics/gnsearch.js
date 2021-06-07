@@ -243,12 +243,10 @@ export const gnsSelectResourceEpic = (action$, store) =>
         });
 
 export const getFeaturedResourcesEpic = (action$, {getState = () => {}}) =>
-    action$.ofType(LOCATION_CHANGE, UPDATE_FEATURED_RESOURCES)
-        .filter(({ payload }) => {
-            return payload ? payload.location?.pathname === '/' : getState().router?.location?.pathname === '/';
-        }).switchMap(({action}) => {
+    action$.ofType(UPDATE_FEATURED_RESOURCES)
+        .switchMap(({action, pageSize}) => {
             const page = getNextPage(action, getState());
-            return Observable.defer( () => getFeaturedResources(page))
+            return Observable.defer( () => getFeaturedResources(page, pageSize))
                 .switchMap((data) => {
                     return Observable.of(setFeaturedResources({...data,
                         isNextPageAvailable: !!data?.links?.next,

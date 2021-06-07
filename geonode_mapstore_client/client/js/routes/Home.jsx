@@ -193,7 +193,8 @@ function Home({
     width,
     resource,
     totalResources,
-    disableFeatured = false
+    disableFeatured = false,
+    fetchFeaturedResources = () => {}
 }) {
 
     const {
@@ -362,6 +363,15 @@ function Home({
 
     }, []);
 
+    useEffect(() => {
+        if (!disableFeatured) {
+            const margin = 24;
+            const size = 320;
+            const count = Math.floor((width || window.outerWidth) / (size + margin));
+            fetchFeaturedResources(undefined, count);
+        }
+    }, [disableFeatured]);
+
     const search = (
         <ConnectedSearchBar
             key="search"
@@ -442,6 +452,8 @@ function Home({
                                 query={query}
                                 formatHref={handleFormatHref}
                                 buildHrefByTemplate={buildHrefByTemplate}
+                                detectedWidth={width}
+                                pageSize={pageSize}
                                 containerStyle={{
                                     minHeight: 'auto'
                                 }}/> }
@@ -584,7 +596,8 @@ const ConnectedHome = connect(
     {
         onSearch: searchResources,
         onSelect: requestResource,
-        onEnableFiltersPanel: setControlProperty.bind(null, 'gnFiltersPanel', 'enabled')
+        onEnableFiltersPanel: setControlProperty.bind(null, 'gnFiltersPanel', 'enabled'),
+        fetchFeaturedResources: loadFeaturedResources
     }
 )(withResizeDetector(Home));
 

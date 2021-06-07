@@ -17,15 +17,13 @@ const Cards = withResizeDetector(({
     resources,
     formatHref,
     isCardActive,
-    containerWidth,
-    width: detectedWidth,
+    width,
     buildHrefByTemplate,
-    options
+    options,
+    size,
+    margin,
+    count
 }) => {
-    const width = containerWidth || detectedWidth;
-    const margin = 24;
-    const size = 320;
-    const count = Math.floor(width / (size + margin));
     const cardWidth = width >= size + margin * 2
         ? Math.floor((width - margin * count) / count)
         : '100%';
@@ -94,8 +92,15 @@ const FeaturedList = withResizeDetector(({
     pageSize,
     buildHrefByTemplate,
     isPreviousPageAvailable,
-    loadFeaturedResources
+    loadFeaturedResources,
+    detectedWidth,
+    containerWidth
 }) => {
+
+    const width = containerWidth || detectedWidth;
+    const margin = 24;
+    const size = 320;
+    const count = Math.floor(width / (size + margin));
 
     const hasResources = resources?.length > 0;
 
@@ -107,6 +112,7 @@ const FeaturedList = withResizeDetector(({
     const previousIconStyles = {
         fontSize: '2rem',
         ...(!isPreviousPageAvailable || loading ? {color: 'grey', cursor: 'not-allowed'} : {cursor: 'pointer'})};
+
     return (
         <>
             {hasResources  && <div className="gn-card-grid">
@@ -126,10 +132,14 @@ const FeaturedList = withResizeDetector(({
                                 isCardActive={isCardActive}
                                 options={cardOptions}
                                 buildHrefByTemplate={buildHrefByTemplate}
+                                size={size}
+                                margin={margin}
+                                width={width}
+                                count={count}
                             />
                             <div className="gn-card-grid-pagination featured-list">
 
-                                <Button size="sm" onClick={() => loadFeaturedResources("previous")} disabled={!isPreviousPageAvailable || loading}
+                                <Button size="sm" onClick={() => loadFeaturedResources("previous", count)} disabled={!isPreviousPageAvailable || loading}
                                     aria-hidden="true">
                                     <FaIcon  style={previousIconStyles} name="caret-left"/>
                                 </Button>
@@ -139,7 +149,7 @@ const FeaturedList = withResizeDetector(({
                                         <span className="sr-only">Loading...</span>
                                     </Spinner>}
                                 </div>
-                                <Button size="sm" onClick={() => loadFeaturedResources("next")} disabled={!isNextPageAvailable || loading}
+                                <Button size="sm" onClick={() => loadFeaturedResources("next", count)} disabled={!isNextPageAvailable || loading}
                                     aria-hidden="true">
                                     <FaIcon style={nextIconStyles} name="caret-right"/>
 
