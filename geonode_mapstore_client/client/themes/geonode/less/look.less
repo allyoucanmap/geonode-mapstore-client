@@ -359,5 +359,9 @@
             .border-color-var(@theme-vars[body-border-color], --gn-body-border-color);
         }
     }
-    .get-react-select-theme(@theme-vars);
+    // needed to override the mapstore style of react-select
+    // TODO: we should not import the mapstore one
+    #container & {
+        .get-react-select-theme(@theme-vars);
+    }
 }
