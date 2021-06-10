@@ -172,7 +172,7 @@ FeaturedList.defaultProps = {
     formatHref: () => '#',
     isCardActive: () => false,
     isPreviousPageAvailable: false,
-    loadFeaturedResources: () => {}
+    loadFeaturedResources: () => { }
 };
 
 export default FeaturedList;
