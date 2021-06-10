@@ -1,4 +1,4 @@
 export {
     default,
-    withRoutes as withRoutes
+    withRoutes
 } from './Router';
