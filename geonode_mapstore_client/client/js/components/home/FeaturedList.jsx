@@ -6,14 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Spinner, Button } from 'react-bootstrap-v1';
 import HTML from '@mapstore/framework/components/I18N/HTML';
 import ResourceCard from '@js/components/home/ResourceCard';
 import FaIcon from '@js/components/home/FaIcon';
-import { withResizeDetector } from 'react-resize-detector';
-
-const Cards = withResizeDetector(({
+const Cards = ({
     resources,
     formatHref,
     isCardActive,
@@ -78,9 +76,9 @@ const Cards = withResizeDetector(({
             })}
         </ul>
     );
-});
+};
 
-const FeaturedList = withResizeDetector(({
+const FeaturedList = ({
     resources,
     loading,
     isNextPageAvailable,
@@ -93,16 +91,18 @@ const FeaturedList = withResizeDetector(({
     buildHrefByTemplate,
     isPreviousPageAvailable,
     loadFeaturedResources,
-    detectedWidth,
-    containerWidth
+    width,
+    onLoad
 }) => {
 
-    const width = containerWidth || detectedWidth;
     const margin = 24;
     const size = 320;
     const count = Math.floor(width / (size + margin));
 
-    const hasResources = resources?.length > 0;
+    useEffect(() => {
+        onLoad(undefined, count);
+    }, [count]);
+
 
     const nextIconStyles = {
         fontSize: '2rem',
@@ -115,7 +115,7 @@ const FeaturedList = withResizeDetector(({
 
     return (
         <>
-            {hasResources  && <div className="gn-card-grid">
+            {resources?.length  && <div className="gn-card-grid">
                 {header}
                 <div style={{
                     display: 'flex',
@@ -162,7 +162,7 @@ const FeaturedList = withResizeDetector(({
             </div>}
         </>
     );
-});
+};
 
 FeaturedList.defaultProps = {
     page: 1,
@@ -172,7 +172,7 @@ FeaturedList.defaultProps = {
     formatHref: () => '#',
     isCardActive: () => false,
     isPreviousPageAvailable: false,
-    loadFeaturedResources: () => { }
+    onLoad: () => { }
 };
 
 export default FeaturedList;
