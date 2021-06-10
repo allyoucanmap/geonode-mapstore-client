@@ -357,15 +357,6 @@ function Home({
 
     }, []);
 
-    // useEffect(() => {
-    //     if (!disableFeatured) {
-    //         const margin = 24;
-    //         const size = 320;
-    //         const count = Math.floor((width || window.outerWidth) / (size + margin));
-    //         fetchFeaturedResources(undefined, count);
-    //     }
-    // }, [disableFeatured]);
-
     const search = (
         <ConnectedSearchBar
             key="search"
