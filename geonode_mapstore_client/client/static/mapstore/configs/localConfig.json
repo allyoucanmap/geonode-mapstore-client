@@ -2909,6 +2909,8 @@
             {
                 "name": "Map",
                 "cfg": {
+                    "shouldLoadFont": false,
+                    "fonts": [],
                     "tools": [
                         "measurement",
                         "draw",
