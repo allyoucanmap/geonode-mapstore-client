@@ -1,6 +1,7 @@
-.get-react-select-theme(@theme-vars) {
+
+.react-select-theme-with-css-variables(@theme-vars) {
     .Select.is-disabled>.Select-control {
-        .background-color-var(@theme-vars[disabled-bg], --gn-disabled-bg);
+        .background-color-var(@theme-vars[disabled-bg]);
     }
 
     .Select.is-disabled>.Select-control:hover {
@@ -8,55 +9,52 @@
     }
 
     .Select.is-open>.Select-control {
-        .color-var(@theme-vars[body-color], --gn-body-color);
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
-        .border-color-var(@theme-vars[body-border-color], --gn-body-border-color);
+        .color-var(@theme-vars[body-color]);
+        .background-color-var(@theme-vars[body-bg]);
+        .border-color-var(@theme-vars[body-border-color]);
     }
 
     .Select.is-open>.Select-control .Select-arrow {
-        border-bottom-color: @theme-vars[body-color];
-        border-bottom-color: var(@theme-vars[body-color], --gn-body-color);
+        .border-bottom-color-var(@theme-vars[body-color]);
     }
 
     .Select.is-focused>.Select-control {
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
+        .background-color-var(@theme-vars[body-bg]);
     }
 
     .Select.is-focused:not(.is-open)>.Select-control {
         box-shadow: none;
-        outline: 2px solid @theme-vars[focus-color];
-        .outline-color-var(@theme-vars[focus-color], --gn-focus-color);
-        .border-color-var(@theme-vars[focus-color], --gn-focus-color);
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
+        .outline-color-var(@theme-vars[focus-color]);
+        .border-color-var(@theme-vars[focus-color]);
+        .background-color-var(@theme-vars[body-bg]);
     }
 
     .Select.has-value.Select--single>.Select-control .Select-value .Select-value-label,
     .Select.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
-        .color-var(@theme-vars[body-color], --gn-body-color);
+        .color-var(@theme-vars[body-color]);
     }
 
     .Select.has-value.Select--single>.Select-control .Select-value a.Select-value-label:hover,
     .Select.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value a.Select-value-label:hover,
     .Select.has-value.Select--single>.Select-control .Select-value a.Select-value-label:focus,
     .Select.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value a.Select-value-label:focus {
-        .color-var(@theme-vars[body-color], --gn-body-color);
+        .color-var(@theme-vars[body-color]);
     }
 
     .Select.has-value.Select--single>.Select-control .Select-value a.Select-value-label:focus,
     .Select.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value a.Select-value-label:focus {
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
+        .background-color-var(@theme-vars[body-bg]);
     }
 
     .Select.is-open .Select-arrow,
     .Select .Select-arrow-zone:hover>.Select-arrow {
-        border-top-color: @theme-vars[body-color];
-        border-top-color: var(@theme-vars[body-color], --gn-body-color);
+        .border-top-color-var(@theme-vars[body-color]);
     }
 
     .Select-control {
-        .color-var(@theme-vars[body-color], --gn-body-color);
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
-        .border-color-var(@theme-vars[body-border-color], --gn-body-border-color);
+        .color-var(@theme-vars[body-color]);
+        .background-color-var(@theme-vars[body-bg]);
+        .border-color-var(@theme-vars[body-border-color]);
     }
 
     .Select-control:hover {
@@ -64,103 +62,101 @@
     }
 
     .Select-control .Select-input:focus {
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
+        .background-color-var(@theme-vars[body-bg]);
     }
 
     .Select-placeholder,
     .Select--single>.Select-control .Select-value {
-        .color-var(@theme-vars[placeholder-color], --gn-placeholder-color);
+        .color-var(@theme-vars[placeholder-color]);
     }
 
     .Select-loading {
-        .border-color-var(@theme-vars[body-border-color], --gn-body-border-color);
-        border-right-color: @theme-vars[body-color];
-        border-right-color: var(@theme-vars[body-color], --gn-body-color);
+        .border-color-var(@theme-vars[body-border-color]);
+        .border-right-color-var(@theme-vars[body-color]);
     }
 
     .Select-clear-zone {
-        .color-var(@theme-vars[body-color], --gn-body-color);
+        .color-var(@theme-vars[body-color]);
     }
 
     .Select-clear-zone:hover {
-        .color-var(@theme-vars[danger-color], --gn-danger-color);
+        .color-var(@theme-vars[danger]);
     }
 
     .Select-arrow {
-        border-top-color: @theme-vars[body-color];
-        border-top-color: var(@theme-vars[body-color], --gn-body-color);
+        .border-top-color-var(@theme-vars[body-color]);
     }
 
     .Select-menu-outer {
-        .color-var(@theme-vars[body-color], --gn-body-color);
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
-        .border-color-var(@theme-vars[body-border-color], --gn-body-border-color);
+        .color-var(@theme-vars[body-color]);
+        .background-color-var(@theme-vars[body-bg]);
+        .border-color-var(@theme-vars[body-border-color]);
     }
 
     .Select-option {
-        .color-var(@theme-vars[body-color], --gn-body-color);
-        .background-color-var(@theme-vars[body-bg], --gn-body-bg);
+        .color-var(@theme-vars[body-color]);
+        .background-color-var(@theme-vars[body-bg]);
     }
 
     .Select-option.is-selected {
-        .color-var(@theme-vars[tag-active-color], --gn-tag-active-color);
-        .background-color-var(@theme-vars[tag-active-bg], --gn-tag-active-bg);
+        .color-var(@theme-vars[primary-color]);
+        .background-color-var(@theme-vars[primary-bg]);
     }
 
     .Select-option.is-focused {
-        .color-var(@theme-vars[tag-hover-color], --gn-tag-hover-color);
-        .background-color-var(@theme-vars[tag-hover-bg], --gn-tag-hover-bg);
+        .color-var(@theme-vars[body-hover-color]);
+        .background-color-var(@theme-vars[body-hover-bg]);
     }
 
     .Select-option.is-disabled {
-        .color-var(@theme-vars[disabled-color], --gn-disabled-color);
+        .color-var(@theme-vars[disabled-color]);
     }
 
     .Select-noresults {
-        .color-var(@theme-vars[placeholder-color], --gn-placeholder-color);
+        .color-var(@theme-vars[placeholder-color]);
     }
 
     .Select--multi .Select-value {
-        .color-var(@theme-vars[tag-active-color], --gn-tag-active-color);
-        .background-color-var(@theme-vars[tag-active-bg], --gn-tag-active-bg);
+        .color-var(@theme-vars[primary-color]);
+        .background-color-var(@theme-vars[primary-bg]);
         border-color: transparent;
     }
 
     .Select--multi a.Select-value-label {
-        .color-var(@theme-vars[link-color], --gn-link-color);
+        .color-var(@theme-vars[link-color]);
     }
 
     .Select--multi .Select-value-icon {
-        .border-color-var(@theme-vars[tag-active-color], --gn-tag-active-color);
+        .border-color-var(@theme-vars[primary-color]);
     }
 
     .Select--multi .Select-value-icon:hover,
     .Select--multi .Select-value-icon:focus {
-        .color-var(@theme-vars[tag-hover-color], --gn-tag-hover-color);
-        .background-color-var(@theme-vars[tag-hover-bg], --gn-tag-hover-bg);
+        .color-var(@theme-vars[body-hover-color]);
+        .background-color-var(@theme-vars[body-hover-bg]);
     }
 
     .Select--multi .Select-value-icon:active {
-        .background-color-var(@theme-vars[tag-active-bg], --gn-tag-active-bg);
+        .background-color-var(@theme-vars[primary-bg]);
     }
 
     .Select--multi.Select--rtl .Select-value-icon {
-        .border-color-var(@theme-vars[tag-active-color], --gn-tag-active-color);
+        .border-color-var(@theme-vars[primary-color]);
     }
 
     .Select--multi.is-disabled .Select-value {
-        .background-color-var(@theme-vars[disabled-bg], --gn-disabled-bg);
-        .border-color-var(@theme-vars[disabled-color], --gn-disabled-color);
-        .color-var(@theme-vars[disabled-color], --gn-disabled-color);
+        .background-color-var(@theme-vars[disabled-bg]);
+        .border-color-var(@theme-vars[disabled-color]);
+        .color-var(@theme-vars[disabled-color]);
     }
 
     .Select--multi.is-disabled .Select-value-icon {
-        .border-color-var(@theme-vars[disabled-color], --gn-disabled-color);
+        .border-color-var(@theme-vars[disabled-color]);
     }
 
     .Select--multi.is-disabled .Select-value-icon:hover,
     .Select--multi.is-disabled .Select-value-icon:focus,
     .Select--multi.is-disabled .Select-value-icon:active {
-        .background-color-var(@theme-vars[disabled-bg], --gn-disabled-bg);
+        .background-color-var(@theme-vars[disabled-bg]);
     }
 }
