@@ -49,9 +49,9 @@ function LayerViewerRoute({
 
     useEffect(() => {
         if (!loading) {
-            onUpdate(pk);
+            onUpdate(pk, name);
         }
-    }, [loading, pk]);
+    }, [loading, pk, name]);
     const Loader = loaderComponent;
 
     return (
