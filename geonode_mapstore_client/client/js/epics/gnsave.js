@@ -20,12 +20,6 @@ import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
 import { currentStorySelector } from '@mapstore/framework/selectors/geostory';
 import { userSelector } from '@mapstore/framework/selectors/security';
 import { error as errorNotification, success as successNotification } from '@mapstore/framework/actions/notifications';
-
-
-import {
-    creatMapStoreMap,
-    updateMapStoreMap
-} from '@js/api/geonode/adapter';
 import {
     SAVE_CONTENT,
     UPDATE_RESOURCE_BEFORE_SAVE,
@@ -44,7 +38,9 @@ import {
 import {
     getResourceByPk,
     createGeoStory,
-    updateGeoStory
+    updateGeoStory,
+    createMap,
+    updateMap
 } from '@js/api/geonode/v2';
 import { parseDevHostname } from '@js/utils/APIUtils';
 import uuid from 'uuid';
@@ -67,40 +63,19 @@ const SaveAPI = {
             bookmarkSearchConfig,
             additionalOptions
         );
-        const name = metadata.name;
-        const description = metadata.description;
-        const thumbnail = metadata.thumbnail;
         const body = {
-            name,
-            data,
-            attributes: [{
-                type: 'string',
-                name: 'title',
-                value: name,
-                label: 'Title'
-            },
-            {
-                type: 'string',
-                name: 'abstract',
-                value: description,
-                label: 'Abstract'
-            },
-            ...(thumbnail
-                ? [{
-                    type: 'string',
-                    name: 'thumbnail',
-                    value: thumbnail,
-                    label: 'Thumbnail'
-                }]
-                : [])
-            ]
+            "title": metadata.name,
+            "abstract": metadata.description,
+            "thumbnail_url": metadata.thumbnail,
+            "data": data
         };
         return id
-            ? updateMapStoreMap(id, { ...body, id })
-            : creatMapStoreMap(body)
+            ? updateMap(id, { ...body, id })
+            : createMap(body)
                 .then((response) => {
                     if (reload) {
-                        window.location.href = parseDevHostname(`${getConfigProp('geonodeUrl')}maps/${response.id}/edit`);
+                        window.location.href = parseDevHostname(`${getConfigProp('geonodeUrl')}viewer/#/map/${response.pk}`);
+                        window.location.reload();
                     }
                     return response.data;
                 });
@@ -111,8 +86,8 @@ const SaveAPI = {
         const body = {
             'title': metadata.name,
             'abstract': metadata.description,
-            'data': JSON.stringify(story),
-            'thumbnail_url': metadata.thumbnail
+            'thumbnail_url': metadata.thumbnail,
+            'data': story
         };
         return id
             ? updateGeoStory(id, body)
@@ -122,7 +97,8 @@ const SaveAPI = {
                 ...body
             }).then((response) => {
                 if (reload) {
-                    window.location.href = parseDevHostname(`${getConfigProp('geonodeUrl')}apps/${response.pk}/edit`);
+                    window.location.href = parseDevHostname(`${getConfigProp('geonodeUrl')}viewer/#/geostory/${response.pk}`);
+                    window.location.reload();
                 }
                 return response.data;
             });
