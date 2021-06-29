@@ -3,6 +3,15 @@ from geonode.base.models import Menu, MenuItem
 
 register = template.Library()
 
+def _handle_single_item(menu_item):
+    m_item = {}
+    m_item['type'] = 'link'
+    m_item['href'] = menu_item.url
+    m_item['label'] = menu_item.title
+    if menu_item.blank_target:
+        m_item['target'] = '_blank'
+    return m_item
+
 @register.simple_tag
 def get_menu_json(placeholder_name):
     menus = {
@@ -17,22 +26,11 @@ def get_menu_json(placeholder_name):
             m['type'] = 'dropdown'
             m['items'] = []
             for menu_item in menu_items:
-                m_item = {}
-                m_item['type'] = 'link'
-                m_item['href'] = menu_item.url
-                m_item['label'] = menu_item.title
-                if menu_item.blank_target:
-                    m_item['target'] = '_blank'
+                m_item = _handle_single_item(menu_item)
                 m['items'].append(m_item)
 
             ms.append(m)
         if len(menu_items) == 1:
-            menu_items_0 = menu_items[0]
-            m = {}
-            m['type'] = 'link'
-            m['href'] = menu_items_0.url
-            m['label'] = menu_items_0.title
-            if menu_items_0.blank_target:
-                m['target'] = '_blank'
+            m = _handle_single_item(menu_items.first())
             ms.append(m)
     return ms
