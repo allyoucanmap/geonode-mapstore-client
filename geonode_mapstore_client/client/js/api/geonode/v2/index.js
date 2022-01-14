@@ -39,7 +39,8 @@ let endpoints = {
     'owners': '/api/v2/owners',
     'keywords': '/api/v2/keywords',
     'regions': '/api/v2/regions',
-    'groups': '/api/v2/groups'
+    'groups': '/api/v2/groups',
+    'uploads': '/api/v2/uploads'
 };
 
 const RESOURCES = 'resources';
@@ -54,7 +55,7 @@ const REGIONS = 'regions';
 const CATEGORIES = 'categories';
 const KEYWORDS = 'keywords';
 const GROUPS = 'groups';
-
+const UPLOADS = 'uploads';
 
 function addCountToLabel(name, count) {
     return `${name} (${count || 0})`;
@@ -702,6 +703,29 @@ export const copyResource = (resource) => {
         .then(({ data }) => data);
 };
 
+export const getPendingUploads = () => {
+    return axios.get(parseDevHostname(endpoints[UPLOADS]), {
+        params: {
+            'filter{-state}': 'PROCESSED',
+            'page': 1,
+            'page_size': 99999
+        }
+    })
+        .then(({ data }) => data?.uploads);
+};
+
+export const getProcessedUploadsById = (ids) => {
+    return axios.get(parseDevHostname(endpoints[UPLOADS]), {
+        params: {
+            'filter{state}': 'PROCESSED',
+            'page': 1,
+            'page_size': ids.length,
+            'filter{id.in}': ids
+        }
+    })
+        .then(({ data }) => data?.uploads);
+};
+
 export default {
     getEndpoints,
     getResources,
@@ -732,5 +756,7 @@ export default {
     updateCompactPermissionsByPk,
     deleteResource,
     copyResource,
-    getDatasets
+    getDatasets,
+    getPendingUploads,
+    getProcessedUploadsById
 };
