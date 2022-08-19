@@ -120,6 +120,14 @@ export const plugins = {
         'Swipe',
         () => import(/* webpackChunkName: 'plugins/swipe' */ '@mapstore/framework/plugins/Swipe')
     ),
+    PortalPlugin: toLazyPlugin(
+        'Portal',
+        () => import(/* webpackChunkName: 'plugins/portal' */ '@js/plugins/Portal')
+    ),
+    FeaturedListPlugin: toLazyPlugin(
+        'FeaturedList',
+        () => import(/* webpackChunkName: 'plugins/featured-list' */ '@js/plugins/FeaturedList')
+    ),
     SearchServicesConfigPlugin: toLazyPlugin(
         'SearchServicesConfig',
         () => import(/* webpackChunkName: 'plugins/search-service-config' */ '@mapstore/framework/plugins/SearchServicesConfig')

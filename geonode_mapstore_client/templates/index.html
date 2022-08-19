@@ -48,9 +48,21 @@
                         </div>
                     </div>
                 {% endblock %}
-    
+                
+                <h1>Text in the django template</h1>
+                <br>
+                <div>This is a plugin</div>
+                <div id="square-test" style="width:100px;height:100px"></div>
+
+                <h1>Another text in the django template</h1>
+                <br>
+                <div>This is another plugin</div>
+                <div id="row-test" style="height:200px"></div>
+                <br>
+                <div>This is another plugin</div>
+
                 {% block ms_scripts %}
-                    <script id="gn-script" src="{% static 'mapstore/dist/js/gn-home.js' %}?{% client_version %}"></script>
+                    <script id="gn-script" src="{% static 'mapstore/dist/js/gn-components.js' %}?{% client_version %}"></script>
                 {% endblock %}
     
                 {% block footer %}
