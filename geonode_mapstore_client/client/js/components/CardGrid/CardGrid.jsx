@@ -28,7 +28,8 @@ const Cards = withResizeDetector(({
     actions,
     onAction,
     onDownload,
-    downloading
+    downloading,
+    getDetailHref
 }) => {
 
     const width = containerWidth || detectedWidth;
@@ -113,6 +114,7 @@ const Cards = withResizeDetector(({
                             readOnly={isProcessing}
                             onDownload={onDownload}
                             downloading={downloading?.find((download) => download.pk === resource.pk) ? true : false}
+                            getDetailHref={getDetailHref}
                         />
                     </li>
                 );
@@ -121,7 +123,7 @@ const Cards = withResizeDetector(({
     );
 });
 
-const CardGrid = ({
+const InfiniteScrollCardGrid = ({
     resources,
     loading,
     page,
@@ -140,7 +142,8 @@ const CardGrid = ({
     onAction,
     onControl,
     onDownload,
-    downloading
+    downloading,
+    getDetailHref
 }) => {
 
     useInfiniteScroll({
@@ -155,13 +158,13 @@ const CardGrid = ({
 
     return (
         <div className="gn-card-grid">
-            {header}
             <div style={{
                 display: 'flex',
                 width: '100%'
             }}>
                 <div style={{ flex: 1, width: '100%' }}>
                     <div className="gn-card-grid-container" style={containerStyle}>
+                        {header}
                         {children}
                         {messageId && <div className="gn-card-grid-message">
                             <h1><HTML msgId={`gnhome.${messageId}Title`}/></h1>
@@ -172,6 +175,7 @@ const CardGrid = ({
                         <Cards
                             resources={resources}
                             formatHref={formatHref}
+                            getDetailHref={getDetailHref}
                             isCardActive={isCardActive}
                             options={cardOptions}
                             buildHrefByTemplate={buildHrefByTemplate}
@@ -197,6 +201,72 @@ const CardGrid = ({
             </div>
         </div>
     );
+};
+
+const FixedCardGrid = ({
+    resources,
+    formatHref,
+    isCardActive,
+    containerStyle,
+    header,
+    cardOptions,
+    messageId,
+    children,
+    buildHrefByTemplate,
+    actions,
+    onAction,
+    onControl,
+    onDownload,
+    downloading,
+    onSelect,
+    footer,
+    getDetailHref
+}) => {
+    return (
+        <div className="gn-card-grid">
+            <div style={{
+                display: 'flex',
+                width: '100%'
+            }}>
+                <div style={{ flex: 1, width: '100%' }}>
+                    <div className="gn-card-grid-container" style={containerStyle}>
+                        {header}
+                        {children}
+                        {messageId && <div className="gn-card-grid-message">
+                            <h1><HTML msgId={`gnhome.${messageId}Title`}/></h1>
+                            <p>
+                                <HTML msgId={`gnhome.${messageId}Content`}/>
+                            </p>
+                        </div>}
+                        <Cards
+                            resources={resources}
+                            formatHref={formatHref}
+                            getDetailHref={getDetailHref}
+                            isCardActive={isCardActive}
+                            options={cardOptions}
+                            buildHrefByTemplate={buildHrefByTemplate}
+                            actions={actions}
+                            onDownload={onDownload}
+                            downloading={downloading}
+                            onSelect={onSelect}
+                            onAction={(action, payload) => {
+                                if (action.isControlled) {
+                                    onControl(action.processType, 'value', payload);
+                                } else {
+                                    onAction(action.processType, payload, action.redirectTo);
+                                }
+                            }}
+                        />
+                        {footer}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const CardGrid = ({ fixed, ...props }) => {
+    return fixed ? <FixedCardGrid {...props}/> : <InfiniteScrollCardGrid {...props}/>;
 };
 
 CardGrid.defaultProps = {

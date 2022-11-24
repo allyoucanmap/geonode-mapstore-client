@@ -47,7 +47,8 @@ import {
     setupConfiguration,
     initializeApp,
     getPluginsConfiguration,
-    storeEpicsCache
+    storeEpicsCache,
+    getPluginsConfigOverride
 } from '@js/utils/AppUtils';
 import { ResourceTypes } from '@js/utils/ResourceUtils';
 import { requestResourceConfig } from '@js/actions/gnresource';
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     }
                                 },
                                 themeCfg: null,
-                                pluginsConfig: getPluginsConfiguration(localConfig.plugins, pluginsConfigKey),
+                                pluginsConfig: getPluginsConfigOverride(getPluginsConfiguration(localConfig.plugins, pluginsConfigKey)),
                                 lazyPlugins: pluginsDefinition.lazyPlugins,
                                 pluginsDef: {
                                     plugins: {

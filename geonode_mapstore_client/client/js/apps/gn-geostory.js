@@ -29,7 +29,8 @@ import {
     setupConfiguration,
     initializeApp,
     getPluginsConfiguration,
-    storeEpicsCache
+    storeEpicsCache,
+    getPluginsConfigOverride
 } from '@js/utils/AppUtils';
 import { ResourceTypes } from '@js/utils/ResourceUtils';
 import pluginsDefinition from '@js/plugins/index';
@@ -94,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             main({
                                 targetId,
                                 appComponent: withRoutes(routes)(ConnectedRouter),
-                                pluginsConfig: getPluginsConfiguration(localConfig.plugins, pluginsConfigKey),
+                                pluginsConfig: getPluginsConfigOverride(getPluginsConfiguration(localConfig.plugins, pluginsConfigKey)),
                                 loaderComponent: MainLoader,
                                 lazyPlugins: pluginsDefinition.lazyPlugins,
                                 pluginsDef: {

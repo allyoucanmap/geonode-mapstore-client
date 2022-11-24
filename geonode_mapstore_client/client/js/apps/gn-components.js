@@ -7,13 +7,10 @@
  */
 import { connect } from 'react-redux';
 import main from '@mapstore/framework/components/app/main';
-import ViewerRoute from '@js/routes/Viewer';
+import ComponentsRoute from '@js/routes/Components';
 import MainLoader from '@js/components/MainLoader';
 import Router, { withRoutes } from '@js/components/Router';
 import security from '@mapstore/framework/reducers/security';
-import gnresource from '@js/reducers/gnresource';
-import gnsettings from '@js/reducers/gnsettings';
-import { updateGeoNodeSettings } from '@js/actions/gnsettings';
 import {
     getEndpoints,
     getConfiguration,
@@ -22,21 +19,17 @@ import {
 import {
     setupConfiguration,
     initializeApp,
-    getPluginsConfiguration,
     storeEpicsCache,
+    getPluginsConfiguration,
     getPluginsConfigOverride
 } from '@js/utils/AppUtils';
-import { ResourceTypes } from '@js/utils/ResourceUtils';
 import pluginsDefinition from '@js/plugins/index';
-import ReactSwipe from 'react-swipeable-views';
-import SwipeHeader from '@mapstore/framework/components/data/identify/SwipeHeader';
-import { requestResourceConfig } from '@js/actions/gnresource';
-import gnresourceEpics from '@js/epics/gnresource';
-const requires = {
-    ReactSwipe,
-    SwipeHeader
-};
-import '@js/observables/persistence';
+import StandardApp from '@mapstore/framework/components/app/StandardApp';
+import withExtensions from '@mapstore/framework/components/app/withExtensions';
+import gnsettings from '@js/reducers/gnsettings';
+import { updateGeoNodeSettings } from '@js/actions/gnsettings';
+
+const requires = {};
 
 initializeApp();
 
@@ -47,14 +40,11 @@ const ConnectedRouter = connect((state) => ({
 
 
 const routes = [{
-    name: 'document_embed',
+    name: 'components',
     path: [
         '/'
     ],
-    pageConfig: {
-        resourceType: ResourceTypes.DOCUMENT
-    },
-    component: ViewerRoute
+    component: ComponentsRoute
 }];
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -64,29 +54,27 @@ document.addEventListener('DOMContentLoaded', function() {
             getAccountInfo()
         ])
             .then(([localConfig, user]) => {
+
                 setupConfiguration({ localConfig, user })
                     .then(({
                         securityState,
-                        geoNodeConfiguration,
                         pluginsConfigKey,
+                        geoNodeConfiguration,
                         configEpics,
                         onStoreInit,
-                        geoNodePageConfig,
-                        targetId = 'ms-container',
                         settings
                     }) => {
 
                         const appEpics = {
-                            ...configEpics,
-                            ...gnresourceEpics
+                            ...configEpics
                         };
 
                         storeEpicsCache(appEpics);
 
                         main({
-                            targetId,
                             appComponent: withRoutes(routes)(ConnectedRouter),
                             pluginsConfig: getPluginsConfigOverride(getPluginsConfiguration(localConfig.plugins, pluginsConfigKey)),
+                            targetId: 'ms-container',
                             loaderComponent: MainLoader,
                             lazyPlugins: pluginsDefinition.lazyPlugins,
                             pluginsDef: {
@@ -105,25 +93,17 @@ document.addEventListener('DOMContentLoaded', function() {
                             },
                             themeCfg: null,
                             appReducers: {
-                                gnresource,
-                                gnsettings,
-                                security
+                                security,
+                                gnsettings
                             },
                             appEpics,
                             onStoreInit,
                             geoNodeConfiguration,
                             initialActions: [
-                                // add some settings in the global state to make them accessible in the monitor state
-                                // later we could use expression in localConfig
-                                updateGeoNodeSettings.bind(null, settings),
-                                ...(geoNodePageConfig.resourceId !== undefined
-                                    ? [requestResourceConfig.bind(null, ResourceTypes.DOCUMENT, geoNodePageConfig.resourceId, {
-                                        readOnly: geoNodePageConfig.isEmbed
-                                    })]
-                                    : [])
+                                updateGeoNodeSettings.bind(null, settings)
                             ]
                         });
-                    });
+                    }, withExtensions(StandardApp));
             });
     });
 });

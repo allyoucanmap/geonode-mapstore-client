@@ -37,11 +37,10 @@ import widgets from '@mapstore/framework/reducers/widgets';
 import annotations from '@mapstore/framework/reducers/annotations';
 // end
 
-import SearchRoute from '@js/routes/Search';
-import DetailRoute from '@js/routes/Detail';
 import ViewerRoute from '@js/routes/Viewer';
 import UploadDatasetRoute from '@js/routes/UploadDataset';
 import UploadDocumentRoute from '@js/routes/UploadDocument';
+import CatalogueRoute from '@js/routes/Catalogue';
 
 import gnsearch from '@js/reducers/gnsearch';
 import gnresource from '@js/reducers/gnresource';
@@ -59,7 +58,8 @@ import {
     setupConfiguration,
     initializeApp,
     getPluginsConfiguration,
-    storeEpicsCache
+    storeEpicsCache,
+    getPluginsConfigOverride
 } from '@js/utils/AppUtils';
 import { ResourceTypes } from '@js/utils/ResourceUtils';
 import { updateGeoNodeSettings } from '@js/actions/gnsettings';
@@ -172,21 +172,15 @@ const routes = [
         component: ViewerRoute
     },
     {
-        name: 'resources',
+        name: 'catalogue',
         path: [
             '/',
-            '/search/',
-            '/search/filter'
-        ],
-        component: SearchRoute
-    },
-    {
-        name: 'detail',
-        path: [
+            '/search',
+            '/search/filter',
             '/detail/:pk',
-            '/detail/:ctype/:pk'
+            '/detail/:resourceType/:pk'
         ],
-        component: DetailRoute
+        component: CatalogueRoute
     },
     {
         name: 'upload_dataset',
@@ -268,7 +262,7 @@ Promise.all([
                                 }
                             },
                             themeCfg: null,
-                            pluginsConfig: getPluginsConfiguration(localConfig.plugins, pluginsConfigKey),
+                            pluginsConfig: getPluginsConfigOverride(getPluginsConfiguration(localConfig.plugins, pluginsConfigKey)),
                             lazyPlugins: pluginsDefinition.lazyPlugins,
                             pluginsDef: {
                                 plugins: {

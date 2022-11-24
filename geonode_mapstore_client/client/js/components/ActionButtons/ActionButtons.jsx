@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from '@js/components/Dropdown';
 import Message from '@mapstore/framework/components/I18N/Message';
@@ -27,9 +27,18 @@ function ActionButtons({
         }
     }
 
+    const containerNode = useRef();
+    const dropdownClassName = 'gn-card-dropdown';
+    const dropdownNode = containerNode?.current?.querySelector(`.${dropdownClassName}`);
+    const isDropdownEmpty = (dropdownNode?.children?.length || 0) === 0;
 
     return (
-        <div className="gn-resource-action-buttons">
+        <div
+            ref={containerNode}
+            className="gn-resource-action-buttons"
+            onClick={event => event.stopPropagation()}
+            style={isDropdownEmpty ? { display: 'none' } : {}}
+        >
             <Dropdown className="gn-card-options" pullRight>
                 <Dropdown.Toggle
                     id={`gn-card-options-${resource.pk2 || resource.pk}`}
@@ -39,8 +48,12 @@ function ActionButtons({
                 >
                     <FaIcon name="ellipsis-v" />
                 </Dropdown.Toggle>
-                <Dropdown.Menu className={`gn-card-dropdown`}>
+                <Dropdown.Menu className={dropdownClassName}>
                     {options.map((opt) => {
+                        if (opt.type === 'plugin') {
+                            const { Component } = opt;
+                            return <Component key={opt.action} resource={resource}/>;
+                        }
                         if ((opt.type === 'button' && actions[opt.action]) || opt.action === 'download') {
                             return (
                                 ((opt.action === 'download' && resource.download_url) || (opt.action !== 'copy' && opt.action !== 'download') || (resource?.is_copyable && opt.action !== 'download')) && <Dropdown.Item

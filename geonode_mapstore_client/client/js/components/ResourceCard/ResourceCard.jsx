@@ -34,7 +34,10 @@ const ResourceCard = forwardRef(({
     featured,
     onClick,
     downloading,
-    onDownload
+    onDownload,
+    getDetailHref = (res) => formatHref({
+        pathname: `/detail/${res.resource_type}/${res.pk}`
+    })
 }, ref) => {
     const res = data;
     const types = getTypesInfo();
@@ -68,9 +71,7 @@ const ResourceCard = forwardRef(({
             {!readOnly && (
                 <a
                     className="gn-resource-card-link"
-                    href={formatHref({
-                        pathname: `/detail/${res.resource_type}/${res.pk}`
-                    })}
+                    href={getDetailHref(res)}
                 />
             )}
             {!readOnly &&
@@ -126,9 +127,7 @@ const ResourceCard = forwardRef(({
                                             : 'gn-card-title'
                                     }
                                     readOnly={readOnly}
-                                    href={formatHref({
-                                        pathname: `/detail/${res.resource_type}/${res.pk}`
-                                    })}
+                                    href={getDetailHref(res)}
                                 >
                                     {res.title}
                                 </ALink>

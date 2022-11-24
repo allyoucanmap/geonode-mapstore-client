@@ -32,7 +32,8 @@ const FeaturedList = withResizeDetector(({
     onControl,
     onAction,
     onDownload,
-    downloading
+    downloading,
+    getDetailHref
 }) => {
 
     const [count, setCount] = useState();
@@ -78,6 +79,7 @@ const FeaturedList = withResizeDetector(({
                             }}
                             onDownload={onDownload}
                             downloading={downloading}
+                            getDetailHref={getDetailHref}
                         />
                         <div className="gn-card-grid-pagination featured-list">
 

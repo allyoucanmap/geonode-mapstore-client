@@ -23,7 +23,8 @@ const Cards = ({
     actions,
     onAction,
     onDownload,
-    downloading
+    downloading,
+    getDetailHref
 }) => {
     const width = detectedWidth || containerWidth;
     const margin = 24;
@@ -89,6 +90,7 @@ const Cards = ({
                             onAction={onAction}
                             onDownload={onDownload}
                             downloading={downloading?.find((download) => download.pk === resource.pk) ? true : false}
+                            getDetailHref={getDetailHref}
                         />
                     </li>
                 );

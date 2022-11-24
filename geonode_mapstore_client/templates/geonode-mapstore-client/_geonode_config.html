@@ -71,6 +71,51 @@
         const geoServerPublicLocation = '{{ GEOSERVER_PUBLIC_LOCATION }}' || '';
         const isMobile = '{{ request.user_agent.is_mobile }}' === 'True' ? true : false;
 
+        const customFilters = {
+            "my-resources": {
+                "filter{owner.pk}": "{state('user') && state('user').pk}"
+            },
+            "favorite": {
+                "favorite": true
+            },
+            "featured": {
+                "filter{featured}": true
+            },
+            "unpublished": {
+                "filter{is_published}": false
+            },
+            "pending-approval": {
+                "filter{is_approved}": false
+            },
+            "dataset": {
+                "filter{resource_type.in}": "dataset"
+            },
+            "store-vector": {
+                "filter{subtype.in}": "vector"
+            },
+            "store-raster": {
+                "filter{subtype.in}": "raster"
+            },
+            "store-remote": {
+                "filter{subtype.in}": "remote"
+            },
+            "store-time-series": {
+                "filter{subtype.in}": "vector_time"
+            },
+            "document": {
+                "filter{resource_type.in}": "document"
+            },
+            "map": {
+                "filter{resource_type.in}": "map"
+            },
+            "geostory": {
+                "filter{resource_type.in}": "geostory"
+            },
+            "dashboard": {
+                "filter{resource_type.in}": "dashboard"
+            }
+        };
+
         window.__GEONODE_CONFIG__ = {
             languageCode: '{{ LANGUAGE_CODE }}',
             languages: languages,
@@ -112,6 +157,7 @@
                     endpointV2: siteUrl + 'api/v2'
                 },
                 projectionDefs: projectionDefs,
+                geoNodeCustomFilters: customFilters,
                 // the properties inside geoNodeSettings are stored in the state
                 // and accessible by the monitored state with state('settings')
                 geoNodeSettings: {
@@ -132,7 +178,7 @@
                     defaultThumbnailSize: defaultThumbnailSize,
                     upload: { 
                         supportedDatasetFileTypes: supportedDatasetFileTypes
-                        }
+                    }
                 },
                 geoNodeConfiguration: {
                     cardsMenu: {
