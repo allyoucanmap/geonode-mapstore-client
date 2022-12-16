@@ -22,6 +22,7 @@ import {
     isNewResource
 } from '@js/selectors/resource';
 import { hasPermissionsTo, reduceArrayRecursive } from '@js/utils/MenuUtils';
+import { mapTypeSelector } from '@mapstore/framework/selectors/maptype';
 
 function checkResourcePerms(menuItem, resourcePerms) {
     if (menuItem.disableIf) {
@@ -43,14 +44,16 @@ function ActionNavbarPlugin(
         isDirtyState,
         selectedLayerPermissions,
         titleItems,
-        disableTitle
+        disableTitle,
+        mapType
     },
     context
 ) {
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins }, [
         resource?.pk,
-        selectedLayerPermissions
+        selectedLayerPermissions,
+        mapType
     ]);
 
     const leftMenuItemsPlugins = reduceArrayRecursive(leftMenuItems, (item) => {
@@ -136,7 +139,8 @@ const ConnectedActionNavbarPlugin = connect(
             getResourceData,
             getResourceDirtyState,
             getSelectedLayerPermissions,
-            isNewResource
+            isNewResource,
+            mapTypeSelector
         ],
         (
             resourcePerms,
@@ -144,13 +148,15 @@ const ConnectedActionNavbarPlugin = connect(
             resource,
             dirtyState,
             selectedLayerPermissions,
-            newResource
+            newResource,
+            mapType
         ) => ({
             resourcePerms: resourcePerms.length > 0 ? resourcePerms : userCanAddResource ? ['change_resourcebase'] : [],
             resource,
             isDirtyState: !!dirtyState,
             selectedLayerPermissions,
-            disableTitle: newResource
+            disableTitle: newResource,
+            mapType
         })
     )
 )(ActionNavbarPlugin);

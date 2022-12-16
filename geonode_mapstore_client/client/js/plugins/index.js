@@ -23,7 +23,10 @@ let epicsNamesToExclude = [
     'loadGeostoryEpic',
     'reloadGeoStoryOnLoginLogout',
     'loadStoryOnHistoryPop',
-    'saveGeoStoryResource'
+    'saveGeoStoryResource',
+    'syncMapType',
+    'updateLast2dMapTypeOnChangeEvents',
+    'restore2DMapTypeOnLocationChange'
 ];
 
 // we need to exclude epics that have been initialized already at app level
@@ -415,6 +418,10 @@ export const plugins = {
     FeaturedResourcesGridPlugin: toModulePlugin(
         'FeaturedResourcesGrid',
         () => import(/* webpackChunkName: 'plugins/featured-resources-grid' */ '@js/plugins/FeaturedResourcesGrid')
+    ),
+    MapTypePlugin: toModulePlugin(
+        'MapType',
+        () => import(/* webpackChunkName: 'plugins/map-type' */ '@js/plugins/MapType')
     )
 };
 

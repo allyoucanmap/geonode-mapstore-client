@@ -71,6 +71,10 @@
         {
             "name": "printEnabled",
             "path": "print.capabilities"
+        },
+        {
+            "name": "mapType",
+            "path": "maptype.mapType"
         }
     ],
     "projectionDefs": [],
@@ -1506,6 +1510,10 @@
                     "rightMenuItems": [
                         {
                             "type": "plugin",
+                            "name": "MapType"
+                        },
+                        {
+                            "type": "plugin",
                             "name": "FullScreen"
                         }
                     ]
@@ -2062,6 +2070,9 @@
                     "editingAllowedRoles": null,
                     "enableSetDefaultStyle": true
                 }
+            },
+            {
+                "name": "MapType"
             }
         ],
         "geostory_viewer": [

@@ -89,6 +89,7 @@ import {
 } from '@mapstore/framework/actions/notifications';
 import { getStyleProperties } from '@js/api/geonode/style';
 import { convertDependenciesMappingForCompatibility } from '@mapstore/framework/utils/WidgetsUtils';
+import { changeMapType } from '@mapstore/framework/actions/maptype';
 
 const resourceTypes = {
     [ResourceTypes.DATASET]: {
@@ -190,7 +191,10 @@ const resourceTypes = {
                         configureMap(mapConfig),
                         setControlProperty('toolbar', 'expanded', false),
                         setResource(resource),
-                        setResourceId(pk)
+                        setResourceId(pk),
+                        ...(mapConfig?.mapType?.lib
+                            ? [changeMapType(mapConfig.mapType.lib)]
+                            : [])
                     );
                 }),
         newResourceObservable: (options) =>

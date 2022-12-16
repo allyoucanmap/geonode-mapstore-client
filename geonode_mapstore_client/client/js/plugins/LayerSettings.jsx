@@ -60,12 +60,13 @@ function LayerSettings({
     selectedNodes,
     onClose,
     items = [],
+    mapType,
     ...props
 }, context) {
 
 
     const { loadedPlugins } = context;
-    const configuredItems = usePluginItems({ items, loadedPlugins });
+    const configuredItems = usePluginItems({ items, loadedPlugins }, [mapType]);
 
     if (isEmpty(node)) {
         return null;
