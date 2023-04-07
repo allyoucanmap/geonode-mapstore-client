@@ -28,6 +28,13 @@ import withExtensions from '@mapstore/framework/components/app/withExtensions';
 import gnsettings from '@js/reducers/gnsettings';
 import { updateGeoNodeSettings } from '@js/actions/gnsettings';
 import { COMPONENTS_ROUTES, appRouteComponentTypes } from '@js/utils/AppRoutesUtils';
+import {
+    standardReducers,
+    standardEpics,
+    standardRootReducerFunc
+} from '@mapstore/framework/stores/defaultOptions';
+
+import maptype from '@mapstore/framework/reducers/maptype';
 
 const requires = {};
 
@@ -59,10 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         geoNodeConfiguration,
                         configEpics,
                         onStoreInit,
+                        mapType = 'openlayers',
                         settings
                     }) => {
 
                         const appEpics = {
+                            ...standardEpics,
                             ...configEpics
                         };
 
@@ -84,15 +93,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             },
                             initialState: {
                                 defaultState: {
+                                    maptype: {
+                                        mapType
+                                    },
                                     ...securityState
                                 }
                             },
                             themeCfg: null,
                             appReducers: {
+                                ...standardReducers,
                                 security,
-                                gnsettings
+                                gnsettings,
+                                maptype
                             },
                             appEpics,
+                            rootReducerFunc: standardRootReducerFunc,
                             onStoreInit,
                             geoNodeConfiguration,
                             initialActions: [

@@ -54,6 +54,14 @@ import FaIcon from '@js/components/FaIcon';
 import Button from '@js/components/Button';
 import useLocalStorage from '@js/hooks/useLocalStorage';
 import MainLoader from '@js/components/MainLoader';
+import withDebounceOnCallback from '@mapstore/framework/components/misc/enhancers/withDebounceOnCallback';
+import localizedProps from '@mapstore/framework/components/misc/enhancers/localizedProps';
+import { FormControl as FormControlRB, Glyphicon } from 'react-bootstrap';
+const FormControl = localizedProps('placeholder')(FormControlRB);
+function InputControl({ onChange, value, ...props }) {
+    return <FormControl {...props} value={value} onChange={event => onChange(event.target.value)}/>;
+}
+const InputControlWithDebounce = withDebounceOnCallback('onChange', 'value')(InputControl);
 
 const suggestionsRequestTypes = {
     categories: {
@@ -191,6 +199,7 @@ function ResourcesGrid({
     totalResources,
     loading,
     defaultQuery,
+    panel,
     order = {
         defaultLabelId: 'gnhome.orderBy',
         options: [
@@ -435,10 +444,11 @@ function ResourcesGrid({
     onReplaceLocation,
     error,
     enableGeoNodeCardsMenuItems,
-    detailsTabs = []
+    detailsTabs = [],
+    defaultLayoutCardsStyle = 'grid'
 }, context) {
 
-    const [cardLayoutStyle, setCardLayoutStyle] = useLocalStorage('layoutCardsStyle', 'grid');
+    const [cardLayoutStyle, setCardLayoutStyle] = useState(defaultLayoutCardsStyle);
     const isPaginated = pagination !== undefined
         ? pagination
         : cardLayoutStyle === 'grid'
@@ -452,7 +462,7 @@ function ResourcesGrid({
         order,
         detailsTabs
     });
-
+    console.log(cardLayoutStyle, defaultLayoutCardsStyle);
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins }, []);
 
@@ -517,7 +527,7 @@ function ResourcesGrid({
         if (!init) {
             const { query } = url.parse(location.search, true);
             if (pagination === undefined && query.page) {
-                setCardLayoutStyle('list');
+                setCardLayoutStyle(defaultLayoutCardsStyle);
             }
             setInit(true);
         }
@@ -543,7 +553,7 @@ function ResourcesGrid({
                 ...(page && { page })
             }, undefined, true);
         }
-    }, [init, isPaginated]);
+    }, [init, isPaginated, defaultQuery]);
 
     const [top, setTop] = useState(0);
     const [bottom, setBottom] = useState(0);
@@ -577,48 +587,113 @@ function ResourcesGrid({
     }, [container, panelsWidth, filterFormWidth]);
 
     useEffect(() => {
-        const pathname = location.pathname;
-        const matchedPath = [
-            '/search',
-            '/search/filter',
-            '/detail/:pk',
-            '/detail/:resourceType/:pk'
-        ].find((path) => matchPath(pathname, { path, exact: true }));
-        if (matchedPath) {
-            const options = matchPath(pathname, { path: matchedPath, exact: true });
-            onReplaceLocation('' + (location.search || ''));
-            switch (options.path) {
-            case '/search':
-            case '/detail/:pk': {
-                //
-                break;
-            }
-            case '/search/filter': {
-                handleShowFilterForm(true);
-                break;
-            }
-            case '/detail/:resourceType/:pk': {
-                const { query: locationQuery } = url.parse(location.search, true);
-                const search = url.format({ query: {
-                    ...locationQuery,
-                    d: `${options?.params?.pk};${options?.params?.resourceType}`
-                }});
-                simulateAClick('#' + (search || ''));
-                break;
-            }
-            default:
-                break;
+        console.log(panel, location.pathname);
+        if (!panel) {
+            const pathname = location.pathname;
+            const matchedPath = [
+                '/search',
+                '/search/filter',
+                '/detail/:pk',
+                '/detail/:resourceType/:pk'
+            ].find((path) => matchPath(pathname, { path, exact: true }));
+            if (matchedPath) {
+                const options = matchPath(pathname, { path: matchedPath, exact: true });
+                onReplaceLocation('' + (location.search || ''));
+                switch (options.path) {
+                case '/search':
+                case '/detail/:pk': {
+                    //
+                    break;
+                }
+                case '/search/filter': {
+                    handleShowFilterForm(true);
+                    break;
+                }
+                case '/detail/:resourceType/:pk': {
+                    const { query: locationQuery } = url.parse(location.search, true);
+                    const search = url.format({ query: {
+                        ...locationQuery,
+                        d: `${options?.params?.pk};${options?.params?.resourceType}`
+                    }});
+                    simulateAClick('#' + (search || ''));
+                    break;
+                }
+                default:
+                    break;
+                }
             }
         }
-    }, [location.pathname]);
+    }, [location.pathname, panel]);
 
+    const inputTextQFilter = (
+        <InputControlWithDebounce
+            placeholder="gnhome.search"
+            value={query.q || ''}
+            debounceTime={300}
+            onChange={(q) => handleUpdate({ q })}
+        />
+    );
+
+    const filterForm = !disableFilters && (
+        <div
+            className="gn-resources-panel-wrapper"
+            style={{
+                top: panel ? 0 : top,
+                bottom: panel ? 0 : bottom,
+                visibility: showFilterForm ? 'visible' : 'hidden'
+            }}
+        >
+            <div
+                ref={filterFormNode}
+                className="gn-resources-filter"
+            >
+                <FiltersForm
+                    key="gn-filter-form"
+                    id="gn-filter-form"
+                    fields={parsedConfig.filtersFormItems}
+                    extentProps={parsedConfig.extent}
+                    suggestionsRequestTypes={suggestionsRequestTypes}
+                    query={query}
+                    onChange={handleUpdate}
+                    onClose={handleShowFilterForm.bind(null, false)}
+                    onClear={handleClear}
+                    header={inputTextQFilter}
+                />
+            </div>
+        </div>
+    );
+
+    const detailsPanel = !disableDetailPanel && (
+        <div
+            className="gn-resources-panel-wrapper"
+            style={{
+                top: panel ? 0 : top,
+                bottom: panel ? 0 : bottom,
+                visibility: showDetail ? 'visible' : 'hidden'
+            }}
+        >
+            <div
+                ref={detailNode}
+                className="gn-resource-detail"
+            >
+                {!isEmpty(resource) && <ConnectedDetailsPanel
+                    key={`${resource.pk}:${resource.resource_type}`}
+                    enableFavorite={!!user}
+                    resource={resource}
+                    linkHref={closeDetailPanelHref}
+                    formatHref={handleFormatHref}
+                    tabs={parsedConfig.detailsTabs}
+                />}
+            </div>
+        </div>
+    );
     return (
         <>
             <Portal targetSelector={targetSelector}>
                 <>
                     <div
-                        className="gn-resources-grid gn-row"
-                        style={container ? {} : {
+                        className={`gn-resources-grid${panel ? ' gn-resources-grid-panel' : ' gn-row'}`}
+                        style={(container || panel) ? {} : {
                             width: `calc(100% - ${panelsWidth}px)`,
                             marginLeft: filterFormWidth
                         }}
@@ -626,12 +701,15 @@ function ResourcesGrid({
                         <div className="gn-grid-container">
                             <ConnectedCardGrid
                                 fixed={isPaginated}
-                                cardLayoutStyle={cardLayoutStyle}
-                                containerStyle={{
-                                    ...((containerHeight && isPaginated) && { minHeight: containerHeight })
-                                }}
+                                cardLayoutStyle="grid"
+                                containerStyle={panel
+                                    ? {}
+                                    : {
+                                        ...((containerHeight && isPaginated) && { minHeight: containerHeight })
+                                    }}
                                 header={
                                     <FiltersMenu
+                                        hideCardLayoutButton={!!panel}
                                         formatHref={handleFormatHref}
                                         cardsMenu={parsedConfig.menuItems || []}
                                         order={query?.sort}
@@ -643,18 +721,30 @@ function ResourcesGrid({
                                         totalFilters={queryFilters.length}
                                         filtersActive={!!(queryFilters.length > 0)}
                                         loading={loading}
-                                        cardLayoutStyle={cardLayoutStyle}
+                                        cardLayoutStyle="grid"
                                         setCardLayoutStyle={setCardLayoutStyle}
-                                        style={{
+                                        style={panel
+                                        ? {
+                                            position: 'sticky',
+                                            top: 0
+                                        }
+                                        : {
                                             position: 'sticky',
                                             top
                                         }}
-                                    />
+                                    >
+
+                                    </FiltersMenu>
                                 }
                                 footer={
                                     <div
                                         className="gn-resources-pagination"
-                                        style={{
+                                        style={panel
+                                        ? {
+                                            position: 'sticky',
+                                            bottom: 0
+                                        }
+                                        : {
                                             position: 'sticky',
                                             bottom
                                         }}
@@ -694,61 +784,18 @@ function ResourcesGrid({
                                 }}
                             />
                         </div>
+                        {panel && <>
+                            {filterForm}
+                            {detailsPanel}
+                        </>}
                     </div>
                     {loading && (totalResources || 0) === 0 ? <MainLoader className="gn-main-grid-loader"/> : null}
                 </>
             </Portal>
-            {!disableFilters && createPortal(
-                <div
-                    className="gn-resources-panel-wrapper"
-                    style={{
-                        top,
-                        bottom,
-                        visibility: showFilterForm ? 'visible' : 'hidden'
-                    }}
-                >
-                    <div
-                        ref={filterFormNode}
-                        className="gn-resources-filter"
-                    >
-                        <FiltersForm
-                            key="gn-filter-form"
-                            id="gn-filter-form"
-                            fields={parsedConfig.filtersFormItems}
-                            extentProps={parsedConfig.extent}
-                            suggestionsRequestTypes={suggestionsRequestTypes}
-                            query={query}
-                            onChange={handleUpdate}
-                            onClose={handleShowFilterForm.bind(null, false)}
-                            onClear={handleClear}
-                        />
-                    </div>
-                </div>,
-                document.querySelector('body > div'))}
-            {!disableDetailPanel && createPortal(
-                <div
-                    className="gn-resources-panel-wrapper"
-                    style={{
-                        top,
-                        bottom,
-                        visibility: showDetail ? 'visible' : 'hidden'
-                    }}
-                >
-                    <div
-                        ref={detailNode}
-                        className="gn-resource-detail"
-                    >
-                        {!isEmpty(resource) && <ConnectedDetailsPanel
-                            key={`${resource.pk}:${resource.resource_type}`}
-                            enableFavorite={!!user}
-                            resource={resource}
-                            linkHref={closeDetailPanelHref}
-                            formatHref={handleFormatHref}
-                            tabs={parsedConfig.detailsTabs}
-                        />}
-                    </div>
-                </div>,
-                document.querySelector('body > div'))}
+            {!panel && <>
+                {createPortal(filterForm, document.querySelector('body > div'))}
+                {createPortal(detailsPanel, document.querySelector('body > div'))}
+            </>}
         </>
     );
 }

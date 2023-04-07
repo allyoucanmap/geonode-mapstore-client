@@ -2,108 +2,649 @@
 {% load client_version %}
 <!DOCTYPE html>
 <html class="msgapi">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
-        <link href="{% static 'mapstore/dist/themes/geonode.css' %}?{% client_version %}" rel="stylesheet" />
-        <title>{{ SITE_NAME }}</title>
-        <link rel="shortcut icon" href="{% static 'geonode/img/favicon.ico' %}" />
-        {% include './geonode-mapstore-client/snippets/loader_style.html' %}
 
-        {% block custom_theme %}
-            {% include './geonode-mapstore-client/snippets/custom_theme.html' %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link href="{% static 'mapstore/dist/themes/geonode.css' %}?{% client_version %}" rel="stylesheet" />
+    <title>{{ SITE_NAME }}</title>
+    <link rel="shortcut icon" href="{% static 'geonode/img/favicon.ico' %}" />
+    {% include './geonode-mapstore-client/snippets/loader_style.html' %}
 
-        {% block extra_style %}
-        {% endblock %}
+    {% block custom_theme %}
+    {% include './geonode-mapstore-client/snippets/custom_theme.html' %}
+    {% endblock %}
 
-        {% block extra_head %}
-        {% endblock %}
-    </head>
-    <body class="msgapi ms2" data-ms2-container="ms2">
-        <div class="gn-page-wrapper {% if request.user_agent.is_mobile %}gn-mobile{% else %}gn-desktop{% endif %}">
-            <div class="gn-theme gn-homepage">
-                {% include './geonode-mapstore-client/_geonode_config.html' %}
-                {% block header %}
-                    {% include './geonode-mapstore-client/snippets/header.html' with show_hero=True %}
-                {% endblock %}
-    
-                {% block content %}
-                    {% comment %}
-                    <!-- example of content extension -->
-                    <div class="gn-container">
-                        <div class="gn-content">
-                            <!-- My custom content -->
-                        </div>
-                    </div>
-                    {% endcomment %}
-                    <div class="gn-container">
-                        <div id="gn-home-featured-resources-grid"></div>
-                        <div id="gn-home-resources-grid"></div>
-                    </div>
-                {% endblock %}
-    
-                {% block container %}
-                    <div id="ms-container">
-                        <div class="gn-main-event-container">
-                            <div class="gn-main-event-content">
-                                <div class="gn-main-loader"></div>
-                                <div class="gn-main-event-text"></div>
-                            </div>
-                        </div>
-                    </div>
-                {% endblock %}
+    {% block extra_style %}
+    {% endblock %}
 
-                <script>
-                    window.addEventListener('mapstore:ready', function(event) {
-                        const msAPI = event.detail;
-                        msAPI.setPluginsConfig([
-                            {
-                                name: 'FeaturedResourcesGrid',
-                                cfg: {
-                                    targetSelector: '#gn-home-featured-resources-grid',
-                                    pagePath: '/catalogue/'
-                                }
-                            },
-                            {
-                                name: 'ResourcesGrid',
-                                cfg: {
-                                    targetSelector: '#gn-home-resources-grid',
-                                    containerSelector: '#gn-home-resources-grid',
-                                    pagination: false,
-                                    pagePath: '/catalogue/',
-                                    disableFilters: true,
-                                    disableDetailPanel: true,
-                                    enableGeoNodeCardsMenuItems: true
-                                }
-                            },
-                            { name: 'SaveAs', cfg: { closeOnSave: true } },
-                            { name: 'DeleteResource' },
-                            { name: 'DownloadResource' },
-                            { name: 'Notifications' }
-                        ]);
-                    });
-                </script>
-    
-                {% block ms_scripts %}
-                    <script id="gn-script" src="{% static 'mapstore/dist/js/gn-components.js' %}?{% client_version %}"></script>
-                {% endblock %}
-    
-                {% block footer %}
-                    {% include './geonode-mapstore-client/snippets/footer.html' %}
-                {% endblock %}
-    
-                {% block scripts %}
-                    <script src="{% static "lib/js/jquery.min.js" %}"></script>
-                    <script src="{% static "lib/js/bootstrap.min.js" %}"></script>
-                    <script type="text/javascript">
-                        // enable dropdown functionalities
-                        $('.dropdown-toggle').dropdown();
-                    </script>
-                {% endblock %}
+    {% block extra_head %}
+    {% endblock %}
+</head>
+
+<body class="msgapi ms2" data-ms2-container="ms2">
+    <div class="gn-page-wrapper {% if request.user_agent.is_mobile %}gn-mobile{% else %}gn-desktop{% endif %}">
+        <div class="gn-theme gn-homepage">
+            
+            {% include './geonode-mapstore-client/_geonode_config.html' %}
+
+            {% comment %}
+            {% block header %}
+            {% include './geonode-mapstore-client/snippets/header.html' %}
+            {% endblock %}
+            {% endcomment %}
+
+            {% block content %}
+            {% comment %}
+            <!-- example of content extension -->
+            <div class="gn-container">
+                <div class="gn-content">
+                    <!-- My custom content -->
+                </div>
             </div>
+            {% endcomment %}
+            <div class="gn-container">
+                <div class="gn-content text-center" id="query-buttons">
+                    <!-- My custom content -->
+                    <button data-query-id="map" class="btn btn-default"><i class="fa fa-map fa-4x"></i></button>
+                    <button data-query-id="dashboard" class="btn btn-default"><i class="fa fa-dashboard fa-4x"></i></button>
+                    <button data-query-id="geostory" class="btn btn-default"><i class="fa fa-book fa-4x"></i></button>
+                </div>
+            </div>
+            {% endblock %}
+
+            {% block container %}
+            <div style="display: flex;width: calc(100% - 20px);height: 80vh;position: relative;margin: 10px;">
+                <div id="ms-container" style="flex: 1;">
+                    <div class="gn-main-event-container">
+                        <div class="gn-main-event-content">
+                            <div class="gn-main-loader"></div>
+                            <div class="gn-main-event-text"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:600px;height:100%;">
+                    <div id="gn-home-resources-grid" style="height: 100%;"></div>
+                </div>
+            </div>
+            {% endblock %}
+
+            <script>
+                window.addEventListener('mapstore:ready', function (event) {
+                    const msAPI = event.detail;
+
+                    const queryButtons = document.querySelectorAll('#query-buttons button');
+                    [...queryButtons].forEach((button) => {
+                        button.addEventListener('click', () => {
+                            msAPI.triggerAction({
+                                type: 'SET_CONTROL_PROPERTY',
+                                control: 'defaultQuery',
+                                property: 'value',
+                                value: {
+                                    f: button.getAttribute('data-query-id')
+                                }
+                            });
+                        });
+                    });
+
+                    msAPI.setPluginsConfig([
+                        {
+                            name: 'Map',
+                            cfg: {
+                                shouldLoadFont: false,
+                                "tools": [
+                                    "popup"
+                                ],
+                                mapOptions: {
+                                    openlayers: {
+                                        interactions: {
+                                            pinchRotate: false,
+                                            altShiftDragRotate: false
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Identify",
+                            "cfg": {
+                                "showInMapPopup": true,
+                                "viewerOptions": {
+                                    "container": "{context.ReactSwipe}"
+                                }
+                            }
+                        },
+                        {
+                            name: 'ResourcesGrid',
+                            cfg: {
+                                targetSelector: '#gn-home-resources-grid',
+                                pagination: true,
+                                panel: true,
+                                defaultQuery: "{state('defaultQuery')}",
+                                filtersFormItems: [
+                                    {
+                                        id: 'themes',
+                                        type: 'tab',
+                                        label: 'Themes',
+                                        items: [
+                                            {
+                                                id: 'my-resources',
+                                                labelId: 'gnhome.myResources',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'favorite',
+                                                labelId: 'gnhome.favorites',
+                                                type: 'filter',
+                                            },
+                                            {
+                                                id: 'featured',
+                                                labelId: 'gnhome.featuredList',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'unpublished',
+                                                labelId: 'gnhome.unpublished',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'pending-approval',
+                                                labelId: 'gnhome.pendingApproval',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'my-resources',
+                                                labelId: 'gnhome.myResources',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'favorite',
+                                                labelId: 'gnhome.favorites',
+                                                type: 'filter',
+                                            },
+                                            {
+                                                id: 'featured',
+                                                labelId: 'gnhome.featuredList',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'unpublished',
+                                                labelId: 'gnhome.unpublished',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'pending-approval',
+                                                labelId: 'gnhome.pendingApproval',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'my-resources',
+                                                labelId: 'gnhome.myResources',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'favorite',
+                                                labelId: 'gnhome.favorites',
+                                                type: 'filter',
+                                            },
+                                            {
+                                                id: 'featured',
+                                                labelId: 'gnhome.featuredList',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'unpublished',
+                                                labelId: 'gnhome.unpublished',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'pending-approval',
+                                                labelId: 'gnhome.pendingApproval',
+                                                type: 'filter'
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'resources',
+                                        type: 'tab',
+                                        label: 'Resources',
+                                        labelId: 'gnhome.customFiltersTitle',
+                                        items: [
+                                            {
+                                                id: 'dataset',
+                                                labelId: 'gnhome.datasets',
+                                                type: 'filter',
+                                                items: [
+                                                    {
+                                                        id: 'store-vector',
+                                                        labelId: 'gnhome.vector',
+                                                        type: 'filter'
+                                                    },
+                                                    {
+                                                        id: 'store-raster',
+                                                        labelId: 'gnhome.raster',
+                                                        type: 'filter'
+                                                    },
+                                                    {
+                                                        id: 'store-remote',
+                                                        labelId: 'gnhome.remote',
+                                                        type: 'filter'
+                                                    },
+                                                    {
+                                                        id: 'store-time-series',
+                                                        labelId: 'gnhome.timeSeries',
+                                                        type: 'filter'
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                id: 'document',
+                                                labelId: 'gnhome.documents',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'map',
+                                                labelId: 'gnhome.maps',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'geostory',
+                                                labelId: 'gnhome.geostories',
+                                                type: 'filter'
+                                            },
+                                            {
+                                                id: 'dashboard',
+                                                labelId: 'gnhome.dashboards',
+                                                type: 'filter'
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: 'others',
+                                        type: 'tab',
+                                        label: 'Others',
+                                        items: [
+                                            {
+                                                labelId: 'gnhome.categories',
+                                                placeholderId: 'gnhome.categoriesPlaceholder',
+                                                type: 'select',
+                                                suggestionsRequestKey: 'categories'
+                                            },
+                                            {
+                                                labelId: 'gnhome.keywords',
+                                                placeholderId: 'gnhome.keywordsPlaceholder',
+                                                type: 'select',
+                                                suggestionsRequestKey: 'keywords'
+                                            },
+                                            {
+                                                labelId: 'gnhome.regions',
+                                                placeholderId: 'gnhome.regionsPlaceholder',
+                                                type: 'select',
+                                                suggestionsRequestKey: 'regions'
+                                            },
+                                            {
+                                                labelId: 'gnhome.owners',
+                                                placeholderId: 'gnhome.ownersPlaceholder',
+                                                type: 'select',
+                                                suggestionsRequestKey: 'owners'
+                                            }
+                                        ]
+                                    }
+                                    
+                                ],
+                                "detailsTabs": [
+                                    {
+                                        "type": "tab",
+                                        "id": "info",
+                                        "labelId": "gnviewer.info",
+                                        "items": [
+                                            {
+                                                "type": "text",
+                                                "labelId": "gnviewer.title",
+                                                "value": "{context.get(state('gnResourceData'), 'title')}"
+                                            },
+                                            {
+                                                "type": "link",
+                                                "labelId": "gnviewer.owner",
+                                                "href": "{'/people/profile/' + context.get(state('gnResourceData'), 'owner.username')}",
+                                                "value": "{context.getUserResourceName(context.get(state('gnResourceData'), 'owner'))}",
+                                                "disableIf": "{!context.get(state('gnResourceData'), 'owner.username')}"
+                                            },
+                                            {
+                                                "type": "date",
+                                                "format": "MMMM Do YYYY",
+                                                "labelId": "gnviewer.created",
+                                                "value": "{context.get(state('gnResourceData'), 'created')}"
+                                            },
+                                            {
+                                                "type": "date",
+                                                "format": "MMMM Do YYYY",
+                                                "labelId": "gnviewer.published",
+                                                "value": "{context.get(state('gnResourceData'), 'date')}"
+                                            },
+                                            {
+                                                "type": "date",
+                                                "format": "MMMM Do YYYY",
+                                                "labelId": "gnviewer.lastModified",
+                                                "value": "{context.get(state('gnResourceData'), 'last_updated')}"
+                                            },
+                                            {
+                                                "type": "query",
+                                                "labelId": "gnviewer.resourceType",
+                                                "value": "{context.get(state('gnResourceData'), 'resource_type')}",
+                                                "pathname": "/",
+                                                "query": {
+                                                    "f": "{context.get(state('gnResourceData'), 'resource_type')}"
+                                                }
+                                            },
+                                            {
+                                                "type": "query",
+                                                "labelId": "gnviewer.category",
+                                                "value": "{context.get(state('gnResourceData'), 'category.identifier')}",
+                                                "pathname": "/",
+                                                "query": {
+                                                    "filter{category.identifier.in}": "{context.get(state('gnResourceData'), 'category.identifier')}"
+                                                }
+                                            },
+                                            {
+                                                "type": "link",
+                                                "labelId": "gnviewer.pointOfContact",
+                                                "href": "{'/messages/create/' + context.get(state('gnResourceData'), 'poc.pk')}",
+                                                "value": "{context.getUserResourceName(context.get(state('gnResourceData'), 'poc'))}",
+                                                "disableIf": "{!context.get(state('gnResourceData'), 'poc.username')}"
+                                            },
+                                            {
+                                                "type": "query",
+                                                "labelId": "gnviewer.keywords",
+                                                "value": "{context.get(state('gnResourceData'), 'keywords')}",
+                                                "valueKey": "name",
+                                                "pathname": "/",
+                                                "queryTemplate": {
+                                                    "filter{keywords.slug.in}": "${slug}"
+                                                }
+                                            },
+                                            {
+                                                "type": "query",
+                                                "labelId": "gnviewer.regions",
+                                                "value": "{context.get(state('gnResourceData'), 'regions')}",
+                                                "valueKey": "name",
+                                                "pathname": "/",
+                                                "queryTemplate": {
+                                                    "filter{regions.name.in}": "${name}"
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "labelId": "gnviewer.attribution",
+                                                "value": "{context.get(state('gnResourceData'), 'attribution')}"
+                                            },
+                                            {
+                                                "type": "text",
+                                                "labelId": "gnviewer.language",
+                                                "value": "{context.get(state('gnResourceData'), 'language')}"
+                                            },
+                                            {
+                                                "type": "html",
+                                                "labelId": "gnviewer.supplementalInformation",
+                                                "value": "{context.get(state('gnResourceData'), 'supplemental_information')}"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]);
+                    function loadMap() {
+                        msAPI.triggerAction({
+                            type: 'MAP_CONFIG_LOADED',
+                            config: {
+                                "map": {
+                                    "zoom": 2,
+                                    "units": "m",
+                                    "center": {
+                                        "x": 0,
+                                        "y": 0,
+                                        "crs": "EPSG:4326"
+                                    },
+                                    "layers": [
+                                        {
+                                            "format": "image/jpeg",
+                                            "group": "background",
+                                            "name": "osm:osm_simple_light",
+                                            "opacity": 1,
+                                            "title": "OSM Simple Light",
+                                            "thumbURL": "assets/img/osm-simple-light.jpeg",
+                                            "type": "wms",
+                                            "url": [
+                                            "https://maps1.geosolutionsgroup.com/geoserver/wms",
+                                            "https://maps2.geosolutionsgroup.com/geoserver/wms",
+                                            "https://maps3.geosolutionsgroup.com/geoserver/wms",
+                                            "https://maps4.geosolutionsgroup.com/geoserver/wms",
+                                            "https://maps5.geosolutionsgroup.com/geoserver/wms",
+                                            "https://maps6.geosolutionsgroup.com/geoserver/wms"
+                                            ],
+                                            "source": "osm_simple_light",
+                                            "visibility": true,
+                                            "singleTile": false,
+                                            "credits": {
+                                                "title": "OSM Simple Light | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+                                            }
+                                        }
+                                    ],
+                                    "maxExtent": [
+                                        -20037508.34,
+                                        -20037508.34,
+                                        20037508.34,
+                                        20037508.34
+                                    ],
+                                    "mapOptions": {},
+                                    "projection": "EPSG:3857",
+                                    "backgrounds": [],
+                                    "sources": {}
+                                },
+                                "version": 2
+                            },
+                            legacy: false
+                        });
+                        msAPI.offAction('REDUCERS_LOADED', loadMap);
+                    }
+                    msAPI.onAction('REDUCERS_LOADED', loadMap);
+                    let initBboxPreviewLayer = false;
+                    let testPoints = true;
+                    const VECTOR_LAYER_ID = 'BBOX_PREVIEW';
+                    msAPI.onAction('GEONODE_SEARCH:UPDATE_RESOURCES', (action) => {
+                        const features = action.resources
+                            ? action.resources.map((resource) => {
+                                if (testPoints) {
+                                    const minx = resource.ll_bbox_polygon.coordinates[0][0][0];
+                                    const miny = resource.ll_bbox_polygon.coordinates[0][0][1];
+                                    const maxx = resource.ll_bbox_polygon.coordinates[0][2][0];
+                                    const maxy = resource.ll_bbox_polygon.coordinates[0][2][1];
+                                    return {
+                                        geometry: {
+                                            type: 'Point',
+                                            coordinates: [
+                                                minx + (maxx - minx) / 2,
+                                                miny + (maxy - miny) / 2
+                                            ]
+                                        },
+                                        properties: {
+                                            pk: resource.pk,
+                                            title: resource.title,
+                                            thumbnailUrl: resource.thumbnail_url
+                                        },
+                                        type: 'Feature'
+                                    };
+                                }
+                                return {
+                                    geometry: resource.ll_bbox_polygon,
+                                    properties: {
+                                        pk: resource.pk,
+                                        title: resource.title,
+                                        thumbnailUrl: resource.thumbnail_url
+                                    },
+                                    type: 'Feature'
+                                };
+                            })
+                            : [];
+                        console.log(features);
+                        const style = testPoints
+                                    ? {
+                                        format: 'geostyler',
+                                        body: {
+                                            name: '',
+                                            rules: features.map((feature) => {
+                                                console.log(feature);
+                                                return {
+                                                    name: '',
+                                                    filter: ['==', 'pk', feature.properties.pk],
+                                                    symbolizers: [
+                                                        /* {
+                                                            kind: 'Icon',
+                                                            image: feature.properties.thumbnailUrl,
+                                                            size: 64
+                                                        }
+                                                        */
+                                                       {
+                                                         kind: 'Mark',
+                                                         wellKnownName: 'Circle',
+                                                         color: '#0000ff',
+                                                         radius: 8
+                                                       }
+                                                    ]
+                                                };
+                                            })
+                                        }
+                                    }
+                                    : {
+                                        format: 'geostyler',
+                                        body: {
+                                            name: '',
+                                            rules: [
+                                                {
+                                                    name: '',
+                                                    symbolizers: [
+                                                        {
+                                                            kind: 'Fill',
+                                                            outlineColor: '#0000ff',
+                                                            outlineWidth: 2
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    };
+
+                        msAPI.triggerAction(initBboxPreviewLayer
+                            ? {
+                                type: 'UPDATE_NODE', 
+                                node: VECTOR_LAYER_ID,
+                                nodeType: 'layers',
+                                options: {
+                                    features: features,
+                                    style: style
+                                }
+                            }
+                            : {
+                                type: 'ADD_LAYER',
+                                layer: {
+                                    id: VECTOR_LAYER_ID,
+                                    type: 'vector',
+                                    visibility: true,
+                                    features: features,
+                                    style: style,
+                                    featureInfo: {
+                                        format: 'TEMPLATE',
+                                        template: '<h2>${properties["title"]}</h2>' +
+                                            '<p><img src="${properties["thumbnailUrl"]}" width="100%" height="auto"/></p>'
+                                    }
+                                }
+                            }
+                        );
+
+                        initBboxPreviewLayer = true;
+                    });
+
+                    const PREVIEW_LAYER_ID = 'PREVIEW_LAYER_ID';
+                    msAPI.onAction('GEONODE:SET_RESOURCE', (action) => {
+                        if (action.data) {
+                            msAPI.triggerAction({
+                                type: 'ADD_LAYER',
+                                layer: {
+                                    id: PREVIEW_LAYER_ID,
+                                    type: 'vector',
+                                    visibility: true,
+                                    features: [
+                                        {
+                                            geometry: action.data.ll_bbox_polygon,
+                                            properties: {},
+                                            type: 'Feature'
+                                        }
+                                    ],
+                                    style: {
+                                        format: 'geostyler',
+                                        body: {
+                                            name: '',
+                                            rules: [
+                                                {
+                                                    name: '',
+                                                    symbolizers: [
+                                                        {
+                                                            kind: 'Fill',
+                                                            outlineColor: '#ff0000',
+                                                            outlineWidth: 4
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            });
+                            initSetResourceLayer = true;
+                        } else {
+                            msAPI.triggerAction({
+                                type: 'REMOVE_LAYER',
+                                layerId: PREVIEW_LAYER_ID
+                            });
+                        }
+                    });
+                    const resizeObserver = new ResizeObserver(() => {
+                        console.log('HERE');
+                        msAPI.triggerAction({ type: 'RESIZE_MAP' });
+                    });
+                    resizeObserver.observe(document.querySelector('#ms-container'));
+                    msAPI.triggerAction({ type: 'RESIZE_MAP' });
+                });
+
+                
+                
+            </script>
+
+            {% block ms_scripts %}
+            <script id="gn-script" src="{% static 'mapstore/dist/js/gn-components.js' %}?{% client_version %}"></script>
+            {% endblock %}
+
+            {% comment %}
+            {% block footer %}
+            {% include './geonode-mapstore-client/snippets/footer.html' %}
+            {% endblock %}
+            {% endcomment %}
+
+            {% block scripts %}
+            <script src="{% static " lib/js/jquery.min.js" %}"></script>
+            <script src="{% static " lib/js/bootstrap.min.js" %}"></script>
+            <script type="text/javascript">
+                // enable dropdown functionalities
+                $('.dropdown-toggle').dropdown();
+            </script>
+            {% endblock %}
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

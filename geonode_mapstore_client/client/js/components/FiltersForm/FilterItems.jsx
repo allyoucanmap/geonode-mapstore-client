@@ -9,13 +9,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import castArray from 'lodash/castArray';
-import { FormGroup, Checkbox } from 'react-bootstrap';
+import { FormGroup, Checkbox, Tabs, Tab } from 'react-bootstrap';
 import ReactSelect from 'react-select';
 import Message from '@mapstore/framework/components/I18N/Message';
 import localizedProps from '@mapstore/framework/components/misc/enhancers/localizedProps';
 import { getFilterLabelById } from '@js/utils/SearchUtils';
 import SelectInfiniteScroll from '@js/components/SelectInfiniteScroll';
 const SelectSync = localizedProps('placeholder')(ReactSelect);
+
+function Accordion({
+    labelId,
+    children
+}) {
+    return (
+        <div>
+            <div><i className="fa fa-chevron-down"></i> {'  '} {labelId}</div>
+            <div>{children}</div>
+        </div>
+    );
+}
 function FilterItems({
     id,
     items,
@@ -26,6 +38,19 @@ function FilterItems({
     return (
         <>
             {items.map((field) => {
+                if (field.type === 'accordion') {
+                    return (
+                        <Accordion {...field}>
+                            <FilterItems
+                                id={id}
+                                items={field.items}
+                                suggestionsRequestTypes={suggestionsRequestTypes}
+                                values={values}
+                                onChange={onChange}
+                            />
+                        </Accordion>
+                    );
+                }
                 if (field.type === 'select') {
                     const {
                         id: formId,
@@ -126,7 +151,7 @@ function FilterItems({
                             : [])
                     ];
                     return (
-                        <FormGroup key={field.id} controlId={'gn-radio-filter-' + field.id}>
+                        <FormGroup key={field.id} controlId={'gn-radio-filter-' + field.id} className={field.style || ''}>
                             <Checkbox
                                 type="checkbox"
                                 checked={!!active}
@@ -138,7 +163,7 @@ function FilterItems({
                                             : [...customFilters, field.id]
                                     });
                                 }}>
-                                <Message msgId={field.labelId}/>
+                                {field.image && <><img src={field.image} style={{ width: 28, height: 28, objectFit: 'cover'}}/>{' '}</>}<Message msgId={field.labelId}/>
                                 {filterChild()}
                             </Checkbox>
                         </FormGroup>
@@ -165,4 +190,29 @@ FilterItems.defaultProps = {
     onChange: () => {}
 };
 
-export default FilterItems;
+function FilterItemsTabs({
+    id,
+    items,
+    ...props
+}) {
+    const tabs = items.filter((tab) => tab.type === 'tab');
+    if (tabs.length === 0) {
+        return <FilterItems {...props} items={items} />;
+    }
+    const selectedTabId = tabs?.[0]?.id;
+    return (
+        <Tabs
+            defaultActiveKey={selectedTabId}
+            bsStyle="pills"
+            className="gn-filters-tabs tabs-underline"
+        >
+            {tabs.map((tab, idx) => (
+                <Tab key={idx} eventKey={tab?.id} title={tab.label}>
+                    <FilterItems {...props} items={tab?.items} />
+                </Tab>
+            ))}
+        </Tabs>
+    );
+}
+
+export default FilterItemsTabs;

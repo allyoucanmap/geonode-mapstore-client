@@ -17,14 +17,7 @@ import FilterItems from './FilterItems';
 import debounce from 'lodash/debounce';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
-import withDebounceOnCallback from '@mapstore/framework/components/misc/enhancers/withDebounceOnCallback';
-import localizedProps from '@mapstore/framework/components/misc/enhancers/localizedProps';
-import { FormControl as FormControlRB, Glyphicon } from 'react-bootstrap';
-const FormControl = localizedProps('placeholder')(FormControlRB);
-function InputControl({ onChange, value, ...props }) {
-    return <FormControl {...props} value={value} onChange={event => onChange(event.target.value)}/>;
-}
-const InputControlWithDebounce = withDebounceOnCallback('onChange', 'value')(InputControl);
+import { Glyphicon } from 'react-bootstrap';
 
 /**
  * FilterForm component allows to configure a list of field that can be used to apply filter on the page
@@ -43,7 +36,8 @@ function FilterForm({
     onClear,
     extentProps,
     suggestionsRequestTypes,
-    timeDebounce
+    timeDebounce,
+    header
 }) {
 
     const handleFieldChange = (newParam) => {
@@ -83,12 +77,7 @@ function FilterForm({
                     <form
                         style={style}
                     >
-                        <InputControlWithDebounce
-                            placeholder="gnhome.search"
-                            value={query.q || ''}
-                            debounceTime={300}
-                            onChange={(q) => handleFieldChange({ q })}
-                        />
+                        {header}
                         <FilterItems
                             id={id}
                             items={fields}

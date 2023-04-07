@@ -31,7 +31,9 @@ const FiltersMenu = forwardRef(({
     totalFilters,
     loading,
     cardLayoutStyle,
-    setCardLayoutStyle
+    setCardLayoutStyle,
+    hideCardLayoutButton,
+    children
 }, ref) => {
 
     const { isMobile } = getConfigProp('geoNodeSettings');
@@ -42,76 +44,81 @@ const FiltersMenu = forwardRef(({
 
     return (
         <div
-            className="gn-filters-menu gn-menu gn-default"
+            className="gn-filters-menu"
             style={style}
             ref={ref}
         >
-            <div className="gn-menu-container">
-                <div className="gn-menu-content">
-                    <div className="gn-menu-fill">
-                        {totalFilters > 0 ? <ButtonWithTooltip
-                            variant="primary"
+            <div className="gn-menu gn-default">
+                <div className="gn-menu-container">
+                    <div className="gn-menu-content">
+                        <div className="gn-menu-fill">
+                            {totalFilters > 0 ? <ButtonWithTooltip
+                                variant="primary"
+                                size="sm"
+                                onClick={onClick}
+                                className="gn-success-changes-icon"
+                                tooltip={<Message msgId="gnhome.filterApplied" msgParams={{ count: totalFilters }}/>}
+                            >
+                                {isMobile ? <FaIcon name="filter" /> : <Message msgId="gnhome.filter"/>}
+                            </ButtonWithTooltip> : <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={onClick}
+                            >
+                                {isMobile ? <FaIcon name="filter" /> : <Message msgId="gnhome.filter"/>}
+                            </Button>}
+                            {' '}
+                            {loading ? <span className="resources-count-loading"><Spinner /></span> : <Badge>
+                                <span className="resources-count"> <Message msgId="gnhome.resourcesFound" msgParams={{ count: totalResources }}/> </span>
+                            </Badge>}
+                        </div>
+                        <Menu
+                            items={cardsMenu}
+                            containerClass={`gn-menu-list`}
+                            size="md"
+                            alignRight
+                        />
+                        {!hideCardLayoutButton && <Button
+                            variant="default"
+                            onClick={handleToggleCardLayoutStyle}
                             size="sm"
-                            onClick={onClick}
-                            className="gn-success-changes-icon"
-                            tooltip={<Message msgId="gnhome.filterApplied" msgParams={{ count: totalFilters }}/>}
                         >
-                            {isMobile ? <FaIcon name="filter" /> : <Message msgId="gnhome.filter"/>}
-                        </ButtonWithTooltip> : <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={onClick}
-                        >
-                            {isMobile ? <FaIcon name="filter" /> : <Message msgId="gnhome.filter"/>}
+                            <FaIcon name={cardLayoutStyle === 'grid' ? 'list' : 'th'} />
                         </Button>}
-                        {' '}
-                        {loading ? <span className="resources-count-loading"><Spinner /></span> : <Badge>
-                            <span className="resources-count"> <Message msgId="gnhome.resourcesFound" msgParams={{ count: totalResources }}/> </span>
-                        </Badge>}
+                        {orderOptions.length > 0 &&
+                        <Dropdown pullRight>
+                            <Dropdown.Toggle
+                                id="sort-dropdown"
+                                bsStyle="default"
+                                bsSize="sm"
+                                noCaret
+                            >
+                                <Message msgId={selectedSort?.labelId || defaultLabelId} />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                {orderOptions.map(({ labelId, value }) => {
+                                    return (
+                                        <Dropdown.Item
+                                            key={value}
+                                            active={value === selectedSort?.value}
+                                            href={formatHref({
+                                                query: {
+                                                    sort: [value]
+                                                },
+                                                replaceQuery: true
+                                            })}
+                                        >
+                                            <Message msgId={labelId} />
+                                        </Dropdown.Item>
+                                    );
+                                })}
+                            </Dropdown.Menu>
+                        </Dropdown>}
                     </div>
-                    <Menu
-                        items={cardsMenu}
-                        containerClass={`gn-menu-list`}
-                        size="md"
-                        alignRight
-                    />
-                    <Button
-                        variant="default"
-                        onClick={handleToggleCardLayoutStyle}
-                        size="sm"
-                    >
-                        <FaIcon name={cardLayoutStyle === 'grid' ? 'list' : 'th'} />
-                    </Button>
-                    {orderOptions.length > 0 &&
-                    <Dropdown pullRight>
-                        <Dropdown.Toggle
-                            id="sort-dropdown"
-                            bsStyle="default"
-                            bsSize="sm"
-                            noCaret
-                        >
-                            <Message msgId={selectedSort?.labelId || defaultLabelId} />
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            {orderOptions.map(({ labelId, value }) => {
-                                return (
-                                    <Dropdown.Item
-                                        key={value}
-                                        active={value === selectedSort?.value}
-                                        href={formatHref({
-                                            query: {
-                                                sort: [value]
-                                            },
-                                            replaceQuery: true
-                                        })}
-                                    >
-                                        <Message msgId={labelId} />
-                                    </Dropdown.Item>
-                                );
-                            })}
-                        </Dropdown.Menu>
-                    </Dropdown>}
                 </div>
+            </div>
+            <div style={{ padding: '0 0.8rem'}}>
+                {children}
             </div>
         </div>
     );

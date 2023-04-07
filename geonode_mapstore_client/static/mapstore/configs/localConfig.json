@@ -71,6 +71,10 @@
         {
             "name": "printEnabled",
             "path": "print.capabilities"
+        },
+        {
+            "name": "defaultQuery",
+            "path": "controls.defaultQuery.value"
         }
     ],
     "projectionDefs": [],
