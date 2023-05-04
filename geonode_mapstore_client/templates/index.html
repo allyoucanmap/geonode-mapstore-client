@@ -58,8 +58,8 @@
             {% endblock %}
 
             {% block container %}
-            <div style="display: flex;width: calc(100% - 20px);height: 80vh;position: relative;margin: 10px;">
-                <div id="ms-container" style="flex: 1;">
+            <div style="display: flex;width: calc(100% - 20px);height: 80vh;position: relative;margin: 10px;justify-content: center;">
+                <div id="ms-container" style="flex: 1;display: none;">
                     <div class="gn-main-event-container">
                         <div class="gn-main-event-content">
                             <div class="gn-main-loader"></div>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="width:600px;height:100%;">
+                <div style="width:1200px;aspect-ratio:16/9;height:auto;">
                     <div id="gn-home-resources-grid" style="height: 100%;"></div>
                 </div>
             </div>
@@ -93,38 +93,14 @@
 
                     msAPI.setPluginsConfig([
                         {
-                            name: 'Map',
-                            cfg: {
-                                shouldLoadFont: false,
-                                "tools": [
-                                    "popup"
-                                ],
-                                mapOptions: {
-                                    openlayers: {
-                                        interactions: {
-                                            pinchRotate: false,
-                                            altShiftDragRotate: false
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "name": "Identify",
-                            "cfg": {
-                                "showInMapPopup": true,
-                                "viewerOptions": {
-                                    "container": "{context.ReactSwipe}"
-                                }
-                            }
-                        },
-                        {
                             name: 'ResourcesGrid',
                             cfg: {
                                 targetSelector: '#gn-home-resources-grid',
                                 pagination: true,
                                 panel: true,
-                                defaultQuery: "{state('defaultQuery')}",
+                                defaultQuery: {
+                                    f: 'map'
+                                },
                                 filtersFormItems: [
                                     {
                                         id: 'themes',
