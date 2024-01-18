@@ -34,9 +34,11 @@ import mapPopups from '@mapstore/framework/reducers/mapPopups';
 import catalog from '@mapstore/framework/reducers/catalog';
 import searchconfig from '@mapstore/framework/reducers/searchconfig';
 import widgets from '@mapstore/framework/reducers/widgets';
+import context from '@mapstore/framework/reducers/context';
 // end
 
 import ViewerRoute from '@js/routes/Viewer';
+import AppViewerRoute from '@js/routes/AppViewer';
 
 import gnresource from '@js/reducers/gnresource';
 import gnsettings from '@js/reducers/gnsettings';
@@ -81,7 +83,8 @@ const ConnectedRouter = connect((state) => ({
 }))(Router);
 
 const viewer = {
-    [appRouteComponentTypes.VIEWER]: ViewerRoute
+    [appRouteComponentTypes.VIEWER]: ViewerRoute,
+    [appRouteComponentTypes.APP_VIEWER]: AppViewerRoute
 };
 
 const routes = MAP_ROUTES.map(({component, ...config}) => ({...config, component: viewer[component]}));
@@ -130,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         };
 
                         storeEpicsNamesToExclude(appEpics);
+                        console.log(pluginsConfigKey);
 
                         // register custom arcgis layer
                         import('@js/map/' + mapType + '/plugins/ArcGisMapServer')
@@ -174,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         catalog,
                                         searchconfig,
                                         widgets,
+                                        context,
                                         ...pluginsDefinition.reducers
                                     },
                                     appEpics,

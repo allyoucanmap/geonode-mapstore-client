@@ -268,7 +268,8 @@ export const ResourceTypes = {
     MAP: 'map',
     DOCUMENT: 'document',
     GEOSTORY: 'geostory',
-    DASHBOARD: 'dashboard'
+    DASHBOARD: 'dashboard',
+    MAP_APP: 'app'
 };
 
 export const isDocumentExternalSource = (resource) => {
@@ -317,6 +318,14 @@ export const getResourceTypesInfo = () => ({
     [ResourceTypes.DASHBOARD]: {
         icon: 'dashboard',
         name: 'Dashboard',
+        canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
+        formatEmbedUrl: (resource) => resource?.embed_url && parseDevHostname(resource.embed_url),
+        formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),
+        formatMetadataUrl: (resource) => (`/apps/${resource.pk}/metadata`)
+    },
+    [ResourceTypes.MAP_APP]: {
+        icon: 'cogs',
+        name: 'Map App',
         canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
         formatEmbedUrl: (resource) => resource?.embed_url && parseDevHostname(resource.embed_url),
         formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),

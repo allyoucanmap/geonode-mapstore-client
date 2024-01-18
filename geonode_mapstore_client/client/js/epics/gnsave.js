@@ -119,6 +119,18 @@ const SaveAPI = {
     },
     [ResourceTypes.DATASET]: (state, id, body) => {
         return id ? updateDataset(id, body) : false;
+    },
+    [ResourceTypes.MAP_APP]: (state, id, body) => {
+        const user = userSelector(state);
+        console.log(body);
+        return id
+            ? updateGeoApp(id, body)
+            : createGeoApp({
+                'name': body.title + ' ' + uuid(),
+                'owner': user.name,
+                'resource_type': ResourceTypes.MAP_APP,
+                ...body
+            });
     }
 };
 

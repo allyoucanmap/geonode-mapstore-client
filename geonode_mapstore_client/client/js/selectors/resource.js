@@ -24,6 +24,14 @@ import isEqual from 'lodash/isEqual';
 import pick from 'lodash/pick';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
+import flatten from 'lodash/flatten';
+import {
+    newContextSelector,
+    pluginsSelector,
+    templatesSelector,
+    selectedThemeSelector,
+    customVariablesEnabledSelector
+} from '@mapstore/framework/selectors/contextcreator';
 
 /**
 * @module selectors/resource
@@ -131,6 +139,41 @@ export const getResourceExtent = (state) => {
     return state?.gnresource?.data?.extent || {};
 };
 
+const flattenPluginTree = (plugins = []) =>
+    flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(plugin.enabled ? flattenPluginTree(plugin.children) : [])));
+
+const makePlugins = (plugins = []) =>
+    plugins.map(plugin => ({...plugin.pluginConfig, ...(plugin.isUserPlugin ? {active: plugin.active} : {})}));
+
+const getContextBlob = (state) => {
+    const mapConfig = mapSelector(state) ? mapSaveSelector(state) : {};
+    const plugins = pluginsSelector(state);
+    const context = newContextSelector(state);
+    const templates = templatesSelector(state);
+    const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.name === 'MapTemplates' ? ({
+        ...plugin,
+        pluginConfig: {
+            ...plugin.pluginConfig,
+            cfg: {
+                ...(plugin.pluginConfig.cfg || {}),
+                allowedTemplates: templates.filter(template => template.enabled).map(template => pick(template, 'id'))
+            }
+        }
+    }) : plugin);
+    const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
+    const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
+    const theme = selectedThemeSelector(state);
+    const customVariablesEnabled = customVariablesEnabledSelector(state);
+    return {
+        ...context,
+        mapConfig,
+        theme,
+        customVariablesEnabled,
+        plugins: {desktop: unselectablePlugins},
+        userPlugins
+    };
+};
+
 export const getDataPayload = (state, resourceType) => {
     const type = resourceType || state?.gnresource?.type;
     switch (type) {
@@ -143,6 +186,10 @@ export const getDataPayload = (state, resourceType) => {
     }
     case ResourceTypes.DASHBOARD: {
         return widgetsConfig(state);
+    }
+    case ResourceTypes.MAP_APP: {
+        const appBlob = getContextBlob(state);
+        return appBlob;
     }
     default:
         return null;

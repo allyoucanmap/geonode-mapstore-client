@@ -1,17 +1,19 @@
 /*
- * Copyright 2021, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import url from 'url';
 import isArray from 'lodash/isArray';
+import isEqual from 'lodash/isEqual';
+import uniqBy from 'lodash/uniqBy';
 import { getMonitoredState } from '@mapstore/framework/utils/PluginsUtils';
 import { getConfigProp } from '@mapstore/framework/utils/ConfigUtils';
 import PluginsContainer from '@mapstore/framework/components/plugins/PluginsContainer';
@@ -23,6 +25,16 @@ import { createShallowSelector } from '@mapstore/framework/utils/ReselectUtils';
 import { getResourceImageSource } from '@js/utils/ResourceUtils';
 import useModulePlugins from '@mapstore/framework/hooks/useModulePlugins';
 import { getPlugins } from '@mapstore/framework/utils/ModulePluginsUtils';
+import {
+    contextMonitoredStateSelector,
+    currentPluginsSelector,
+    currentTitleSelector,
+    contextThemeSelector,
+    contextCustomVariablesEnabledSelector
+} from '@mapstore/framework/selectors/context';
+import { canEditResource } from '@js/selectors/resource';
+import ContextTheme from '@mapstore/framework/components/theme/ContextTheme';
+import defaultThemeVars from "!!raw-loader!../../themes/geonode/less/_variables.less";
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -55,9 +67,10 @@ function getPluginsConfiguration(name, pluginsConfig) {
     return pluginsConfig[name] || DEFAULT_PLUGINS_CONFIG;
 }
 
-function ViewerRoute({
+function AppViewerRoute({
     name,
     pluginsConfig: propPluginsConfig,
+    appPluginsConfig: propAppPluginsConfig,
     params,
     onUpdate,
     onCreate = () => {},
@@ -68,16 +81,40 @@ function ViewerRoute({
     siteName,
     resourceType,
     loadingConfig,
-    configError
+    configError,
+    defaultPluginsConfigName,
+    canEdit,
+    theme,
+    customVariablesEnabled,
+    embedded
 }) {
 
-    const { pk } = match.params || {};
-    const pluginsConfig = getPluginsConfiguration(name, propPluginsConfig);
+    const { pk, actionType } = match.params || {};
+    const editing = canEdit && actionType === 'edit';
+    const pluginsConfig = embedded ? getPluginsConfiguration('desktop', propAppPluginsConfig) : (resource?.pk === pk || pk === 'new') ? uniqBy([
+        ...getPluginsConfiguration(name, propPluginsConfig),
+        ...(editing ? getPluginsConfiguration(defaultPluginsConfigName, propPluginsConfig) : []),
+        ...((propAppPluginsConfig && !editing) ? getPluginsConfiguration('desktop', propAppPluginsConfig) : [])
+    ], 'name') : [];
 
     const { plugins: loadedPlugins, pending } = useModulePlugins({
         pluginsEntries: getPlugins(plugins, 'module'),
         pluginsConfig
     });
+
+    const prevConfig = useRef();
+
+    useEffect(() => {
+
+        if (match?.params?.pk !== prevConfig?.current?.pk) {
+            console.log('HERE', match.params, prevConfig.current);
+        }
+
+        prevConfig.current = {
+            ...match.params
+        };
+    })
+
     useEffect(() => {
         if (!pending && pk !== undefined) {
             if (pk === 'new') {
@@ -113,11 +150,9 @@ function ViewerRoute({
             }
         }
         // hide the navigation bar if a resource is being viewed
-        if (!loading) {
-            document.getElementById('gn-topbar')?.classList.add('hide-navigation');
-            document.getElementById('gn-brand-navbar-bottom')?.classList.add('hide-search-bar');
-            resize();
-        }
+        document.getElementById('gn-topbar')?.classList.add('hide-navigation');
+        document.getElementById('gn-brand-navbar-bottom')?.classList.add('hide-search-bar');
+        resize();
         return () => {
             document.getElementById('gn-topbar')?.classList.remove('hide-navigation');
             document.getElementById('gn-brand-navbar-bottom')?.classList.remove('hide-search-bar');
@@ -134,7 +169,20 @@ function ViewerRoute({
                 contentURL={resource?.detail_url}
                 content={resource?.abstract}
             />}
-            {!loading && <ConnectedPluginsContainer
+            {!editing && <ContextTheme
+                theme={{
+                    ...theme,
+                    variables: Object.keys(theme?.variables || {}).reduce((acc, key) => {
+                        return {
+                            ...acc,
+                            [key.replace('ms-', 'gn-')]: theme.variables[key]
+                        };
+                    }, {})
+                }}
+                customVariablesEnabled={customVariablesEnabled}
+                themeVars={defaultThemeVars + ".get-root-css-variables(@gn-theme-vars);"}
+            />}
+            <ConnectedPluginsContainer
                 key={className}
                 id={className}
                 className={className}
@@ -143,36 +191,46 @@ function ViewerRoute({
                 plugins={parsedPlugins}
                 allPlugins={plugins}
                 params={params}
-            />}
-            {loading && Loader && <Loader />}
+            />
+            {loading && Loader && <Loader style={{ opacity: 0.5 }}/>}
             {configError && <MainEventView msgId={configError}/>}
         </>
     );
 }
 
-ViewerRoute.propTypes = {
+AppViewerRoute.propTypes = {
     onUpdate: PropTypes.func
 };
 
-const ConnectedViewerRoute = connect(
+const ConnectedAppViewerRoute = connect(
     createSelector([
         state => state?.gnresource?.data,
         state => state?.gnsettings?.siteName || 'GeoNode',
         state => state?.gnresource?.loadingResourceConfig,
-        state => state?.gnresource?.configError
-    ], (resource, siteName, loadingConfig, configError) => ({
+        state => state?.gnresource?.configError,
+        currentPluginsSelector,
+        contextMonitoredStateSelector,
+        canEditResource,
+        contextThemeSelector,
+        contextCustomVariablesEnabledSelector
+    ], (resource, siteName, loadingConfig, configError, appPluginsConfig, monitoredState, canEdit, theme, customVariablesEnabled) => ({
         resource,
         siteName,
         loadingConfig,
-        configError
+        configError,
+        appPluginsConfig,
+        monitoredState,
+        canEdit,
+        theme,
+        customVariablesEnabled
     })),
     {
         onUpdate: requestResourceConfig,
         onCreate: requestNewResourceConfig
 
     }
-)(ViewerRoute);
+)(AppViewerRoute);
 
-ConnectedViewerRoute.displayName = 'ConnectedViewerRoute';
+ConnectedAppViewerRoute.displayName = 'ConnectedAppViewerRoute';
 
-export default ConnectedViewerRoute;
+export default ConnectedAppViewerRoute;

@@ -430,6 +430,14 @@ export const plugins = {
     FeaturedResourcesGridPlugin: toModulePlugin(
         'FeaturedResourcesGrid',
         () => import(/* webpackChunkName: 'plugins/featured-resources-grid' */ '@js/plugins/FeaturedResourcesGrid')
+    ),
+    ContextCreatorPlugin: toModulePlugin(
+        'ContextCreator',
+        () => import(/* webpackChunkName: 'plugins/context-creator' */ '@mapstore/framework/plugins/ContextCreator')
+    ),
+    ContextPlugin: toModulePlugin(
+        'Context',
+        () => import(/* webpackChunkName: 'plugins/context' */ '@mapstore/framework/plugins/Context')
     )
 };
 

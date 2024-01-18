@@ -13,7 +13,8 @@ export const appRouteComponentTypes = {
     CATALOGUE: 'CatalogueRoute',
     DATASET_UPLOAD: 'UploadDatasetRoute',
     DOCUMENT_UPLOAD: 'UploadDocumentRoute',
-    COMPONENTS: 'ComponentsRoute'
+    COMPONENTS: 'ComponentsRoute',
+    APP_VIEWER: 'AppViewerRoute'
 };
 
 export const COMPONENTS_ROUTES = [
@@ -29,9 +30,10 @@ export const MAP_ROUTES = [
         name: 'map-viewer',
         path: ['/'],
         pageConfig: {
-            resourceType: ResourceTypes.MAP
+            resourceType: ResourceTypes.MAP,
+            embedded: true
         },
-        component: appRouteComponentTypes.VIEWER,
+        component: appRouteComponentTypes.APP_VIEWER,
         shouldNotRequestResources: true
     }
 ];
@@ -105,14 +107,39 @@ export const CATALOGUE_ROUTES = [
         shouldNotRequestResources: true
     },
     {
-        name: 'map_viewer',
+        name: 'map_app_viewer',
         path: [
             '/map/:pk'
         ],
         pageConfig: {
-            resourceType: ResourceTypes.MAP
+            resourceType: ResourceTypes.MAP,
+            defaultPluginsConfigName: 'map_viewer'
         },
-        component: appRouteComponentTypes.VIEWER,
+        component: appRouteComponentTypes.APP_VIEWER,
+        shouldNotRequestResources: true
+    },
+    {
+        name: 'map_app_viewer',
+        path: [
+            '/map/:pk/:actionType'
+        ],
+        pageConfig: {
+            resourceType: ResourceTypes.MAP,
+            defaultPluginsConfigName: 'map_viewer'
+        },
+        component: appRouteComponentTypes.APP_VIEWER,
+        shouldNotRequestResources: true
+    },
+    {
+        name: 'map_app_viewer',
+        path: [
+            '/map/:pk/app/:appPk'
+        ],
+        pageConfig: {
+            resourceType: ResourceTypes.MAP,
+            defaultPluginsConfigName: 'map_viewer'
+        },
+        component: appRouteComponentTypes.APP_VIEWER,
         shouldNotRequestResources: true
     },
     {
@@ -144,6 +171,28 @@ export const CATALOGUE_ROUTES = [
         ],
         pageConfig: {
             resourceType: ResourceTypes.DASHBOARD
+        },
+        component: appRouteComponentTypes.VIEWER,
+        shouldNotRequestResources: true
+    },
+    {
+        name: 'map_app_edit_config_viewer',
+        path: [
+            '/app/:pk'
+        ],
+        pageConfig: {
+            resourceType: ResourceTypes.MAP_APP
+        },
+        component: appRouteComponentTypes.VIEWER,
+        shouldNotRequestResources: true
+    },
+    {
+        name: 'map_app_edit_config_viewer',
+        path: [
+            '/app/:pk/map/:mapPk'
+        ],
+        pageConfig: {
+            resourceType: ResourceTypes.MAP_APP
         },
         component: appRouteComponentTypes.VIEWER,
         shouldNotRequestResources: true
