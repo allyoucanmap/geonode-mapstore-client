@@ -55,7 +55,7 @@ const DownloadButton = ({
     }
 
     if (isNotAjaxSafe) {
-        return (
+        return downloadInfo.url ? (
             <Component
                 {...isButton && { variant, size }}
                 {...showIcon && { tooltipId: "gnviewer.download" }}
@@ -69,7 +69,7 @@ const DownloadButton = ({
                     : <Message msgId="gnviewer.download" />
                 }
             </Component>
-        );
+        ) : null;
     }
 
     return (
