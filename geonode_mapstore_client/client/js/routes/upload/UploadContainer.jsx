@@ -118,7 +118,7 @@ function UploadContainer({
         <Dropzone
             multiple
             onDrop={onDrop}
-            className="gn-upload-dataset"
+            className="gn-upload-panel"
             activeClassName="gn-dropzone-active"
             rejectClassName="gn-dropzone-reject"
             disableClick

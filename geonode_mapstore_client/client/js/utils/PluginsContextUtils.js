@@ -54,6 +54,12 @@ const canManageResourceSettings = (resource) => {
     return !!(perms || []).find(perm => settingsPerms.includes(perm));
 };
 
+const getUploadMainFile = () => {
+    return ({ upload }) => {
+        return upload?.files?.[upload?.ext?.[0]];
+    };
+};
+
 export const getPluginsContext = () => ({
     get,
     getMetadataUrl,
@@ -67,5 +73,6 @@ export const getPluginsContext = () => ({
     getCataloguePath,
     getCreateNewMapLink,
     hasDefaultSettings,
-    canManageResourceSettings
+    canManageResourceSettings,
+    getUploadMainFile
 });

@@ -516,6 +516,205 @@
         ],
         "dataset_viewer": [
             {
+                "name": "Operation",
+                "cfg": {
+                    "id": "replace",
+                    "containerPosition": "header",
+                    "iconName": "refresh",
+                    "titleMsgId": "gnviewer.replaceDataset",
+                    "api": {
+                        "upload": {
+                            "url": "/api/v2/uploads/upload",
+                            "method": "post",
+                            "maxParallelUploads": 1,
+                            "formData": true,
+                            "body": {
+                                "base_file": "{context.getUploadMainFile()}",
+                                "dataset_title": "{context.get(state('gnResourceData'), 'alternate')}"
+                            },
+                            "supportedFiles": [
+                                {
+                                    "id": "shp",
+                                    "label": "ESRI Shapefile",
+                                    "ext": ["shp", "prj", "dbf", "shx"],
+                                    "optionalExt": ["xml", "sld", "cpg", "cst"]
+                                },
+                                {
+                                    "id": "csv",
+                                    "label": "CSV",
+                                    "ext": ["csv"],
+                                    "optionalExt": ["sld", "xml"]
+                                },
+                                {
+                                    "id": "gpkg",
+                                    "label": "GeoPackage",
+                                    "ext": ["gpkg"]
+                                },
+                                {
+                                    "id": "json",
+                                    "label": "GeoJSON",
+                                    "ext": ["json"],
+                                    "optionalExt": ["sld", "xml"]
+                                },
+                                {
+                                    "id": "geojson",
+                                    "label": "GeoJSON",
+                                    "ext": ["geojson"],
+                                    "optionalExt": ["sld", "xml"]
+                                },
+                                {
+                                    "id": "kml",
+                                    "label": "KML",
+                                    "ext": ["kml"]
+                                },
+                                {
+                                    "id": "kmz",
+                                    "label": "KMZ",
+                                    "ext": ["kmz"]
+                                },
+                                {
+                                    "id": "3dtiles",
+                                    "label": "3D Tiles",
+                                    "ext": ["json"],
+                                    "optionalExt": ["xml","sld"]
+                                },
+                                {
+                                    "id": "tiff",
+                                    "label": "TIFF",
+                                    "ext": ["tiff"],
+                                    "optionalExt": ["xml", "sld"]
+                                },
+                                {
+                                    "id": "tif",
+                                    "label": "TIF",
+                                    "ext": ["tif"],
+                                    "optionalExt": ["xml", "sld"]
+                                },
+                                {
+                                    "id": "geotiff",
+                                    "label": "GeoTIFF",
+                                    "ext": ["geotiff"],
+                                    "optionalExt": ["xml", "sld"]
+                                },
+                                {
+                                    "id": "geotif",
+                                    "label": "GeoTIF",
+                                    "ext": ["geotif"],
+                                    "optionalExt": ["xml", "sld"]
+                                },
+                                {
+                                    "id": "zip",
+                                    "label": "Zip Archive",
+                                    "format": "archive",
+                                    "ext": ["zip"],
+                                    "optionalExt": ["xml", "sld"]
+                                }
+                            ]
+                        },
+                        "executionRequest": {
+                            "url": "/api/v2/executionrequest",
+                            "params": {
+                                "filter{source}": "resource_file_upload",
+                                "filter{name.endswith}": ".shp",
+                                "sort[]": "-created",
+                                "filter{geonode_resource}": "{context.get(state('gnResourceData'), 'pk')}"
+                            }
+                        }
+                    }
+                },
+                "override": {
+                    "ActionNavbar": {
+                        "name": "OperationReplace"
+                    }
+                }
+            },
+            {
+                "name": "Operation",
+                "cfg": {
+                    "id": "upload-style",
+                    "containerPosition": "header",
+                    "blocking": true,
+                    "iconName": "paint-brush",
+                    "titleMsgId": "gnviewer.uploadDatasetStyle",
+                    "api": {
+                        "upload": {
+                            "url": "/api/v2/uploads/upload",
+                            "method": "post",
+                            "maxParallelUploads": 1,
+                            "formData": true,
+                            "body": {
+                                "base_file": "{context.getUploadMainFile()}",
+                                "dataset_title": "{context.get(state('gnResourceData'), 'alternate')}"
+                            },
+                            "supportedFiles": [
+                                {
+                                    "id": "sld",
+                                    "ext": ["sld"],
+                                    "label": "Styled Layer Descriptor 1.0, 1.1 (SLD)"
+                                }
+                            ]
+                        },
+                        "executionRequest": {
+                            "url": "/api/v2/executionrequest",
+                            "params": {
+                                "filter{source}": "resource_file_upload",
+                                "filter{name.endswith}": ".sld",
+                                "sort[]": "-created",
+                                "filter{geonode_resource}": "{context.get(state('gnResourceData'), 'pk')}"
+                            }
+                        }
+                    }
+                },
+                "override": {
+                    "ActionNavbar": {
+                        "name": "OperationUploadStyle"
+                    }
+                }
+            },
+            {
+                "name": "Operation",
+                "cfg": {
+                    "id": "upload-metadata",
+                    "containerPosition": "header",
+                    "iconName": "file-code-o",
+                    "titleMsgId": "gnviewer.uploadDatasetMetadata",
+                    "blocking": true,
+                    "api": {
+                        "upload": {
+                            "url": "/api/v2/uploads/upload",
+                            "method": "post",
+                            "maxParallelUploads": 1,
+                            "formData": true,
+                            "body": {
+                                "base_file": "{context.getUploadMainFile()}",
+                                "dataset_title": "{context.get(state('gnResourceData'), 'alternate')}"
+                            },
+                            "supportedFiles": [
+                                {
+                                    "id": "xml",
+                                    "label": "XML Metadata File (XML - ISO, FGDC, ebRIM, Dublin Core)",
+                                    "ext": ["xml"]
+                                }
+                            ]
+                        },
+                        "executionRequest": {
+                            "url": "/api/v2/executionrequest",
+                            "params": {
+                                "filter{source}": "resource_file_upload",
+                                "filter{name.endswith}": ".xml",
+                                "sort[]": "-created",
+                                "filter{geonode_resource}": "{context.get(state('gnResourceData'), 'pk')}"
+                            }
+                        }
+                    }
+                },
+                "override": {
+                    "ActionNavbar": {
+                        "name": "OperationUploadMetadata"
+                    }
+                }
+            },
+            {
                 "name": "ActionNavbar",
                 "cfg": {
                     "containerPosition": "header",
@@ -619,6 +818,18 @@
                                     "href": "{'/datasets/' + (state('gnResourceData') || {}).alternate + '/metadata_upload'}",
                                     "labelId": "gnviewer.metadataUpload",
                                     "disableIf": "{state('gnResourceData').subtype === '3dtiles'}"
+                                },
+                                {
+                                    "type": "plugin",
+                                    "name": "OperationReplace"
+                                },
+                                {
+                                    "type": "plugin",
+                                    "name": "OperationUploadStyle"
+                                },
+                                {
+                                    "type": "plugin",
+                                    "name": "OperationUploadMetadata"
                                 }
                             ]
                         },

@@ -748,10 +748,10 @@ export const getPendingExecutionRequests = () => {
 export const getProcessedUploadsById = (ids) => {
     return axios.get(parseDevHostname(endpoints[UPLOADS]), {
         params: {
-            'filter{state}': 'PROCESSED',
+            'filter{status}': 'finished',
             'page': 1,
             'page_size': ids.length,
-            'filter{id.in}': ids
+            'filter{exec_id.in}': ids
         }
     })
         .then(({ data }) => data?.uploads);
@@ -760,10 +760,10 @@ export const getProcessedUploadsById = (ids) => {
 export const getProcessedUploadsByImportId = (importIds) => {
     return axios.get(parseDevHostname(endpoints[UPLOADS]), {
         params: {
-            'filter{state}': 'PROCESSED',
+            'filter{status}': 'finished',
             'page': 1,
             'page_size': importIds.length,
-            'filter{import_id.in}': importIds
+            'filter{exec_id.in}': importIds
         }
     })
         .then(({ data }) => data?.uploads);
