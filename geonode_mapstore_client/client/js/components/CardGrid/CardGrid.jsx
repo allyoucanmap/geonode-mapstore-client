@@ -12,7 +12,7 @@ import HTML from '@mapstore/framework/components/I18N/HTML';
 import FaIcon from '@js/components/FaIcon';
 import ResourceCard from '@js/components/ResourceCard';
 import useInfiniteScroll from '@js/hooks/useInfiniteScroll';
-import {getResourceStatuses} from '@js/utils/ResourceUtils';
+import {getResourceStatus} from '@js/utils/ResourceUtils';
 import MainLoader from '@js/components/MainLoader';
 
 const Cards = ({
@@ -32,7 +32,7 @@ const Cards = ({
             className={`gn-card-list gn-cards-type-${cardLayoutStyle}`}
         >
             {resources.map((resource) => {
-                const { isProcessing } = getResourceStatuses(resource);
+                const { isProcessing } = getResourceStatus(resource);
                 // enable allowedOptions (menu cards)
                 const allowedOptions =  !isProcessing ? options : [];
                 return (

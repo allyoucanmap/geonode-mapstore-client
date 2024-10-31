@@ -17,6 +17,7 @@ import { toModulePlugin as msToModulePlugin } from '@mapstore/framework/utils/Mo
 
 import TOCPlugin from '@mapstore/framework/plugins/TOC';
 import OperationPlugin from '@js/plugins/Operation';
+import resourcesGridPlugins from '@js/plugins/ResourcesGrid';
 
 let epicsNamesToExclude = [
     'loadGeostoryEpic',
@@ -62,6 +63,7 @@ const toModulePlugin = (...args) => {
 };
 
 export const plugins = {
+    ...resourcesGridPlugins,
     TOCPlugin,
     OperationPlugin,
     LayerDownloadPlugin: toModulePlugin(
@@ -405,10 +407,6 @@ export const plugins = {
     DublinCoreDownloadPlugin: toModulePlugin(
         'DublinCoreDownload',
         () => import(/* webpackChunkName: 'plugins/iso-download-plugin' */ '@js/plugins/downloads/DublinCoreDownload')
-    ),
-    ResourcesGridPlugin: toModulePlugin(
-        'ResourcesGrid',
-        () => import(/* webpackChunkName: 'plugins/resources-grid' */ '@js/plugins/ResourcesGrid')
     ),
     FeaturedResourcesGridPlugin: toModulePlugin(
         'FeaturedResourcesGrid',

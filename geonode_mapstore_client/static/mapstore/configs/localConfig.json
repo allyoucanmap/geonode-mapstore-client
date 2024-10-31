@@ -3625,8 +3625,8 @@
             {
                 "name": "ResourcesGrid",
                 "cfg": {
+                    "id": "catalogue",
                     "containerSelector": "#gn-catalogue",
-                    "scrollContainerSelector": "#gn-catalogue",
                     "enableGeoNodeCardsMenuItems": true,
                     "detailsTabs": [
                         {
@@ -3776,7 +3776,7 @@
                     "allPage": {},
                     "mapsPage": {
                         "defaultQuery": {
-                            "resource": "map"
+                            "f": "map"
                         },
                         "menuItems": [
                             {
@@ -3869,7 +3869,7 @@
                     },
                     "documentsPage": {
                         "defaultQuery": {
-                            "resource": "document"
+                            "f": "document"
                         },
                         "menuItems": [
                             {
@@ -3967,7 +3967,7 @@
                     },
                     "dashboardsPage": {
                         "defaultQuery": {
-                            "resource": "dashboard"
+                            "f": "dashboard"
                         },
                         "menuItems": [
                             {
@@ -4060,7 +4060,7 @@
                     },
                     "datasetsPage": {
                         "defaultQuery": {
-                            "resource": "dataset"
+                            "f": "dataset"
                         },
                         "menuItems": [
                             {
@@ -4199,7 +4199,7 @@
                     },
                     "geostoriesPage": {
                         "defaultQuery": {
-                            "resource": "geostory"
+                            "f": "geostory"
                         },
                         "menuItems": [
                             {
@@ -4290,6 +4290,18 @@
                             }
                         ]
                     }
+                }
+            },
+            {
+                "name": "ResourcesFiltersForm",
+                "cfg": {
+                    "resourcesGridId": "catalogue"
+                }
+            },
+            {
+                "name": "ResourceDetails",
+                "cfg": {
+                    "resourcesGridId": "catalogue"
                 }
             },
             {

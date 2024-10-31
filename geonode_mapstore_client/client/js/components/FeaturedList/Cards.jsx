@@ -8,7 +8,7 @@
 
 import React from 'react';
 import ResourceCard from '@js/components/ResourceCard';
-import { getResourceStatuses } from '@js/utils/ResourceUtils';
+import { getResourceStatus } from '@js/utils/ResourceUtils';
 
 const Cards = ({
     resources,
@@ -24,7 +24,7 @@ const Cards = ({
             className={`gn-card-list gn-cards-type-grid`}
         >
             {resources.map((resource) => {
-                const { isProcessing } = getResourceStatuses(resource);
+                const { isProcessing } = getResourceStatus(resource);
 
                 return (
                     <li

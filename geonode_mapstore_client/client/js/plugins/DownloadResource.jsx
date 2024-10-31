@@ -126,7 +126,8 @@ export default createPlugin('DownloadResource', {
             target: 'cardOptions',
             detailsToolbar: true,
             Component: DownloadResource,
-            priority: 1
+            priority: 1,
+            position: 3
         },
         DetailViewer: {
             name: 'DownloadResource',

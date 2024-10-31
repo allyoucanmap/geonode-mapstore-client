@@ -221,7 +221,8 @@ export default createPlugin('SaveAs', {
         ResourcesGrid: {
             name: ProcessTypes.COPY_RESOURCE,
             target: 'cardOptions',
-            Component: ConnectedMenuItem
+            Component: ConnectedMenuItem,
+            position: 2
         }
     },
     epics: {

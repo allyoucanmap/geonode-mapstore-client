@@ -326,64 +326,89 @@ export const isDocumentExternalSource = (resource) => {
     return resource && resource.resource_type === ResourceTypes.DOCUMENT && resource.sourcetype === 'REMOTE';
 };
 
-export const getResourceTypesInfo = () => ({
-    [ResourceTypes.DATASET]: {
-        icon: 'database',
-        canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
-        formatEmbedUrl: (resource) => resource.embed_url && parseDevHostname(updateUrlQueryParameter(resource.embed_url, {
-            config: 'dataset_preview'
-        })),
-        formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),
-        name: 'Dataset',
-        formatMetadataUrl: (resource) => isDefaultDatasetSubtype(resource?.subtype)
-            ? `/datasets/${resource.store ? resource.store + ":" : ''}${resource.alternate}/metadata`
-            : `/resources/${resource.pk}/metadata`
-    },
-    [ResourceTypes.MAP]: {
-        icon: 'map',
-        name: 'Map',
-        canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
-        formatEmbedUrl: (resource) => parseDevHostname(updateUrlQueryParameter(resource.embed_url, {
-            config: 'map_preview'
-        })),
-        formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),
-        formatMetadataUrl: (resource) => (`/maps/${resource.pk}/metadata`)
-    },
-    [ResourceTypes.DOCUMENT]: {
-        icon: 'file',
-        name: 'Document',
-        canPreviewed: (resource) => resourceHasPermission(resource, 'download_resourcebase') && !!(determineResourceType(resource.extension) !== 'unsupported'),
-        hasPermission: (resource) => resourceHasPermission(resource, 'download_resourcebase'),
-        formatEmbedUrl: (resource) => isDocumentExternalSource(resource) ? undefined : resource?.embed_url && parseDevHostname(resource.embed_url),
-        formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),
-        formatMetadataUrl: (resource) => (`/documents/${resource.pk}/metadata`),
-        metadataPreviewUrl: (resource) => (`/documents/${resource.pk}/metadata_detail?preview`)
-    },
-    [ResourceTypes.GEOSTORY]: {
-        icon: 'book',
-        name: 'GeoStory',
-        canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
-        formatEmbedUrl: (resource) => resource?.embed_url && parseDevHostname(resource.embed_url),
-        formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),
-        formatMetadataUrl: (resource) => (`/apps/${resource.pk}/metadata`)
-    },
-    [ResourceTypes.DASHBOARD]: {
-        icon: 'dashboard',
-        name: 'Dashboard',
-        canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
-        formatEmbedUrl: (resource) => resource?.embed_url && parseDevHostname(resource.embed_url),
-        formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),
-        formatMetadataUrl: (resource) => (`/apps/${resource.pk}/metadata`)
-    },
-    [ResourceTypes.VIEWER]: {
-        icon: 'cogs',
-        name: 'MapViewer',
-        canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
-        formatEmbedUrl: () => false,
-        formatDetailUrl: (resource) => resource?.detail_url && parseDevHostname(resource.detail_url),
-        formatMetadataUrl: (resource) => (`/apps/${resource.pk}/metadata`)
-    }
-});
+export const getResourceTypesInfo = () => {
+
+    let resourceTypesInfo;
+
+    const formatViewerUrl = (resource) => {
+        const {
+            canPreviewed,
+            hasPermission,
+            formatMetadataUrl
+        } = resourceTypesInfo[resource?.subtype] || resourceTypesInfo[resource?.resource_type] || {};
+        const detailUrl = resource?.detail_url ? parseDevHostname(resource.detail_url) : undefined;
+        const resourceCanPreviewed = canPreviewed && canPreviewed(resource);
+        const canView = hasPermission && hasPermission(resource);
+        const metadataDetailUrl = formatMetadataUrl ? formatMetadataUrl(resource) + '_detail' : undefined;
+        return (resourceCanPreviewed || canView) ? detailUrl : metadataDetailUrl;
+    };
+
+    resourceTypesInfo = {
+        [ResourceTypes.DATASET]: {
+            icon: 'database',
+            canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
+            formatEmbedUrl: (resource) => resource.embed_url && parseDevHostname(updateUrlQueryParameter(resource.embed_url, {
+                config: 'dataset_preview'
+            })),
+            formatDetailUrl: formatViewerUrl,
+            formatViewerUrl,
+            name: 'Dataset',
+            formatMetadataUrl: (resource) => isDefaultDatasetSubtype(resource?.subtype)
+                ? `/datasets/${resource.store ? resource.store + ":" : ''}${resource.alternate}/metadata`
+                : `/resources/${resource.pk}/metadata`
+        },
+        [ResourceTypes.MAP]: {
+            icon: 'map',
+            name: 'Map',
+            canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
+            formatEmbedUrl: (resource) => parseDevHostname(updateUrlQueryParameter(resource.embed_url, {
+                config: 'map_preview'
+            })),
+            formatDetailUrl: formatViewerUrl,
+            formatViewerUrl,
+            formatMetadataUrl: (resource) => (`/maps/${resource.pk}/metadata`)
+        },
+        [ResourceTypes.DOCUMENT]: {
+            icon: 'file',
+            name: 'Document',
+            canPreviewed: (resource) => resourceHasPermission(resource, 'download_resourcebase') && !!(determineResourceType(resource.extension) !== 'unsupported'),
+            hasPermission: (resource) => resourceHasPermission(resource, 'download_resourcebase'),
+            formatEmbedUrl: (resource) => isDocumentExternalSource(resource) ? undefined : resource?.embed_url && parseDevHostname(resource.embed_url),
+            formatDetailUrl: formatViewerUrl,
+            formatViewerUrl,
+            formatMetadataUrl: (resource) => (`/documents/${resource.pk}/metadata`),
+            metadataPreviewUrl: (resource) => (`/documents/${resource.pk}/metadata_detail?preview`)
+        },
+        [ResourceTypes.GEOSTORY]: {
+            icon: 'book',
+            name: 'GeoStory',
+            canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
+            formatEmbedUrl: (resource) => resource?.embed_url && parseDevHostname(resource.embed_url),
+            formatDetailUrl: formatViewerUrl,
+            formatViewerUrl,
+            formatMetadataUrl: (resource) => (`/apps/${resource.pk}/metadata`)
+        },
+        [ResourceTypes.DASHBOARD]: {
+            icon: 'dashboard',
+            name: 'Dashboard',
+            canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
+            formatEmbedUrl: (resource) => resource?.embed_url && parseDevHostname(resource.embed_url),
+            formatDetailUrl: formatViewerUrl,
+            formatViewerUrl,
+            formatMetadataUrl: (resource) => (`/apps/${resource.pk}/metadata`)
+        },
+        [ResourceTypes.VIEWER]: {
+            icon: 'cogs',
+            name: 'MapViewer',
+            canPreviewed: (resource) => resourceHasPermission(resource, 'view_resourcebase'),
+            formatEmbedUrl: () => false,
+            formatDetailUrl: formatViewerUrl,
+            formatViewerUrl,
+            formatMetadataUrl: (resource) => (`/apps/${resource.pk}/metadata`)
+        }
+    };
+    return resourceTypesInfo;
+};
 
 export const getMetadataUrl = (resource) => {
     if (resource) {
@@ -397,7 +422,20 @@ export const getMetadataDetailUrl = (resource) => {
     return (getMetadataUrl(resource)) ? getMetadataUrl(resource) + '_detail' : '';
 };
 
-export const getResourceStatuses = (resource) => {
+const getResourcePendingStatusTooltipId = ({ isApproved, isPublished }) => {
+    if (!isApproved && isPublished) {
+        return 'gnhome.pendingApproval';
+    }
+    if (!isApproved && !isPublished) {
+        return 'gnhome.unApprovedunPublished';
+    }
+    if (isApproved && !isPublished) {
+        return 'gnhome.unpublished';
+    }
+    return '';
+};
+
+export const getResourceStatus = (resource) => {
     const { processes } = resource || {};
     const isProcessing = processes
         ? !!processes.find(({ completed }) => !completed)
@@ -410,14 +448,47 @@ export const getResourceStatuses = (resource) => {
     const isCopied = deleteProcess?.output?.status === ProcessStatus.FINISHED;
     const isApproved = resource?.is_approved;
     const isPublished = isApproved && resource?.is_published;
+    const isDownloading = !!resource?.['@downloading'];
+    const isUnadvertised = resource?.advertised === false;
     return {
+        items: [
+            ...(isUnadvertised ? [{
+                type: 'icon',
+                tooltipId: 'gnviewer.unadvertised',
+                variant: 'warning',
+                glyph: 'eye-slash'
+            }] : []),
+            ...( (!isProcessing && (!isApproved || !isPublished)) ? [{
+                type: 'icon',
+                tooltipId: getResourcePendingStatusTooltipId({ isApproved, isPublished }),
+                variant: 'warning',
+                glyph: 'info-circle'
+            }] : []),
+            ...(isDeleting ? [{
+                type: 'text',
+                labelId: 'gnviewer.deleting',
+                variant: 'danger'
+            }] : []),
+            ...(isDeleted ? [{
+                type: 'text',
+                labelId: 'gnviewer.deleted',
+                variant: 'danger'
+            }] : []),
+            ...(isCopying ? [{
+                type: 'text',
+                labelId: 'gnviewer.cloning',
+                variant: 'primary'
+            }] : [])
+        ],
         isApproved,
         isPublished,
         isProcessing,
         isDeleting,
         isDeleted,
         isCopying,
-        isCopied
+        isCopied,
+        isDownloading,
+        isUnadvertised
     };
 };
 
@@ -683,7 +754,7 @@ export const canCopyResource = (resource, user) => {
 
 export const excludeDeletedResources = (suppliedResources) => {
     return suppliedResources.filter((resource) => {
-        const { isDeleted } = getResourceStatuses(resource);
+        const { isDeleted } = getResourceStatus(resource);
         return !isDeleted && resource;
     });
 };

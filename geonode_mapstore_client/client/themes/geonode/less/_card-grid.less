@@ -20,25 +20,36 @@
         .background-color-var(@theme-vars[main-variant-bg]);
     }
 
-    .gn-resource-status-warning {
+    .gn-resource-status-text.gn-resource-status-warning {
         .background-color-var(@theme-vars[warning]);
         .color-var(@theme-vars[warning-contrast]);
     }
-    .gn-resource-status-danger {
+    .gn-resource-status-text.gn-resource-status-danger {
         .background-color-var(@theme-vars[danger]);
         .color-var(@theme-vars[danger-contrast]);
     }
-    .gn-resource-status-pending {
-        .color-var(@theme-vars[warning]);
-    }
-    .gn-resource-status-primary {
+    .gn-resource-status-text.gn-resource-status-primary {
         .background-color-var(@theme-vars[primary]);
         .color-var(@theme-vars[primary-contrast]);
     }
-    .gn-resource-status-success {
+    .gn-resource-status-text.gn-resource-status-success {
         .background-color-var(@theme-vars[success]);
         .color-var(@theme-vars[success-contrast]);
     }
+
+    .gn-resource-status-icon.gn-resource-status-warning {
+        .color-var(@theme-vars[warning]);
+    }
+    .gn-resource-status-icon.gn-resource-status-danger {
+        .color-var(@theme-vars[danger]);
+    }
+    .gn-resource-status-icon.gn-resource-status-primary {
+        .color-var(@theme-vars[primary]);
+    }
+    .gn-resource-status-icon.gn-resource-status-success {
+        .color-var(@theme-vars[success]);
+    }
+
     .gn-resource-delete-warning {
         .border-bottom-color-var(@theme-vars[main-border-color]);
         .color-var(@theme-vars[warning]);
@@ -145,27 +156,18 @@
     }
 }
 
-p.gn-resource-status-text {
-    margin: 0;
-}
-
 .gn-resource-status {
-    padding: 0.2em 0.5em;
-    border-radius: 2px;
-    font-size: @font-size-sm;
-    margin-right: 0.25rem;
-}
-
-.gn-resource-status-pending {
-    padding: 0;
-    text-transform: uppercase;
-    font-size: 1rem;
-}
-
-.gn-resource-delete-warning {
-    font-size: @font-size-sm;
     display: flex;
-    align-items: baseline;
-    padding: 10px;
-    border-bottom: 1px solid;
+    gap: 0.25rem;
+}
+.gn-resource-status-text {
+    padding: 0 0.25rem;
+    border-radius: 4px;
+    font-size: @font-size-sm;
+}
+
+.gn-resource-status-icon {
+    cursor: pointer;
+    pointer-events: auto;
+    font-size: @font-size-sm;
 }

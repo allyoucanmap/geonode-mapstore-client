@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import FaIcon from '@js/components/FaIcon';
 import tooltip from '@mapstore/framework/components/misc/enhancers/tooltip';
 import isEmpty from 'lodash/isEmpty';
-import { getResourceStatuses } from '@js/utils/ResourceUtils';
+import { getResourceStatus } from '@js/utils/ResourceUtils';
 import Button from '@js/components/Button';
 
 const ButtonWithTooltip = tooltip(Button);
@@ -24,7 +24,7 @@ const ResourceStatus = ({ resource = {} }) => {
         isCopying,
         isDeleting,
         isDeleted
-    } = getResourceStatuses(resource);
+    } = getResourceStatus(resource);
 
     const getTitle = (status) => {
         const { isApproved: approved, isPublished: published } = status;

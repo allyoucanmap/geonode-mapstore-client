@@ -41,7 +41,8 @@ import {
     EXECUTION_REQUEST,
     FACETS,
     getEndpoints as cGetEndpoints,
-    getEndpointUrl
+    getEndpointUrl,
+    getQueryParams
 } from './constants';
 
 
@@ -52,38 +53,6 @@ export const getEndpoints = cGetEndpoints;
  * @module api/geonode/v2
  */
 
-function mergeCustomQuery(params, customQuery) {
-    if (customQuery) {
-        return mergeWith(
-            { ...params },
-            { ...customQuery },
-            (objValue, srcValue) => {
-                if (isArray(objValue) && isArray(srcValue)) {
-                    return [...objValue, ...srcValue];
-                }
-                if (isString(objValue) && isArray(srcValue)) {
-                    return [objValue, ...srcValue];
-                }
-                if (isArray(objValue) && isString(srcValue)) {
-                    return [...objValue, srcValue];
-                }
-                if (isString(objValue) && isString(srcValue)) {
-                    return [ objValue, srcValue ];
-                }
-                return undefined; // eslint-disable-line consistent-return
-            }
-        );
-    }
-    return params;
-}
-export const getQueryParams = (params, customFilters) => {
-    const customQuery = customFilters
-        .filter(({ id }) => castArray(params?.f ?? []).indexOf(id) !== -1)
-        .reduce((acc, filter) => mergeCustomQuery(acc, filter.query || {}), {}) || {};
-    return {
-        ...mergeCustomQuery(omit(params, "f"), customQuery)
-    };
-};
 export const getResources = ({
     q,
     pageSize = 20,
@@ -91,6 +60,7 @@ export const getResources = ({
     sort,
     f,
     customFilters = [],
+    config,
     ...params
 }) => {
     const _params = {
@@ -107,7 +77,8 @@ export const getResources = ({
     };
     return axios.get(getEndpointUrl(RESOURCES), {
         params: _params,
-        ...paramsSerializer()
+        ...paramsSerializer(),
+        ...config
     })
         .then(({ data }) => {
             return {
@@ -243,8 +214,9 @@ export const setFavoriteResource = (pk, favorite) => {
         .then(({ data }) => data );
 };
 
-export const getResourceByPk = (pk) => {
+export const getResourceByPk = (pk, config) => {
     return axios.get(getEndpointUrl(RESOURCES, `/${pk}`), {
+        ...config,
         params: {
             api_preset: API_PRESET.VIEWER_COMMON
         }
@@ -290,8 +262,9 @@ export const getResourceByUuid = (uuid) => {
         .then(({ data }) => data?.resources?.[0]);
 };
 
-export const getDatasetByPk = (pk) => {
+export const getDatasetByPk = (pk, config) => {
     return axios.get(getEndpointUrl(DATASETS, `/${pk}`), {
+        ...config,
         params: {
             api_preset: [API_PRESET.VIEWER_COMMON, API_PRESET.DATASET]
         },
@@ -300,8 +273,9 @@ export const getDatasetByPk = (pk) => {
         .then(({ data }) => data.dataset);
 };
 
-export const getDocumentByPk = (pk) => {
+export const getDocumentByPk = (pk, config) => {
     return axios.get(getEndpointUrl(DOCUMENTS, `/${pk}`), {
+        ...config,
         params: {
             api_preset: [API_PRESET.VIEWER_COMMON, API_PRESET.DOCUMENT]
         },
@@ -697,28 +671,27 @@ export const deleteExecutionRequest = (executionId) => {
     return axios.delete(getEndpointUrl(EXECUTION_REQUEST, `/${executionId}`));
 };
 
-export const getResourceByTypeAndByPk = (type, pk, subtype) => {
+export const getResourceByTypeAndByPk = (type, pk, subtype, config) => {
     switch (type) {
     case "document":
-        return getDocumentByPk(pk);
+        return getDocumentByPk(pk, config);
     case "dataset":
         return isDefaultDatasetSubtype(subtype)
-            ? getDatasetByPk(pk)
-            : getResourceByPk(pk);
+            ? getDatasetByPk(pk, config)
+            : getResourceByPk(pk, config);
     // Add type condition based on requirement
     default:
-        return getResourceByPk(pk);
+        return getResourceByPk(pk, config);
     }
 };
 
-export const getFacetItemsByFacetName = ({ name: facetName, style, filterKey, filters, setFilters}, { config, ...params }, customFilters) => {
+export const getFacetItemsByFacetName = ({ name: facetName, style, filterKey, filters, setFilters, config, params }, customFilters) => {
     const updatedParams = getQueryParams(params, customFilters);
-    return axios.get(getEndpointUrl(FACETS, `/${facetName}`),
-        { ...config,
-            params: updatedParams,
-            ...paramsSerializer()
-        }
-    ).then(({data}) => {
+    return axios.get(getEndpointUrl(FACETS, `/${facetName}`), {
+        ...config,
+        params: updatedParams,
+        ...paramsSerializer()
+    }).then(({data}) => {
         const {page: _page = 0, items: _items = [], total, page_size: size} = data?.topics ?? {};
         const page = Number(_page);
         const isNextPageAvailable = (Math.ceil(Number(total) / Number(size)) - (page + 1)) !== 0;
@@ -755,8 +728,8 @@ export const getFacetItemsByFacetName = ({ name: facetName, style, filterKey, fi
             });
 
         // Update filters
-        setFilters(items.map((item) => ({[item.filterKey + item.filterValue]: {...item, facetName}})).reduce((f, c) => ({...f, ...c}), {}));
-
+        // setFilters(items.map((item) => ({[item.filterKey + item.filterValue]: {...item, facetName}})).reduce((f, c) => ({...f, ...c}), {}));
+        console.log(items);
         return {
             page,
             isNextPageAvailable,

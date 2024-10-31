@@ -31,7 +31,7 @@ import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '@mapstore/framework/selectors/security';
 import ConnectedCardGrid from '@js/plugins/resourcesgrid/ConnectedCardGrid';
 import { getTotalResources, getFacetsItems } from '@js/selectors/search';
-import { searchResources, setSearchConfig, getFacetItems, setFilters as setFiltersAction } from '@js/actions/gnsearch';
+import { searchResources, setSearchConfig, getFacetItems, setFilters as setFiltersAction, loadingResources, updateResources, updateResourcesMetadata } from '@js/actions/gnsearch';
 
 import gnsearch from '@js/reducers/gnsearch';
 import gnresource from '@js/reducers/gnresource';
@@ -48,12 +48,18 @@ import {downloadResource, setFavoriteResource} from '@js/actions/gnresource';
 import FiltersForm from '@js/components/FiltersForm';
 import usePluginItems from '@js/hooks/usePluginItems';
 import { ProcessTypes } from '@js/utils/ResourceServiceUtils';
-import { replace } from 'connected-react-router';
+import { replace, push } from 'connected-react-router';
 import FaIcon from '@js/components/FaIcon';
 import Button from '@js/components/Button';
 import useLocalStorage from '@js/hooks/useLocalStorage';
 import MainLoader from '@js/components/MainLoader';
 import tabComponents from '@js/plugins/detailviewer/tabComponents';
+
+import useResourcesCatalog from '@js/hooks/useResourcesCatalog';
+import {
+    getResources
+} from '@js/api/geonode/v2';
+import { getCustomMenuFilters } from '@js/selectors/config';
 
 const ConnectedDetailsPanel = connect(
     createSelector([
@@ -205,7 +211,7 @@ const withPageConfig = (Component) => {
 function ResourcesGrid({
     location,
     params,
-    onSearch,
+    // onSearch,
     user,
     totalResources,
     loading,
@@ -486,8 +492,27 @@ function ResourcesGrid({
     facets,
     filters,
     setFilters,
+    onPush,
+    setLoading,
+    setResources,
+    setResourcesMetadata,
+    customFilters,
     ...props
 }, context) {
+
+    const {
+        search: onSearch
+    } = useResourcesCatalog({
+        request: getResources,
+        location,
+        onPush,
+        setLoading,
+        setResources,
+        setResourcesMetadata,
+        defaultQuery,
+        pageSize,
+        customFilters
+    });
 
     const [_cardLayoutStyleState, setCardLayoutStyle] = useLocalStorage('layoutCardsStyle', defaultCardLayoutStyle);
     const cardLayoutStyleState = cardLayoutStyle || _cardLayoutStyleState; // Force style when `cardLayoutStyle` is configured
@@ -870,8 +895,9 @@ const ResourcesGridPlugin = connect(
         state => getMonitoredState(state, getConfigProp('monitorState')),
         state => state?.gnsearch?.error,
         getFacetsItems,
-        state => state?.gnsearch?.filters
-    ], (params, user, totalResources, loading, location, resource, monitoredState, error, facets, filters) => ({
+        state => state?.gnsearch?.filters,
+        getCustomMenuFilters
+    ], (params, user, totalResources, loading, location, resource, monitoredState, error, facets, filters, customFilters) => ({
         params,
         user,
         totalResources,
@@ -881,14 +907,19 @@ const ResourcesGridPlugin = connect(
         monitoredState,
         error,
         facets,
-        filters
+        filters,
+        customFilters
     })),
     {
         onSearch: searchResources,
         onInit: setSearchConfig,
         onReplaceLocation: replace,
         onGetFacets: getFacetItems,
-        setFilters: setFiltersAction
+        setFilters: setFiltersAction,
+        onPush: push,
+        setLoading: loadingResources,
+        setResources: updateResources,
+        setResourcesMetadata: updateResourcesMetadata
     }
 )(withResizeDetector(withPageConfig(ResourcesGrid)));
 

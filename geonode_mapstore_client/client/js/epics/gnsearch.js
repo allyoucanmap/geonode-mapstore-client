@@ -108,7 +108,7 @@ const getNextPage = (action, state) => {
 
     return isPreviousPageAvailable ? currentPage - 1 : 1;
 };
-
+/*
 export const gnsSearchResourcesEpic = (action$, store) =>
     action$.ofType(SEARCH_RESOURCES)
         .switchMap(action => {
@@ -140,7 +140,7 @@ export const gnsSearchResourcesEpic = (action$, store) =>
             return Observable.empty();
         });
 
-
+/*
 const requestResourcesObservable = ({
     params,
     pageSize,
@@ -197,6 +197,7 @@ const requestResourcesObservable = ({
             loadingResources(true)
         );
 };
+*/
 
 // checks if location change is made to a viewer page
 const isViewerPage = (currentPath) => {
@@ -206,7 +207,7 @@ const isViewerPage = (currentPath) => {
     });
     return match;
 };
-
+/*
 export const gnsSearchResourcesOnLocationChangeEpic = (action$, store) =>
     action$.ofType(LOCATION_CHANGE, UPDATE_RESOURCES_REQUEST)
         .filter(({ payload }) => {
@@ -272,7 +273,7 @@ export const gnsSearchResourcesOnLocationChangeEpic = (action$, store) =>
                 location
             }, store);
         });
-
+*/
 export const gnsRequestResourceOnLocationChange = (action$, store) =>
     action$.ofType(LOCATION_CHANGE)
         .filter(({ payload }) => {
@@ -448,8 +449,8 @@ export const gnGetFacetItems = (action$, {getState = () => {}}) =>
         });
 
 export default {
-    gnsSearchResourcesEpic,
-    gnsSearchResourcesOnLocationChangeEpic,
+    // gnsSearchResourcesEpic,
+    // gnsSearchResourcesOnLocationChangeEpic,
     gnsSelectResourceEpic,
     getFeaturedResourcesEpic,
     gnWatchStopCopyProcessOnSearch,

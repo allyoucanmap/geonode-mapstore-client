@@ -7,9 +7,13 @@
 */
 
 import { excludeDeletedResources } from '@js/utils/ResourceUtils';
+import {
+    getResources,
+    getTotalResources as getTotalResourcesSelector
+} from '../plugins/ResourcesGrid/selectors/resources';
 
-export const getSearchResults = (state) => {
-    const resources = state?.gnsearch?.resources || [];
+export const getSearchResults = (state, props) => {
+    const resources = getResources(state, props);
     const processes = state?.resourceservice?.processes || [];
     const searchResources = resources.map((resource) => {
         const resourceProcesses = processes.filter((process) => process?.resource?.pk === resource?.pk);
@@ -35,10 +39,11 @@ export const getFeaturedResults = (state) => {
     return excludeDeletedResources(featuredResults);
 };
 
-export const getTotalResources = (state) => {
-    const resources = getSearchResults(state);
+export const getTotalResources = (state, props) => {
+    const resources = getSearchResults(state, props);
     const temporaryResourcesCount = resources.filter(resource => resource['@temporary']).length;
-    return (state?.gnsearch?.total || 0) + temporaryResourcesCount;
+    return (getTotalResourcesSelector(state, props)) + temporaryResourcesCount;
 };
 
 export const getFacetsItems = state => state?.gnsearch?.facetItems;
+export const getShowFilterForm = state => state?.gnsearch?.showFilterForm;

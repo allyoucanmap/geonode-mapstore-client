@@ -28,8 +28,8 @@ export const processingDownload = (state) => {
     return downloading;
 };
 
-export const generalResourceDownload = (state) => {
-    const generalResources = getSearchResults(state);
+export const generalResourceDownload = (state, props) => {
+    const generalResources = getSearchResults(state, props);
     const downloads = state?.resourceservice?.downloads || [];
     const generalDownloads = generalResources?.reduce((acc, resource) => {
         const downloadingResources = downloads.find(download => download.pk === resource.pk);

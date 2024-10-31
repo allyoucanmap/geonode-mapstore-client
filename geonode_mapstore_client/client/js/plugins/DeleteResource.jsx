@@ -234,7 +234,8 @@ export default createPlugin('DeleteResource', {
         ResourcesGrid: {
             name: ProcessTypes.DELETE_RESOURCE,
             target: 'cardOptions',
-            Component: ConnectedMenuItem
+            Component: ConnectedMenuItem,
+            position: 1
         }
     },
     epics: {},
