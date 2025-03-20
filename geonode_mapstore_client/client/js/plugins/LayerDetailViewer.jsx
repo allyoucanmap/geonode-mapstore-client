@@ -26,7 +26,7 @@ import { hashLocationToHref } from '@js/utils/SearchUtils';
 import { mapSelector } from '@mapstore/framework/selectors/map';
 import { parsePluginConfigExpressions } from '@js/utils/MenuUtils';
 import tooltip from '@mapstore/framework/components/misc/enhancers/tooltip';
-import tabComponents from '@js/plugins/detailviewer/tabComponents';
+import tabComponents from '@js/plugins/ResourceDetails/tabComponents';
 
 const Button = tooltip(GNButton);
 

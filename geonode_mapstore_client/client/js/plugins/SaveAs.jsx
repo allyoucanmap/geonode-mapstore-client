@@ -35,8 +35,6 @@ import { ProcessTypes } from '@js/utils/ResourceServiceUtils';
 import { canCopyResource } from '@js/utils/ResourceUtils';
 import { processResources } from '@js/actions/gnresource';
 import { getCurrentResourceCopyLoading } from '@js/selectors/resourceservice';
-import Dropdown from '@js/components/Dropdown';
-import FaIcon from '@js/components/FaIcon';
 import withPrompt from '@js/plugins/save/withPrompt';
 
 function SaveAs({
@@ -167,20 +165,22 @@ const ConnectedSaveAsButton = connect(
 function CopyMenuItem({
     resource,
     canCopy,
-    onCopy
+    onCopy,
+    component
 }) {
     if (!canCopy(resource)) {
         return null;
     }
+    const Component = component;
     return (
-        <Dropdown.Item
+        <Component
             onClick={() =>
                 onCopy([resource])
             }
-        >
-            <FaIcon name="copy" />{' '}
-            <Message msgId="gnviewer.clone" />
-        </Dropdown.Item>
+            labelId="gnviewer.clone"
+            glyph="duplicate"
+            iconType="glyphicon"
+        />
     );
 }
 
@@ -220,7 +220,7 @@ export default createPlugin('SaveAs', {
         },
         ResourcesGrid: {
             name: ProcessTypes.COPY_RESOURCE,
-            target: 'cardOptions',
+            target: 'card-options',
             Component: ConnectedMenuItem
         }
     },

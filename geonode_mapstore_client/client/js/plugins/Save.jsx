@@ -69,7 +69,30 @@ function SaveButton({
     );
 }
 
-const ConnectedSaveButton = connect(
+function ResourceDetailsSaveButton({
+    component,
+    loading,
+    onClick,
+    dirtyState
+}) {
+    const Component = component;
+    return Component
+        ? (
+            <Component
+                glyph="floppy-disk"
+                iconType="glyphicon"
+                labelId="save"
+                square
+                className={dirtyState ? 'ms-notification-circle warning' : ''}
+                disabled={!dirtyState || loading}
+                onClick={() => onClick()}
+                loading={loading}
+            />
+        )
+        : null;
+}
+
+const saveConnector = connect(
     createSelector(
         isLoggedIn,
         isNewResource,
@@ -77,25 +100,34 @@ const ConnectedSaveButton = connect(
         mapInfoSelector,
         getCurrentResourcePermissionsLoading,
         getResourceDirtyState,
-        (loggedIn, isNew, canEdit, mapInfo, permissionsLoading, dirtyState) => ({
+        state => state?.gnsave?.saving,
+        (loggedIn, isNew, canEdit, mapInfo, permissionsLoading, dirtyState, saveLoading) => ({
             // we should add permList to map pages too
             // currently the canEdit is located inside the map info
             enabled: loggedIn && !isNew && (canEdit || mapInfo?.canEdit),
-            loading: permissionsLoading,
+            loading: permissionsLoading || saveLoading,
             dirtyState
         })
     ),
     {
         onClick: saveDirectContent
     }
-)((withRouter(withPrompt(SaveButton))));
+);
 
 export default createPlugin('Save', {
     component: SavePlugin,
     containers: {
         ActionNavbar: {
             name: 'Save',
-            Component: ConnectedSaveButton
+            Component: saveConnector(((withRouter(withPrompt(SaveButton))))),
+            doNotHide: true,
+            priority: 2
+        },
+        ResourceDetails: {
+            name: 'Save',
+            target: 'toolbar',
+            Component: saveConnector(ResourceDetailsSaveButton),
+            priority: 1
         }
     },
     epics: {

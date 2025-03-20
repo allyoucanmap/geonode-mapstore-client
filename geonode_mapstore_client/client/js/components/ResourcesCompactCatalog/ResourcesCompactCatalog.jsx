@@ -11,13 +11,14 @@ import PropTypes from 'prop-types';
 import { FormControl as FormControlRB, Glyphicon } from 'react-bootstrap';
 import Message from '@mapstore/framework/components/I18N/Message';
 import Button from '@js/components/Button';
-import ResourceCard from '@js/components/ResourceCard';
 import useInfiniteScroll from '@js/hooks/useInfiniteScroll';
 import FaIcon from '@js/components/FaIcon/FaIcon';
 import Spinner from '@js/components/Spinner';
 import Loader from '@mapstore/framework/components/misc/Loader';
 import withDebounceOnCallback from '@mapstore/framework/components/misc/enhancers/withDebounceOnCallback';
 import localizedProps from '@mapstore/framework/components/misc/enhancers/localizedProps';
+import ResourceCard from '@mapstore/framework/plugins/ResourcesCatalog/components/ResourceCard';
+
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
 function InputControl({ onChange, value, ...props }) {
@@ -142,9 +143,17 @@ function ResourcesCompactCatalog({
                     return (
                         <li key={entry.pk}>
                             <ResourceCard
-                                data={entry}
+                                data={{
+                                    ...entry,
+                                    '@extras': {
+                                        info: {
+                                            thumbnailUrl: entry?.thumbnail_url
+                                        }
+                                    }
+                                }}
                                 readOnly
-                                layoutCardsStyle="list"
+                                layoutCardsStyle="grid"
+                                metadata={[{ path: 'title', target: 'header', width: 100 }]}
                                 onClick={() => handleSelectResource(entry)}
                             />
                         </li>

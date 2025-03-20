@@ -19,7 +19,7 @@ import { getResourceTypesInfo, getMetadataDetailUrl } from '@js/utils/ResourceUt
 import debounce from 'lodash/debounce';
 import CopyToClipboardCmp from 'react-copy-to-clipboard';
 import ResourceStatus from '@js/components/ResourceStatus';
-import AuthorInfo from '@js/components/AuthorInfo/AuthorInfo';
+// import AuthorInfo from '@js/components/AuthorInfo/AuthorInfo';
 import { getUserName } from '@js/utils/SearchUtils';
 import { useInView } from 'react-intersection-observer';
 import DetailsResourcePreview from './DetailsResourcePreview';
@@ -281,7 +281,7 @@ function DetailsPanel({
                             <img src={resource?.owner.avatar} alt={getUserName(resource?.owner)} className="gn-card-author-image" />
                             }
                             <ResourceMessage type={resource?.resource_type} pathname={pathname} formatHref={formatHref} />
-                            <AuthorInfo resource={resource} formatHref={formatHref} pathname={pathname} style={{ margin: 0 }} detailsPanel /></>}
+                            {/* <AuthorInfo resource={resource} formatHref={formatHref} pathname={pathname} style={{ margin: 0 }} detailsPanel /> */}</>}
                             {(resource?.date_type && resource?.date)
                             && <>{' '}/{' '}{moment(resource.date).format('MMMM Do YYYY')}</>}
                         </p>

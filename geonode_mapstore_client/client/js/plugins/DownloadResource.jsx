@@ -131,11 +131,12 @@ export default createPlugin('DownloadResource', {
             Component: DownloadResource,
             priority: 1
         },
-        DetailViewer: {
+        ResourceDetails: {
             name: 'DownloadResource',
             target: 'toolbar',
             Component: DownloadResource,
-            priority: 1
+            priority: 1,
+            position: 1
         },
         LayerDownload: {
             name: 'DownloadResource',

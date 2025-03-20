@@ -43,7 +43,6 @@ import UploadDocumentRoute from '@js/routes/UploadDocument';
 import CatalogueRoute from '@js/routes/Catalogue';
 import MapViewerRoute from '@js/routes/MapViewer';
 
-import gnsearch from '@js/reducers/gnsearch';
 import gnresource from '@js/reducers/gnresource';
 import resourceservice from '@js/reducers/resourceservice';
 import gnsettings from '@js/reducers/gnsettings';
@@ -75,8 +74,6 @@ import {
 import timelineEpics from '@mapstore/framework/epics/timeline';
 import gnresourceEpics from '@js/epics/gnresource';
 import resourceServiceEpics from '@js/epics/resourceservice';
-import gnsearchEpics from '@js/epics/gnsearch';
-import favoriteEpics from '@js/epics/favorite';
 import maplayout from '@mapstore/framework/reducers/maplayout';
 
 import pluginsDefinition, { storeEpicsNamesToExclude, cleanEpics } from '@js/plugins/index';
@@ -147,8 +144,6 @@ getEndpoints()
                         ...pluginsDefinition.epics,
                         ...gnresourceEpics,
                         ...resourceServiceEpics,
-                        ...gnsearchEpics,
-                        ...favoriteEpics,
                         updateMapLayoutEpic,
                         // needed to initialize the correct time range
                         ...timelineEpics
@@ -198,7 +193,6 @@ getEndpoints()
                             searchconfig,
                             widgets,
                             geostory,
-                            gnsearch,
                             notifications,
                             context,
                             ...pluginsDefinition.reducers

@@ -120,7 +120,9 @@ def run_setup_hooks(*args, **kwargs):
             "subtype",
             "title",
             "executions",
-            "thumbnail_url"
+            "thumbnail_url",
+            "created",
+            "favorite"
         ],
     }
     settings.REST_API_PRESETS["dataset_list"] = {
@@ -229,6 +231,11 @@ def run_setup_hooks(*args, **kwargs):
             "metadata_uploaded_preserve",
             "featured"
         ],
+    }
+    settings.REST_API_PRESETS["map_details"] = {
+        "include[]": [
+            "maplayers"
+        ]
     }
     settings.REST_API_PRESETS["map_viewer"] = {
         "include[]": [
