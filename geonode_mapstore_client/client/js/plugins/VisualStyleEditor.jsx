@@ -42,7 +42,7 @@ import {
     selectedStyleSelector
 } from '@mapstore/framework/selectors/styleeditor';
 import Message from '@mapstore/framework/components/I18N/Message';
-import GNButton from '@js/components/Button';
+import GNButton from '@mapstore/framework/components/layout/Button';
 import Portal from '@mapstore/framework/components/misc/Portal';
 import ResizableModal from '@mapstore/framework/components/misc/ResizableModal';
 import StylesAPI from '@mapstore/framework/api/geoserver/Styles';

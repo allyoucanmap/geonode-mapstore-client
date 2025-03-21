@@ -354,3 +354,5 @@ export const getGeoNodeResourceFromDashboard = (state) => get(originalDataSelect
 export const defaultViewerPluginsSelector = (state) => {
     return state?.gnresource?.defaultViewerPlugins ?? [];
 };
+
+export const getResourceLoading = (state) => state?.gnresource?.loading;

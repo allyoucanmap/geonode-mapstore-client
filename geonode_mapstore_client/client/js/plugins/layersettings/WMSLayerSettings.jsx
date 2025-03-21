@@ -10,7 +10,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import isNumber from 'lodash/isNumber';
 import clamp from 'lodash/clamp';
 import { Glyphicon, FormGroup, ControlLabel, Checkbox } from 'react-bootstrap';
-import Button from '@js/components/Button';
+import Button from '@mapstore/framework/components/layout/Button';
 import IntlNumberFormControl from '@mapstore/framework/components/I18N/IntlNumberFormControl';
 import Message from '@mapstore/framework/components/I18N/Message';
 import InfoPopover from '@mapstore/framework/components/widgets/widget/InfoPopover';

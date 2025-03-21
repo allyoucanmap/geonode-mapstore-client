@@ -10,7 +10,7 @@ import React from 'react';
 import get from 'lodash/get';
 import { updateMetadata } from '@js/api/geonode/v2/metadata';
 import Message from '@mapstore/framework/components/I18N/Message';
-import Button from '@js/components/Button';
+import Button from '@mapstore/framework/components/layout/Button';
 
 function MetadataUpdateButton({
     pendingChanges,

@@ -16,7 +16,7 @@ import { createPlugin } from '@mapstore/framework/utils/PluginsUtils';
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import Message from '@mapstore/framework/components/I18N/Message';
 import controls from '@mapstore/framework/reducers/controls';
-import Button from '@js/components/Button';
+import Button from '@mapstore/framework/components/layout/Button';
 import { mapInfoSelector } from '@mapstore/framework/selectors/map';
 import { layersSelector } from '@mapstore/framework/selectors/layers';
 import OverlayContainer from '@js/components/OverlayContainer';
@@ -29,7 +29,7 @@ import {
     getViewedResourceType
 } from '@js/selectors/resource';
 import { updateResourceCompactPermissions } from '@js/actions/gnresource';
-import Permissions from '@js/components/Permissions';
+import Permissions from '@mapstore/framework/plugins/ResourcesCatalog/components/Permissions';
 import { getUsers, getGroups, getResourceTypes } from '@js/api/geonode/v2';
 import {
     resourceToPermissionEntry,
@@ -37,11 +37,18 @@ import {
     getResourcePermissions,
     cleanUrl,
     getDownloadUrlInfo,
-    getResourceTypesInfo
+    getResourceTypesInfo,
+    permissionsListsToCompact,
+    permissionsCompactToLists
 } from '@js/utils/ResourceUtils';
 import SharePageLink from '@js/plugins/share/SharePageLink';
 import ShareEmbedLink from '@js/plugins/share/ShareEmbedLink';
 import { getCurrentResourcePermissionsLoading } from '@js/selectors/resourceservice';
+import GeoLimits from '@js/components/Permissions/GeoLimits';
+import Popover from '@mapstore/framework/components/styleeditor/Popover';
+import useIsMounted from '@mapstore/framework/hooks/useIsMounted';
+import { getGeoLimits } from '@js/api/geonode/security';
+import Icon from '@mapstore/framework/plugins/ResourcesCatalog/components/Icon';
 
 const getEmbedUrl = (resource) => {
     const { formatEmbedUrl = (_resource) => _resource?.embed_url  } = getResourceTypesInfo()[resource?.resource_type] || {};
@@ -96,11 +103,75 @@ const entriesTabs = [
         }
     }
 ];
+
+const ConnectedGeoLimits = connect(
+    createSelector([getResourceId, mapInfoSelector, layersSelector],
+        (resourceId, mapInfo, layers) => ({
+            resourceId: resourceId || mapInfo?.id,
+            layers
+        })
+    )
+)(({
+    entry,
+    onUpdate,
+    resourceId,
+    layers
+}) => {
+
+    const isMounted = useIsMounted();
+
+    function handleRequestGeoLimits(_entry) {
+        if (!_entry.geoLimitsLoading) {
+            onUpdate(_entry.id, { geoLimitsLoading: true }, true);
+            getGeoLimits(resourceId, _entry.id, _entry.type)
+                .then((collection) => {
+                    isMounted(() => {
+                        onUpdate(_entry.id, {
+                            geoLimitsLoading: false,
+                            features: collection.features || [],
+                            isGeoLimitsChanged: false
+                        });
+                    });
+                })
+                .catch(() => {
+                    isMounted(() => {
+                        onUpdate(_entry.id, {
+                            geoLimitsLoading: false,
+                            features: [],
+                            isGeoLimitsChanged: false
+                        });
+                    });
+                });
+        }
+    }
+
+    return (
+        <Popover
+            placement="left"
+            onOpen={(open) => {
+                if (open && !entry.features) {
+                    handleRequestGeoLimits(entry);
+                }
+            }}
+            content={
+                <GeoLimits
+                    key={entry.geoLimitsLoading}
+                    layers={layers}
+                    features={entry.features}
+                    loading={entry.geoLimitsLoading}
+                    onChange={(changes) => onUpdate(entry.id, { ...changes, isGeoLimitsChanged: true })}
+                    onRefresh={handleRequestGeoLimits.bind(null, entry)}
+                />
+            }>
+            <Button>
+                <Icon glyph="globe" />
+            </Button>
+        </Popover>
+    );
+});
 function Share({
     enabled,
-    resourceId,
     compactPermissions,
-    layers,
     onChangePermissions,
     enableGeoLimits,
     onClose,
@@ -158,11 +229,12 @@ function Share({
                     {(resourceType === 'document' && !!downloadUrl) && <SharePageLink value={downloadUrl} label={<Message msgId={`gnviewer.directLink`} />} />}
                     {canEdit && <>
                         <Permissions
-                            compactPermissions={compactPermissions}
-                            layers={layers} entriesTabs={entriesTabs}
-                            onChange={onChangePermissions}
-                            enableGeoLimits={enableGeoLimits}
-                            resourceId={resourceId}
+                            editing
+                            compactPermissions={permissionsCompactToLists(compactPermissions)}
+                            entriesTabs={entriesTabs}
+                            onChange={(value) => onChangePermissions(permissionsListsToCompact(value))}
+                            showGroupsPermissions
+                            tools={enableGeoLimits ? [{ Component: ConnectedGeoLimits, name: 'GeoLimits' }] : []}
                             loading={permissionsLoading}
                             permissionOptions={permissionsObject}
                         />
@@ -188,19 +260,14 @@ Share.defaultProps = {
 const SharePlugin = connect(
     createSelector([
         state => state?.controls?.rightOverlay?.enabled === 'Share',
-        getResourceId,
-        mapInfoSelector,
         getCompactPermissions,
-        layersSelector,
         canManageResourcePermissions,
         getCurrentResourcePermissionsLoading,
         getResourceData,
         getViewedResourceType
-    ], (enabled, resourceId, mapInfo, compactPermissions, layers, canEdit, permissionsLoading, resource, type) => ({
+    ], (enabled, compactPermissions, canEdit, permissionsLoading, resource, type) => ({
         enabled,
-        resourceId: resourceId || mapInfo?.id,
         compactPermissions,
-        layers,
         canEdit,
         permissionsLoading,
         embedUrl: getEmbedUrl(resource),

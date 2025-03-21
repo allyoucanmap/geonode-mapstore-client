@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import isEmpty from 'lodash/isEmpty';
 import { Glyphicon } from 'react-bootstrap';
-import GNButton from '@js/components/Button';
+import GNButton from '@mapstore/framework/components/layout/Button';
 import { updateNode, hideSettings, showSettings } from '@mapstore/framework/actions/layers';
 import { groupsSelector, elementSelector } from '@mapstore/framework/selectors/layers';
 import { mapSelector } from '@mapstore/framework/selectors/map';

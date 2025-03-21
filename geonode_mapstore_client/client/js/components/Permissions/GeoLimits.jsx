@@ -12,9 +12,9 @@ import BaseMap from '@mapstore/framework/components/map/BaseMap';
 import mapTypeHOC from '@mapstore/framework/components/map/enhancers/mapType';
 import LocalDrawSupport from '@mapstore/framework/components/geostory/common/map/LocalDrawSupport';
 import FitBounds from '@mapstore/framework/components/geostory/common/map/FitBounds';
-import Button from '@js/components/Button';
-import FaIcon from '@js/components/FaIcon';
-import Spinner from '@js/components/Spinner';
+import Button from '@mapstore/framework/components/layout/Button';
+import Icon from '@mapstore/framework/plugins/ResourcesCatalog/components/Icon';
+import Spinner from '@mapstore/framework/components/layout/Spinner';
 import { getExtent } from '@js/utils/CoordinatesUtils';
 
 const Map = mapTypeHOC(BaseMap);
@@ -141,14 +141,14 @@ function GeoLimits({
             </Map>
             <div  className="gn-geo-limits-tools">
                 <Button variant={draw ? 'primary' : 'default'} onClick={() => setDraw(!draw)}>
-                    <FaIcon name="pencil"/>
+                    <Icon glyph="pencil"/>
                 </Button>
                 <Button disabled={draw} onClick={handleRemove}>
-                    <FaIcon name="trash"/>
+                    <Icon glyph="trash"/>
                 </Button>
                 {children}
                 <Button disabled={draw} onClick={handleRefresh}>
-                    <FaIcon name="refresh"/>
+                    <Icon glyph="refresh"/>
                 </Button>
             </div>
             {loading && <div className="gn-geo-limits-loader">

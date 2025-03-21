@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Message from '@mapstore/framework/components/I18N/Message';
 import SVGPreview from '@mapstore/framework/components/styleeditor/SVGPreview';
 import Popover from '@mapstore/framework/components/styleeditor/Popover';
-import GNButton from '@js/components/Button';
+import GNButton from '@mapstore/framework/components/layout/Button';
 import tooltip from '@mapstore/framework/components/misc/enhancers/tooltip';
 import { getStyleParser } from '@mapstore/framework/utils/VectorStyleUtils';
 import { getStyleTemplates } from '@js/api/geonode/config';
