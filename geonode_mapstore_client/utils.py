@@ -121,20 +121,51 @@ def get_default_resource_page_config():
     }
     page_resource_config = {
         "maps": {
-            "title": "Map",
-            "defaultQuery": {
-                "f": "map"
-            },
-            "menuItems": [
+            "blocks": [
                 {
-                    **default_menu_item,
-                    "value": "map",
-                    "href": "{context.getCataloguePath('/catalogue/#/map/new')}"
+                    "id": "map-catalog",
+                    "class": "",
+                    "type": "html",
+                    "value": "Maps"
+                },
+                {
+                    "type": "ms-plugin",
+                    "name": "ResourcesGrid",
+                    "id": "map-all",
+                    "cfg": {
+                        "id": "catalog",
+                        "title": "Map",
+                        "defaultQuery": {
+                            "f": "map"
+                        },
+                        "menuItems": [
+                            {
+                                **default_menu_item,
+                                "value": "map",
+                                "href": "{context.getCataloguePath('/catalogue/#/map/new')}"
+                            }
+                        ],
+                    }
+                },
+                {
+                    "type": "ms-plugin",
+                    "name": "ResourcesFiltersForm",
+                    "cfg": {
+                        "resourcesGridId": "catalog",
+                        "fields": DEFAULT_PAGE_FILTER_FORM
+                    }
                 }
-            ],
-            "filterFormFields" : DEFAULT_PAGE_FILTER_FORM
+            ]
         },
         "datasets": {
+            "blocks": [
+                {
+                    "id": "map-catalog",
+                    "class": "",
+                    "type": "html",
+                    "value": "Datasets"
+                },
+            ],
             "title": "Dataset",
             "defaultQuery": {
                 "f": "dataset"
