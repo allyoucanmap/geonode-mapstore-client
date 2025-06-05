@@ -25,13 +25,13 @@
         {
             "type": "ms-plugin",
             "name": "ResourcesGrid",
-            "id": "map-all",
             "cfg": {
                 "id": "catalog",
                 "title": "Map",
                 "defaultQuery": {
                     "f": "map"
                 },
+                "targetSelector": "#map-all",
                 "menuItems": [
                     {
                         "labelId": "gnhome.new",
@@ -44,28 +44,6 @@
                 ],
             }
         }
-        {
-            "type": "ms-plugin",
-            "name": "ResourcesGrid",
-            "id": "map-all",
-            "cfg": {
-                "id": "catalog",
-                "title": "Map",
-                "defaultQuery": {
-                    "f": "map"
-                },
-                "menuItems": [
-                    {
-                        "labelId": "gnhome.new",
-                        "disableIf": "{(state('settings') && state('settings').isMobile) || !(state('user') && state('user').perms && state('user').perms.includes('add_resource'))}",
-                        "type": "button",
-                        "variant": "primary",
-                        "value": "map",
-                        "href": "{context.getCataloguePath('/catalogue/#/map/new')}"
-                    }
-                ],
-            }
-        },
         {
             "type": "ms-plugin",
             "name": "ResourcesFiltersForm",
