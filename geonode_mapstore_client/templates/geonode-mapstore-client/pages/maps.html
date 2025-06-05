@@ -1,0 +1,75 @@
+{% extends "geonode-mapstore-client/resource_page_catalog.html" %} 
+{% load i18n %}
+
+{% block content %}
+
+<div class="gn-resource-page-catalog-section">
+    <div class="gn-resource-page-catalog-content">
+        <h1>Maps</h1>
+        {% include "geonode-mapstore-client/snippets/breadcrumb.html" %}
+    </div>
+</div>
+
+<div id="map-all" class="ms-plugin ResourcesGrid">
+    <div class="ms-plugin-placeholder">
+        <div class="ms-spinner">
+            <div></div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block ms_plugins %}
+    msPluginsBlocks = [
+        {
+            "type": "ms-plugin",
+            "name": "ResourcesGrid",
+            "id": "map-all",
+            "cfg": {
+                "id": "catalog",
+                "title": "Map",
+                "defaultQuery": {
+                    "f": "map"
+                },
+                "menuItems": [
+                    {
+                        "labelId": "gnhome.new",
+                        "disableIf": "{(state('settings') && state('settings').isMobile) || !(state('user') && state('user').perms && state('user').perms.includes('add_resource'))}",
+                        "type": "button",
+                        "variant": "primary",
+                        "value": "map",
+                        "href": "{context.getCataloguePath('/catalogue/#/map/new')}"
+                    }
+                ],
+            }
+        }
+        {
+            "type": "ms-plugin",
+            "name": "ResourcesGrid",
+            "id": "map-all",
+            "cfg": {
+                "id": "catalog",
+                "title": "Map",
+                "defaultQuery": {
+                    "f": "map"
+                },
+                "menuItems": [
+                    {
+                        "labelId": "gnhome.new",
+                        "disableIf": "{(state('settings') && state('settings').isMobile) || !(state('user') && state('user').perms && state('user').perms.includes('add_resource'))}",
+                        "type": "button",
+                        "variant": "primary",
+                        "value": "map",
+                        "href": "{context.getCataloguePath('/catalogue/#/map/new')}"
+                    }
+                ],
+            }
+        },
+        {
+            "type": "ms-plugin",
+            "name": "ResourcesFiltersForm",
+            // "cfg": getDefaultFilter()
+        }
+    ];
+{% endblock ms_plugins %}

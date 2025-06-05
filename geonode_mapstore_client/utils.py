@@ -1,12 +1,10 @@
 import os
 import json
 
-from geoserver.catalog import FailedRequestError
-from geonode.geoserver.helpers import gs_catalog
-from geonode.layers.models import Dataset
-
-
 def set_default_style_to_open_in_visual_mode(instance, **kwargs):
+    from geoserver.catalog import FailedRequestError
+    from geonode.geoserver.helpers import gs_catalog
+    from geonode.layers.models import Dataset
     if isinstance(instance, Dataset):
         style = gs_catalog.get_style(
             instance.name, workspace=instance.workspace
@@ -112,6 +110,7 @@ def get_page_filter_form(group_filter_form = None):
     return page_filter_form
 
 def get_default_resource_page_config():
+
     DEFAULT_PAGE_FILTER_FORM = get_page_filter_form()
     default_menu_item = {
         "labelId": "gnhome.new",
@@ -120,13 +119,12 @@ def get_default_resource_page_config():
         "variant": "primary",
     }
     page_resource_config = {
-        "maps": {
+        "maps": "",
+        "_maps": {
             "blocks": [
                 {
-                    "id": "map-catalog",
-                    "class": "",
-                    "type": "html",
-                    "value": "Maps"
+                    "type": "template",
+                    "value": "geonode-mapstore-client/resource_page_heder.html"
                 },
                 {
                     "type": "ms-plugin",

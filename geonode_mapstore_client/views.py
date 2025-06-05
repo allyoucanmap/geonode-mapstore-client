@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import Http404
 from django.utils.translation.trans_real import get_language_from_request
 from dateutil import parser
 
@@ -72,12 +71,5 @@ def metadata_embed(request, pk):
     return metadata(request, pk, template="geonode-mapstore-client/metadata_embed.html")
 
 def resource_page_catalog(request, page_id):
-    from django.conf import settings
 
-    RESOURCES_PAGE_CONFIG = getattr(settings, "RESOURCES_PAGE_CONFIG", {})
-    config = RESOURCES_PAGE_CONFIG.get(page_id)
-    if config is None:
-        raise Http404(f"Resource page '{page_id}' does not exist.")
-    
-    context = { "resource_page_config": config }
-    return render(request, "geonode-mapstore-client/resource_page_catalog.html", context=context)
+    return render(request, f"geonode-mapstore-client/pages/{page_id}.html", context={})

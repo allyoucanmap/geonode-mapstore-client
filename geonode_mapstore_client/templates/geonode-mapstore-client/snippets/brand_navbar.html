@@ -23,9 +23,24 @@
         <div class="gn-brand-navbar-right-menu-container ms-flex-fill ms-flex-box _flex _flex-gap-sm _flex-center-v">
             <ul class="ms-flex-fill ms-flex-box _flex _flex-gap-sm _flex-center-v gn-brand-navbar-menu">
                 {% block default_left_menu_items %}
-                    {% for menu_item in BRAND_NAVBAR_MENU %}
-                        {% include './menu_item.html' with menu_item=menu_item %}
-                    {% endfor %}
+                    <li>
+                        <a
+                            id="all"
+                            href="/all/"
+                            target=""
+                            class="nav-link btn btn-default"
+                        >
+                            All
+                        </a>
+                        <a
+                            id="all"
+                            href="/all/"
+                            target=""
+                            class="nav-link btn btn-default"
+                        >
+                            All
+                        </a>
+                    </li>
                 {% endblock %}
                 {% for menu_item in TOPBAR_MENU %}
                     {% include './menu_item.html' with menu_item=menu_item %}
