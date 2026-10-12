@@ -35,7 +35,7 @@ import DetailsHeader from '@mapstore/framework/plugins/ResourcesCatalog/componen
 import DetailsToolbar from '../components/DetailsToolbar';
 import moment from 'moment';
 import DetailsThumbnail from '../components/DetailsThumbnail';
-import ALink from '@mapstore/framework/plugins/ResourcesCatalog/components/ALink';
+import ALink from '@mapstore/framework/components/catalog/resources/ALink';
 import { parseCatalogResource } from '@js/utils/ResourceUtils';
 import useParsePluginConfigExpressions from '@mapstore/framework/plugins/ResourcesCatalog/hooks/useParsePluginConfigExpressions';
 import { hashLocationToHref } from '@mapstore/framework/utils/ResourcesFiltersUtils';

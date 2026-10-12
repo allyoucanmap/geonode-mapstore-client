@@ -29,7 +29,7 @@ import isNil from 'lodash/isNil';
 import { generateContextResource } from '@mapstore/framework/selectors/contextcreator';
 import { layerSettingSelector, getSelectedLayer as getSelectedNode } from '@mapstore/framework/selectors/layers';
 import { saveLayer } from '@mapstore/framework/utils/LayersUtils';
-import { crsProjectionsConfigSelector } from '@mapstore/framework/selectors/crsselector';
+import { crsProjectionsConfigSelector } from '@mapstore/framework/plugins/CRSSelector/selectors/crsselector';
 
 const RESOURCE_MANAGEMENT_PROPERTIES_KEYS = Object.keys({...RESOURCE_PUBLISHING_PROPERTIES, ...RESOURCE_OPTIONS_PROPERTIES});
 

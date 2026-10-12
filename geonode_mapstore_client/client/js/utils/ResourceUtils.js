@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import url from 'url';
 import { isEmpty, uniqBy, omit, orderBy, isString, isObject } from 'lodash';
 
